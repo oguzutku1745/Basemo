@@ -14,7 +14,7 @@ connection.connect();
 
 
 // NFT contract address
-const contractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
+const contractAddress = '0x2E983A1Ba5e8b38AAAeC4B440B9dDcFBf72E15d1';
 
 // ABI (Application Binary Interface) of the NFT contract
 const contractABI = [
