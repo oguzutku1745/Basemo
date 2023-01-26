@@ -1,20 +1,13 @@
 const Web3 = require('web3');
 const mysql = require('mysql2');
+const db = require('../eth_app/db');
 const web3 = new Web3(new Web3.providers.WebsocketProvider('ws://127.0.0.1:8545'));
 
-
-const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'basemo'
-});
-
-connection.connect();
+db.connect();
 
 
 // NFT contract address
-const contractAddress = '0x2E983A1Ba5e8b38AAAeC4B440B9dDcFBf72E15d1';
+const contractAddress = '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0';
 
 // ABI (Application Binary Interface) of the NFT contract
 const contractABI = [
@@ -506,7 +499,7 @@ const whitelistAddress = (address) => {
   console.log(address)
   const sql = 'INSERT INTO basemotest(Wallet_address, expirydate) VALUES (?, ?)';
   const data = [address, expirationDate];
-  connection.query(sql, data, (err, results) => {
+  db.query(sql, data, (err, results) => {
     if (err) throw err;
     console.log(`Inserted ${results.affectedRows} row(s)`);
   });

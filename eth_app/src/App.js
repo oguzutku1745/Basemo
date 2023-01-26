@@ -1,7 +1,5 @@
-import React, {useState} from 'react';
-
-
-import ConnectWallet from './ConnectWallet';
+import React from 'react';
+import ConnectWallet from './components/ConnectWallet';
 
 function App() {
   return (
