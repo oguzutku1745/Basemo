@@ -1,10 +1,12 @@
 import React, {useState, useEffect} from 'react';
+import { useNavigate } from 'react-router-dom';
 import MintButton from './MintButton';
 import metamask from './Metamask.png';
 import Web3 from 'web3';
 
 
 const ConnectWallet = () => {
+    const navigate = useNavigate();
     const [isConnected, setIsConnected] = useState(false);
     const [contract, setContract] = useState(null);
     const [accounts, setAccounts] = useState([]);
@@ -486,7 +488,7 @@ const ConnectWallet = () => {
             "type": "function"
         }
     ]
-    const contractAddress = '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0';
+    const contractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
 
     useEffect(()=> {
         fetch("/api").then(
@@ -552,13 +554,15 @@ useEffect(() => {
 }, [accounts]);
 
 return (
-    <div style={{ backgroundColor: 'darkblue', height: '100vh', display: 'flex', alignItems: 'center', justifyContent:'center'}}>
+    <div style={{ backgroundColor: '#2e2ca6', height: '100vh', display: 'flex', alignItems: 'center', justifyContent:'center'}}>
       <div style={{ width: '50%', textAlign: 'center'}}>
-        <img src={metamask} alt="Metamask" style={{ width: '300px', marginBottom: '20px', display: 'block', margin: '0auto'}} />
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+          <img src={metamask} alt="Metamask" style={{ width: '300px', marginBottom: '20px', display: 'block', margin: '0auto'}} />
+        </div>
         <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.3)', padding: '20px', borderRadius: '10px'}}>
         {isConnected ? (
           existWallet ? ( 
-            expired ? <p>Your whitelist has expired</p> : <p>You are whitelisted</p>
+            expired ? <p>Your whitelist has expired</p> : navigate('Botpage')
           ) : (
             <MintButton contract={contract} to={accounts[0]} accounts={accounts} />
           )

@@ -5,6 +5,7 @@
 /.pnp
 .pnp.js
 db_aws.js
+db.js
 
 # testing
 /coverage

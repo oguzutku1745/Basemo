@@ -1,0 +1,24 @@
+.homepage {
+    background-color: #2e2ca6;
+    height: 100vh;
+  }
+  
+  .btn-container {
+    text-align: center;
+  }
+  
+  .brand-name {
+    margin-left: 20px;
+    font-size: 50px;
+  }
+  
+  .btn-orange {
+    background-color: orange;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+    margin-right: 100px;
+    padding: 30px 40px;
+    border-radius: 400px;
+    text-decoration: none;
+  }
