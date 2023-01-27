@@ -1,11 +1,14 @@
-import React, {useState, useEffect} from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, {useState, useEffect, useContext} from 'react';
+import { useNavigate, redirect } from 'react-router-dom';
 import MintButton from './MintButton';
 import metamask from './Metamask.png';
 import Web3 from 'web3';
+import {AuthContext} from '../utils/AuthContext';
+import ProtectedRoutes from '../pages/Appage/Protectedroute';
 
 
-const ConnectWallet = () => {
+
+const ConnectWallet = (props) => {
     const navigate = useNavigate();
     const [isConnected, setIsConnected] = useState(false);
     const [contract, setContract] = useState(null);
@@ -13,6 +16,10 @@ const ConnectWallet = () => {
     const [existWallet, setExistWallet] = useState(false);
     const [backendData, setBackendData] = useState([{}]);
     const [expired, setExpired] = useState(false);
+    const { allowed, setAllowed } = useContext(AuthContext);
+    useEffect(() => {
+        checkWhitelistedStatus(setAllowed);
+      }, [setAllowed]);
 
     const contractABI = [
         {
@@ -490,6 +497,8 @@ const ConnectWallet = () => {
     ]
     const contractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
 
+
+    
     useEffect(()=> {
         fetch("/api").then(
           response => response.json()
@@ -505,15 +514,20 @@ const ConnectWallet = () => {
             const currentDate = new Date();
             const dbdata = backendData.find(item => item.Wallet_address === accounts[0]);
             if (dbdata) {
-                setExistWallet(true)
                 console.log(dbdata.expirydate)
                 const expiryDate = new Date(dbdata.expirydate);
+                setExistWallet(true)
                 if (currentDate > expiryDate) {
                     console.log(`Expiry date has passed`);
                     setExpired(true);
+                    //setAllowed(false);
+                    setAllowed(false);
                 } else {
                     console.log(`Expiry date has not passed`);
                     setExpired(false);
+                    //setAllowed(true);
+                    setAllowed(true);
+                    console.log(allowed)      
                 }
             } else {
                 console.log(`${accounts[0]} is not whitelisted`);
@@ -522,6 +536,7 @@ const ConnectWallet = () => {
             console.error(error);
         }
     };
+
 
     const handleConnect = async () => {
     try {
@@ -562,7 +577,7 @@ return (
         <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.3)', padding: '20px', borderRadius: '10px'}}>
         {isConnected ? (
           existWallet ? ( 
-            expired ? <p>Your whitelist has expired</p> : navigate('Botpage')
+            expired ? <p>Your whitelist has expired</p> : navigate("/botpage")
           ) : (
             <MintButton contract={contract} to={accounts[0]} accounts={accounts} />
           )

@@ -1,19 +1,13 @@
-import React from 'react';
-import { Route, Redirect } from 'react-router-dom';
+import { useContext} from 'react';
+import {AuthContext} from '../../utils/AuthContext';
+import { Navigate, Outlet } from "react-router-dom";
 
-const ProtectedRoute = ({ component: Component, whitelisted, ...rest }) => {
-  return (
-    <Route
-      {...rest}
-      render={(props) => {
-        if (whitelisted) {
-          return <Component {...props} />;
-        } else {
-          return <Redirect to="/" />;
-        }
-      }}
-    />
-  );
+const ProtectedRoutes = () => {
+  
+  const {allowed} = useContext(AuthContext);
+
+  return allowed ? <Outlet /> : <Navigate to="/" />;
+
 };
 
-export default ProtectedRoute;
+export default ProtectedRoutes;
