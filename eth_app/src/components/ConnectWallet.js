@@ -16,10 +16,18 @@ const ConnectWallet = (props) => {
     const [existWallet, setExistWallet] = useState(false);
     const [backendData, setBackendData] = useState([{}]);
     const [expired, setExpired] = useState(false);
-    const { allowed, setAllowed } = useContext(AuthContext);
-    useEffect(() => {
-        checkWhitelistedStatus(setAllowed);
-      }, [setAllowed]);
+    const {allowed, setAllowed} = useContext(AuthContext);
+    //useEffect(() => {
+    //    if (existWallet && !(expired)){
+    //        console.log(allowed)
+    //        console.log("You are allowed")
+    //    }
+    //    else {
+    //        console.log("You are not allowed")
+    //        console.log(allowed)
+    //    }
+    //    
+    //}, [existWallet,expired]);
 
     const contractABI = [
         {
@@ -520,14 +528,9 @@ const ConnectWallet = (props) => {
                 if (currentDate > expiryDate) {
                     console.log(`Expiry date has passed`);
                     setExpired(true);
-                    //setAllowed(false);
-                    setAllowed(false);
                 } else {
-                    console.log(`Expiry date has not passed`);
-                    setExpired(false);
-                    //setAllowed(true);
                     setAllowed(true);
-                    console.log(allowed)      
+                    console.log(`Expiry date has not passed`);
                 }
             } else {
                 console.log(`${accounts[0]} is not whitelisted`);
@@ -566,7 +569,16 @@ useEffect(() => {
     if (accounts.length > 0) {
         checkWhitelistedStatus();
     }
-}, [accounts]);
+    if (existWallet && !(expired)){
+        console.log(allowed)
+        console.log("You are allowed")
+    }
+    else {
+        console.log("You are not allowed")
+        console.log(allowed)
+    }
+}, [accounts,existWallet,expired]);
+
 
 return (
     <div style={{ backgroundColor: '#2e2ca6', height: '100vh', display: 'flex', alignItems: 'center', justifyContent:'center'}}>
@@ -577,7 +589,7 @@ return (
         <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.3)', padding: '20px', borderRadius: '10px'}}>
         {isConnected ? (
           existWallet ? ( 
-            expired ? <p>Your whitelist has expired</p> : navigate("/botpage")
+            allowed ? (navigate("/botpage")) : <p>Your whitelist has expired</p> 
           ) : (
             <MintButton contract={contract} to={accounts[0]} accounts={accounts} />
           )
