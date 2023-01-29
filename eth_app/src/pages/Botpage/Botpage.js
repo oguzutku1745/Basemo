@@ -1,16 +1,13 @@
 import React from "react";
+import CreateWallet from "../../components/get_mint_wallets";
 
 const Botpage = () => {
-
     return (
-        <div className="container">
-          <div>
-            <h1>Welcome to the BotPage!</h1>
-            <h2>It took so long to arrive this stage. CONGRATS!!</h2>
-            Çalış çalış ananın amı beş karış
-          </div>
+        <div>
+            <>MK BÖYLE İŞİN</>
+            <CreateWallet />
         </div>
-      );
-}
+    );
+};
 
 export default Botpage;

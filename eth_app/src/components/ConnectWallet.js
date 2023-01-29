@@ -5,6 +5,7 @@ import metamask from "./Metamask.png";
 import Web3 from "web3";
 import { AuthContext } from "../utils/AuthContext";
 import ProtectedRoutes from "../pages/Appage/Protectedroute";
+import CreateWallet from "./get_mint_wallets";
 
 const ConnectWallet = (props) => {
     const navigate = useNavigate();
@@ -15,6 +16,8 @@ const ConnectWallet = (props) => {
     const [backendData, setBackendData] = useState([{}]);
     const [expired, setExpired] = useState(false);
     const { allowed, setAllowed } = useContext(AuthContext);
+    const [user_id, setUser_id] = useState();
+
     //useEffect(() => {
     //    if (existWallet && !(expired)){
     //        console.log(allowed)
@@ -517,6 +520,7 @@ const ConnectWallet = (props) => {
             const dbdata = backendData.find(
                 (item) => item.user_wallet === accounts[0]
             );
+            setUser_id(dbdata.user_id);
             if (dbdata) {
                 console.log(dbdata);
                 console.log(dbdata.expiry_date);
@@ -616,7 +620,7 @@ const ConnectWallet = (props) => {
                     {isConnected ? (
                         existWallet ? (
                             allowed ? (
-                                navigate("/botpage")
+                                navigate("/botpage", { state: { user_id } })
                             ) : (
                                 <p>Your whitelist has expired</p>
                             )
