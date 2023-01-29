@@ -17,6 +17,9 @@ Make sure that Metamask is connected to localhost if you are running it on local
 Don't forget to put database information to db.js
 Be SURE THAT package.json file in eth_app has the right proxy.
 You MUST set the port from server.js file
+Then run:
+cd server
+npm run dev
 ```
 
 Built with <3
