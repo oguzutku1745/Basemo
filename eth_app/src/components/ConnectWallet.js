@@ -1,12 +1,10 @@
-import React, {useState, useEffect, useContext} from 'react';
-import { useNavigate } from 'react-router-dom';
-import MintButton from './MintButton';
-import metamask from './Metamask.png';
-import Web3 from 'web3';
-import {AuthContext} from '../utils/AuthContext';
-import ProtectedRoutes from '../pages/Appage/Protectedroute';
-
-
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import MintButton from "./MintButton";
+import metamask from "./Metamask.png";
+import Web3 from "web3";
+import { AuthContext } from "../utils/AuthContext";
+import ProtectedRoutes from "../pages/Appage/Protectedroute";
 
 const ConnectWallet = (props) => {
     const navigate = useNavigate();
@@ -17,7 +15,7 @@ const ConnectWallet = (props) => {
     const [backendData, setBackendData] = useState([{}]);
     const [expired, setExpired] = useState(false);
     const [user_id, setUser_id] = useState();
-    const {allowed, setAllowed} = useContext(AuthContext);
+    const { allowed, setAllowed } = useContext(AuthContext);
     //useEffect(() => {
     //    if (existWallet && !(expired)){
     //        console.log(allowed)
@@ -522,10 +520,10 @@ const ConnectWallet = (props) => {
             );
             setUser_id(dbdata.user_id);
             if (dbdata) {
-                console.log(dbdata.expirydate)
-                const expiryDate = new Date(dbdata.expirydate);
-                setUser_id(dbdata.id);
-                setExistWallet(true)
+                console.log(dbdata.expiry_date);
+                const expiryDate = new Date(dbdata.expiry_date);
+                setUser_id(dbdata.user_id);
+                setExistWallet(true);
                 if (currentDate > expiryDate) {
                     console.log(`Expiry date has passed`);
                     setExpired(true);
@@ -581,29 +579,77 @@ const ConnectWallet = (props) => {
         }
     }, [accounts, existWallet, expired]);
 
-return (
-    <div style={{ backgroundColor: '#2e2ca6', height: '100vh', display: 'flex', alignItems: 'center', justifyContent:'center'}}>
-      <div style={{ width: '50%', textAlign: 'center'}}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-          <img src={metamask} alt="Metamask" style={{ width: '300px', marginBottom: '20px', display: 'block', margin: '0auto'}} />
+    return (
+        <div
+            style={{
+                backgroundColor: "#2e2ca6",
+                height: "100vh",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+            }}
+        >
+            <div style={{ width: "50%", textAlign: "center" }}>
+                <div
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                    }}
+                >
+                    <img
+                        src={metamask}
+                        alt="Metamask"
+                        style={{
+                            width: "300px",
+                            marginBottom: "20px",
+                            display: "block",
+                            margin: "0auto",
+                        }}
+                    />
+                </div>
+                <div
+                    style={{
+                        backgroundColor: "rgba(255, 255, 255, 0.3)",
+                        padding: "20px",
+                        borderRadius: "10px",
+                    }}
+                >
+                    {isConnected ? (
+                        existWallet ? (
+                            allowed ? (
+                                navigate("/botpage", { state: { user_id } })
+                            ) : (
+                                <p>Your whitelist has expired</p>
+                            )
+                        ) : (
+                            <MintButton
+                                contract={contract}
+                                to={accounts[0]}
+                                accounts={accounts}
+                            />
+                        )
+                    ) : (
+                        <button
+                            style={{
+                                backgroundColor: "orange",
+                                color: "white",
+                                padding: "15px 30px",
+                                fontSize: "20px",
+                                border: "none",
+                                borderRadius: "5px",
+                                cursor: "pointer",
+                                marginTop: "20px",
+                            }}
+                            onClick={handleConnect}
+                        >
+                            Connect Wallet
+                        </button>
+                    )}
+                </div>
+            </div>
         </div>
-        <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.3)', padding: '20px', borderRadius: '10px'}}>
-        {isConnected ? (
-          existWallet ? ( 
-            allowed ? navigate("/botpage", { state: { user_id } }) : <p>Your whitelist has expired</p> 
-          ) : (
-            <MintButton contract={contract} to={accounts[0]} accounts={accounts} />
-          )
-        ) : (
-            <button style={{ backgroundColor: 'orange', color: 'white', padding: '15px 30px', fontSize: '20px', border:'none', borderRadius: '5px', cursor: 'pointer', marginTop: '20px'}}
-              onClick={handleConnect}>
-              Connect Wallet
-            </button>
-          )}
-        </div>
-      </div>
-    </div>
-      );
+    );
 };
 
 export default ConnectWallet;
