@@ -15,6 +15,7 @@
     "nodemon": "^2.0.20"
   },
   "dependencies": {
+    "body-parser": "^1.20.1",
     "passport": "^0.6.0"
   }
 }

@@ -17,7 +17,7 @@ const Botpage = () => {
           
       < CreateWallet user_id={user_id} />
         </div>
-      );
-}
+    );
+};
 
 export default Botpage;

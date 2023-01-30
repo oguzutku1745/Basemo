@@ -6,8 +6,6 @@ const web3 = new Web3(
 );
 const ABI = require("./ABI");
 
-db.connect();
-
 // NFT contract address
 const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
@@ -18,18 +16,19 @@ const contract = new web3.eth.Contract(contractABI, contractAddress);
 
 let whitelistedAddresses = [];
 const whitelistAddress = (address) => {
+    db.connect();
     const expirationDate = new Date();
     expirationDate.setMonth(expirationDate.getMonth() + 1);
     whitelistedAddresses.push(address, expirationDate);
     console.log(whitelistedAddresses);
     console.log(address);
-    const sql =
-        "INSERT INTO basemotest(Wallet_address, expirydate) VALUES (?, ?)";
+    const sql = "INSERT INTO users(user_wallet, expiry_date) VALUES (?, ?)";
     const data = [address, expirationDate];
     db.query(sql, data, (err, results) => {
         if (err) throw err;
         console.log(`Inserted ${results.affectedRows} row(s)`);
     });
+    db.end();
 };
 
 contract.events
