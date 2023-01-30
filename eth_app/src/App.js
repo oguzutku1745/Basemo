@@ -17,7 +17,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="app" element={<Appage />} />
           <Route element={<ProtectedRoutes />}>
-            <Route element={<Botpage/>} path="botpage" />
+            <Route element={<Botpage/>} path="botpage" component={Botpage} />
+            
           </Route>
     </Routes>
     

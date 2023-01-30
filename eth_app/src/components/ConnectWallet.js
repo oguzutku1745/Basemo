@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react';
-import { useNavigate, redirect } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import MintButton from './MintButton';
 import metamask from './Metamask.png';
 import Web3 from 'web3';
@@ -16,6 +16,7 @@ const ConnectWallet = (props) => {
     const [existWallet, setExistWallet] = useState(false);
     const [backendData, setBackendData] = useState([{}]);
     const [expired, setExpired] = useState(false);
+    const [user_id, setUser_id] = useState();
     const {allowed, setAllowed} = useContext(AuthContext);
     //useEffect(() => {
     //    if (existWallet && !(expired)){
@@ -524,6 +525,7 @@ const ConnectWallet = (props) => {
             if (dbdata) {
                 console.log(dbdata.expirydate)
                 const expiryDate = new Date(dbdata.expirydate);
+                setUser_id(dbdata.id);
                 setExistWallet(true)
                 if (currentDate > expiryDate) {
                     console.log(`Expiry date has passed`);
@@ -589,7 +591,7 @@ return (
         <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.3)', padding: '20px', borderRadius: '10px'}}>
         {isConnected ? (
           existWallet ? ( 
-            allowed ? (navigate("/botpage")) : <p>Your whitelist has expired</p> 
+            allowed ? navigate("/botpage", { state: { user_id } }) : <p>Your whitelist has expired</p> 
           ) : (
             <MintButton contract={contract} to={accounts[0]} accounts={accounts} />
           )

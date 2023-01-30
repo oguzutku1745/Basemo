@@ -7,7 +7,21 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "axios": "^1.2.6",
     "bootstrap": "^5.2.3",
+    "browserify-zlib": "^0.2.0",
+    "buffer": "^6.0.3",
+    "Buffer": "^0.0.0",
+    "connector": "^0.0.1",
+    "crypto": "^1.0.1",
+    "crypto-browserify": "^3.12.0",
+    "express": "^4.18.2",
+    "mqtt": "^4.3.7",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.0.1",
+    "net": "^1.0.2",
+    "node-polyfill-webpack-plugin": "^2.0.1",
+    "paho-mqtt": "^1.1.0",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "react": "^18.2.0",
@@ -15,7 +29,12 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.8.0",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+    "stream-browserify": "^3.0.0",
+    "timers-browserify": "^2.0.12",
+    "tls": "^0.0.1",
+    "web-vitals": "^2.1.4",
+    "web3": "^1.8.1",
+    "webpack-cli": "^5.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -40,5 +59,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "npm-install-webpack-plugin": "^4.0.5",
+    "webpack": "^5.0.0"
   }
 }
