@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const db = require("/root/basemov2/Basemo/server/db.js");
+const db = require("../eth_app/src/db");
 const passport = require("passport");
 const bodyParser = require("body-parser");
 
@@ -30,6 +30,18 @@ app.use(function (req, res, next) {
 
 app.get("/api", (req, res) => {
     const query = "SELECT * FROM users";
+
+    db.query(query, (err, data) => {
+        if (err) {
+            res.status(500).json({ error: err });
+        } else {
+            res.json(data);
+        }
+    });
+});
+
+app.get("/api/data", (req, res) => {
+    const query = "SELECT * FROM mint_wallet";
 
     db.query(query, (err, data) => {
         if (err) {

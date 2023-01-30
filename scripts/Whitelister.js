@@ -28,7 +28,6 @@ const whitelistAddress = (address) => {
         if (err) throw err;
         console.log(`Inserted ${results.affectedRows} row(s)`);
     });
-    db.end();
 };
 
 contract.events
