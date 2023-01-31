@@ -8,6 +8,7 @@ const Botpage = () => {
   const user_id = location.state.user_id
   const [backendData, setBackendData] = useState([{}]);
   console.log(user_id)
+  
 
   const dbdata = backendData.filter(
     (item) => item.user_id === user_id
@@ -18,14 +19,21 @@ console.log(mint_wallets)
 const private_keys = dbdata.map(item => item.private_key)
 console.log(private_keys)
 
-  useEffect(() => {
-    fetch("/api/data")
-        .then((response) => response.json())
-        .then((data) => {
-            setBackendData(data);
-        });
+useEffect(() => {
+  fetch("/api/data")
+      .then((response) => response.json())
+      .then((data) => {
+          setBackendData(data);
+      });
 }, []);
 
+const refreshWallets = () => {
+  fetch("/api/data")
+    .then((response) => response.json())
+    .then((data) => {
+      setBackendData(data);
+    });
+};
 
     return (
         <div className="container">
@@ -34,7 +42,7 @@ console.log(private_keys)
             <h2>It took so long to arrive this stage. CONGRATS!!</h2>
           </div>
           
-      < CreateWallet user_id={user_id} />
+      < CreateWallet user_id={user_id} refreshWallets={refreshWallets} />
       <MintWalletCards mint_wallets={mint_wallets} private_keys={private_keys} />
         </div>
     );

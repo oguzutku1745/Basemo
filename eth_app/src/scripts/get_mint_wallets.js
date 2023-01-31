@@ -8,12 +8,13 @@ const web3 = new Web3(
 
 
 
-const CreateWallet = () => {
+const CreateWallet = ({ refreshWallets }) => {
     const location = useLocation();
     //console.log(location.state.user_id);
     const [mint_wallet, setMint_wallet] = useState();
     const [private_key, setPrivate_key] = useState();
     const [child_user_id, setChild_user_id] = useState();
+    
 
     useEffect(() => {
         myFunction()
@@ -31,7 +32,9 @@ const CreateWallet = () => {
             mint_wallet: mint_wallet,
             private_key: private_key,
         });
-        console.log(private_key)
+        console.log(mint_wallet)
+        refreshWallets();
+        
     };
 
     const myFunction = () => {
@@ -47,6 +50,7 @@ const CreateWallet = () => {
             .post("http://localhost:3002/api/data", data)
             .then((response) => console.log("Success:", response))
             .catch((error) => console.error("Error:", error));
+            
     };
 
     return (
@@ -62,6 +66,7 @@ const CreateWallet = () => {
                 cursor: "pointer",
                 marginTop: "20px"
               }} onClick={handleSubmit}> Create mint wallet </button>
+
         </div>
     );
 };
