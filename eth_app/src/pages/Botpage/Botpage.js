@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import CreateWallet from "../../scripts/get_mint_wallets";
+import CreateWallet from "../../scripts/CreateWallet";
 import MintWalletCards from "../../../src/components/MintWalletCard(s)/MintWalletCards";
 import Header from "../../components/Header";
 
@@ -9,31 +9,33 @@ const Botpage = () => {
     const user_id = location.state.user_id;
     const user_wallet = location.state.user_wallet;
     const [backendData, setBackendData] = useState([{}]);
-    console.log(user_id);
-
-    const dbdata = backendData.filter((item) => item.user_id === user_id);
-
-    const mint_wallets = dbdata.map((item) => item.mint_wallet);
-    console.log(user_wallet);
-    //console.log(mint_wallets);
-    const private_keys = dbdata.map((item) => item.private_key);
-    //console.log(private_keys);
+    const [mint_wallets, setMint_wallets] = useState([]);
+    const [private_keys, setPrivate_keys] = useState([]);
 
     useEffect(() => {
         fetch("/api/data")
             .then((response) => response.json())
             .then((data) => {
+                const dbdata = data.filter((item) => item.user_id === user_id);
+                const mint_wallets = dbdata.map((item) => item.mint_wallet);
+                setMint_wallets(mint_wallets);
+                const private_keys = dbdata.map((item) => item.private_key);
+                setPrivate_keys(private_keys);
                 setBackendData(data);
             });
     }, []);
 
-    const refreshWallets = () => {
-        fetch("/api/data")
-            .then((response) => response.json())
-            .then((data) => {
-                setBackendData(data);
-            });
-    };
+    function changeStateMintWallets(new_mint_wallet_address) {
+        setMint_wallets((prev) => {
+            return [...prev, new_mint_wallet_address];
+        });
+    }
+
+    function changeStatePrivateKeys(new_private_key) {
+        setPrivate_keys((prev) => {
+            return [...prev, new_private_key];
+        });
+    }
 
     return (
         <div>
@@ -49,7 +51,10 @@ const Botpage = () => {
 
                 <CreateWallet
                     user_id={user_id}
-                    refreshWallets={refreshWallets}
+                    mint_wallets={mint_wallets}
+                    private_keys={private_keys}
+                    changeStateMintWallets={changeStateMintWallets}
+                    changeStatePrivateKeys={changeStatePrivateKeys}
                 />
                 <MintWalletCards
                     mint_wallets={mint_wallets}
