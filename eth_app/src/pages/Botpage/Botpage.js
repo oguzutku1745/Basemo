@@ -39,24 +39,33 @@ const Botpage = () => {
 
     return (
         <div>
-            <div>
-                <Header wallet={user_wallet} />
-            </div>
-
+            <Header wallet={user_wallet} />
             <div className="container">
-                <div>
-                    <h1>Welcome to the BotPage!</h1>
+                <div className="left-side">
+                    <div>
+                        <h1>Welcome to the BotPage!</h1>
+                    </div>
+
+                    <div className="create-wallet">
+                        <CreateWallet
+                            user_id={user_id}
+                            changeStateMintWallets={changeStateMintWallets}
+                            changeStatePrivateKeys={changeStatePrivateKeys}
+                        />
+                    </div>
+
+                    <div className="mint-wallet-cards">
+                        <MintWalletCards
+                            mint_wallets={mint_wallets}
+                            private_keys={private_keys}
+                        />
+                    </div>
                 </div>
 
-                <CreateWallet
-                    user_id={user_id}
-                    changeStateMintWallets={changeStateMintWallets}
-                    changeStatePrivateKeys={changeStatePrivateKeys}
-                />
-                <MintWalletCards
-                    mint_wallets={mint_wallets}
-                    private_keys={private_keys}
-                />
+                <div className="right-side">
+                    AHA BURAYA BOT GELİCEK
+                    {/* BOT COMPONENT İ BURAYA GELİCEK*/}
+                </div>
             </div>
         </div>
     );
