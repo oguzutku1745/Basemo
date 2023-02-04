@@ -46,13 +46,10 @@ const Botpage = () => {
             <div className="container">
                 <div>
                     <h1>Welcome to the BotPage!</h1>
-                    <h2>It took so long to arrive this stage. CONGRATS!!</h2>
                 </div>
 
                 <CreateWallet
                     user_id={user_id}
-                    mint_wallets={mint_wallets}
-                    private_keys={private_keys}
                     changeStateMintWallets={changeStateMintWallets}
                     changeStatePrivateKeys={changeStatePrivateKeys}
                 />

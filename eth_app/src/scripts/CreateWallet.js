@@ -1,6 +1,5 @@
 import Web3 from "web3";
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
 import axios from "axios";
 const web3 = new Web3(
     new Web3.providers.WebsocketProvider("ws://127.0.0.1:8545")
@@ -8,36 +7,20 @@ const web3 = new Web3(
 
 const CreateWallet = ({
     user_id,
-    mint_wallets,
-    private_keys,
     changeStateMintWallets,
     changeStatePrivateKeys,
 }) => {
-    const location = useLocation();
-    //console.log(location.state.user_id);
-
-    const [child_user_id, setChild_user_id] = useState(user_id);
-    console.log(child_user_id);
-
     const handleSubmit = () => {
         var mint_account = web3.eth.accounts.create();
-        var mint_wallet_address = mint_account.address;
-        var mint_wallet_private_key = mint_account.privateKey;
-        changeStateMintWallets(mint_wallet_address);
-        changeStatePrivateKeys(mint_wallet_private_key);
+        changeStateMintWallets(mint_account.address);
+        changeStatePrivateKeys(mint_account.privateKey);
         // Send outputs to the database here
         sendDataToDatabase({
-            user_id: child_user_id,
-            mint_wallet: mint_wallet_address,
-            private_key: mint_wallet_private_key,
+            user_id: user_id,
+            mint_wallet: mint_account.address,
+            private_key: mint_account.privateKey,
         });
     };
-
-    /*const myFunction = () => {
-        var mint_account = web3.eth.accounts.create();
-        var mint_wallet_address = mint_account.address;
-        var mint_wallet_private_key = mint_account.privateKey;
-    };*/
 
     const sendDataToDatabase = (data) => {
         axios

@@ -4,7 +4,7 @@ const Header = ({ wallet }) => {
     const Box = ({ text }) => (
         <div
             style={{
-                width: "400px",
+                width: "450px",
                 height: "50px",
                 backgroundColor: "white",
                 display: "flex",
@@ -15,7 +15,7 @@ const Header = ({ wallet }) => {
                 borderRadius: "15px",
             }}
         >
-            {text}
+            User: {text}
         </div>
     );
 
