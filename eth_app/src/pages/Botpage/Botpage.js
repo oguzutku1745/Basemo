@@ -13,7 +13,7 @@ const Botpage = () => {
     const [private_keys, setPrivate_keys] = useState([]);
 
     useEffect(() => {
-        fetch("/api/data")
+        fetch(`/users/${user_id}`)
             .then((response) => response.json())
             .then((data) => {
                 const dbdata = data.filter((item) => item.user_id === user_id);

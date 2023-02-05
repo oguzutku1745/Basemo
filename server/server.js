@@ -52,6 +52,19 @@ app.get("/api/data", (req, res) => {
     });
 });
 
+app.get("/users/:user_id", (req, res) => {
+    const user_id = req.params.user_id;
+    const query = "SELECT * FROM mint_wallet WHERE user_id = (?)";
+    input = [user_id];
+    db.query(query, input, (err, data) => {
+        if (err) {
+            res.status(500).json({ error: err });
+        } else {
+            res.json(data);
+        }
+    });
+});
+
 app.use(bodyParser.json());
 
 app.post("/api/data", (req, res) => {
