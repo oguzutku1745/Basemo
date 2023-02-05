@@ -3,6 +3,8 @@ import { useLocation } from "react-router-dom";
 import CreateWallet from "../../scripts/CreateWallet";
 import MintWalletCards from "../../../src/components/MintWalletCard(s)/MintWalletCards";
 import Header from "../../components/Header";
+import MainInput from "../../components/CoreComps/coreInput";
+import AddressInput from "../../components/mintBot/AddressInput";
 
 const Botpage = () => {
     const location = useLocation();
@@ -37,6 +39,31 @@ const Botpage = () => {
         });
     }
 
+    ////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////
+    //// BU KISIMDAN SONRAKİ KISIM BOT İÇİN
+    const [verifiedContractAddress, setVerifiedContractAddress] = useState("");
+
+    const loadVerifiedContract = async (address = null) => {
+        const queryContractAddress = address ?? verifiedContractAddress;
+
+        let contract;
+        try {
+            const providerOrSigner = userSigner ?? localProvider;
+            contract = await loadContractEtherscan(
+                queryContractAddress,
+                selectedNetwork,
+                providerOrSigner
+            );
+        } catch (e) {
+            message.error(e.message);
+            return;
+        }
+
+        setLoadedContract(contract);
+        return contract.address;
+    };
+
     return (
         <div>
             <Header wallet={user_wallet} />
@@ -63,8 +90,8 @@ const Botpage = () => {
                 </div>
 
                 <div className="right-side">
-                    AHA BURAYA BOT GELİCEK
-                    {/* BOT COMPONENT İ BURAYA GELİCEK*/}
+                    <AddressInput placeholder="Enter the Contract address" />
+                    {/* BOT COMPONENT İ BURAYA GELİCEK DAHA ÇALIŞMIYO AMA :D */}
                 </div>
             </div>
         </div>
