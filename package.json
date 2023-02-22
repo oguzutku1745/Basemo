@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.8.1",
+    "antd": "^5.2.0",
     "axios": "^1.2.4",
     "bootstrap": "^5.2.3",
     "eslint-plugin-react-hooks": "^4.6.0",

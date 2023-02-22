@@ -5,6 +5,7 @@ import Home from './pages/Home/Home';
 import Botpage from './pages/Botpage/Botpage';
 import ProtectedRoutes from './pages/Appage/Protectedroute';
 import { AuthContext } from './utils/AuthContext';
+import {ethers} from 'ethers';
 
 
 

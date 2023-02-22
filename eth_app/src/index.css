@@ -12,6 +12,12 @@ code {
         monospace;
 }
 
+input {
+    border-radius: 10px;
+    margin:5px;
+    padding:5px;
+}
+
 .mint-wallet-list {
     list-style-type: decimal;
     padding-left: 10px;
@@ -34,8 +40,8 @@ code {
     padding: 20px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    align-items: top;
+    justify-content: top;
 }
 .right-side {
     padding: 20px;
@@ -50,8 +56,26 @@ h1 {
     margin-bottom: 20px;
 }
 
+input[type="checkbox"] {
+    margin-left: 10px;
+  }
+
 .create-wallet,
 .mint-wallet-cards {
     margin-bottom: 20px;
     align-items: center;
+}
+.functionDisplay {
+    height: flex;
+    width: 500px;
+    padding: 10px;
+    border: 4px solid #19547b;
+    border-radius: 5px;
+    display: inline-block;
+    margin-right: 4px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+.functionContainers{
+    padding: 10px;
 }
