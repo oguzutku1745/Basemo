@@ -19,11 +19,16 @@ const Botpage = () => {
         contractAddress:"",
         contractABI:"",
     })
-    const [contractFunctions, setContractFunctions] = useState([])
+    const [contractFunctions, setContractFunctions] = useState({
+        name: [],
+        paramName: [],
+        inputType: [],
+        functionType: []
+      });
 
     
     function bringIt() {
-        fetch(`https://api-goerli.etherscan.io/api?module=contract&action=getabi&address=${contractInputs.contractAddress}&apikey="Etherscan KEY"`
+        fetch(`https://api-goerli.etherscan.io/api?module=contract&action=getabi&address=${contractInputs.contractAddress}&apikey="Your etherscan key"`
         )
         .then((response) => response.json())
         .then((data) => {
@@ -38,21 +43,33 @@ const Botpage = () => {
       }
 
     async function resolveContract(address, ABI) {
-        const provider = new ethers.InfuraProvider("goerli", "INFURA GOERLI KEY");
+        const provider = new ethers.InfuraProvider("goerli", "Your Infura Key");
         const contract = new ethers.Contract(address, ABI, provider);
         const resolved = new ethers.Interface(ABI)
         const FormatTypes = ethers.formatEther;
         const funct = resolved.format(FormatTypes.json)
-        const filteredfunct = funct.filter(str => str.includes("state") || str.includes("function")); // Filters the events
+        const filteredfunct = funct.filter(str =>str.includes("function")); // Filters the events
         
-        const indexedFunctions = filteredfunct.map((f, i) => {
-            //Gives id and function params to state
-            return { id: i, functionItself: f};
-        });
+        const updatedArray = filteredfunct.map((item,i) => {
+            const functionName = item.split("function ")[1].split("(")[0]; // extract function name
+            const paramMatch = item.match(/\((.*?)\)/); // extract parameter string inside parentheses (optional)
+            const paramName = paramMatch ? paramMatch[1] : ""; // extract parameter string or set to empty string
+            const inputType = paramName ? paramName.split(" ")[0] : ""; // extract input type from parameter string or set to empty string
+            const functionType = item.includes("view") ? "read" : "write"; // check if function is read or write
+          
+            return { id:i, name: functionName, paramName, inputType, functionType };
+          });
 
-        setContractFunctions(indexedFunctions);
+          console.log(updatedArray)
 
-    }
+        //const indexedFunctions = filteredfunct.map((f, i) => {
+        //    //Gives id and function params to state
+        //    return { id: i, functionItself: f};
+        //});
+
+        setContractFunctions(updatedArray);
+    };
+        
 
     
 
@@ -145,12 +162,14 @@ const Botpage = () => {
 
                 <div className="right-side">
                     <div className="functionContainers">
-                        {contractFunctions && 
-                        contractFunctions.map(fn => (
+                        {contractFunctions && contractFunctions.map(fn => (
                         <FunctionStorer
                             key={fn.id}
                             id={fn.id}
-                            function={fn.functionItself}
+                            name={fn.name}
+                            paramName={fn.paramName}
+                            inputType={fn.inputType}
+                            functionType={fn.functionType}
                         />
                         ))} 
                     </div>
