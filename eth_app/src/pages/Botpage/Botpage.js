@@ -28,7 +28,7 @@ const Botpage = () => {
 
     
     function bringIt() {
-        fetch(`https://api-goerli.etherscan.io/api?module=contract&action=getabi&address=${contractInputs.contractAddress}&apikey=Etherscan key`
+        fetch(`https://api-goerli.etherscan.io/api?module=contract&action=getabi&address=${contractInputs.contractAddress}&apikey=Etherscan Key`
         )
         .then((response) => response.json())
         .then((data) => {
@@ -158,16 +158,33 @@ const Botpage = () => {
 
                 <div className="right-side">
                     <div className="functionContainers">
-                        {contractFunctions.length > 0 && contractFunctions.map(fn => (
-                        <FunctionStorer
-                            key={fn.id}
-                            id={fn.id}
-                            name={fn.name}
-                            paramName={fn.paramName}
-                            inputType={fn.inputType}
-                            functionType={fn.functionType}
-                        />
-                        ))} 
+                    {contractFunctions.length > 0 && (
+                    <>
+                        <h2>READ</h2>
+                        {contractFunctions.filter(fn => fn.functionType === "read").map(fn => (
+                            <FunctionStorer
+                                key={fn.id}
+                                id={fn.id}
+                                name={fn.name}
+                                paramName={fn.paramName}
+                                inputType={fn.inputType}
+                                functionType={fn.functionType}
+                            />
+                        ))}
+                
+                        <h2>WRITE</h2>
+                        {contractFunctions.filter(fn => fn.functionType === "write").map(fn => (
+                            <FunctionStorer
+                                key={fn.id}
+                                id={fn.id}
+                                name={fn.name}
+                                paramName={fn.paramName}
+                                inputType={fn.inputType}
+                                functionType={fn.functionType}
+                            />
+                        ))}
+                    </>
+                )} 
                     </div>
                     <form>
                     <input 
@@ -177,7 +194,7 @@ const Botpage = () => {
                     name="contractAddress"
                     placeholder="Paste the contract address..."
                     /> </form> <br />
-                    <button onClick={bringIt}>Bring the contract</button>
+                    <button className="buttons" onClick={bringIt}>Bring the contract</button>
                </div>
            </div>
        </div>

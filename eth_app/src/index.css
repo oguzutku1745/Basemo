@@ -79,3 +79,10 @@ input[type="checkbox"] {
 .functionContainers{
     padding: 10px;
 }
+.buttons{
+    border-radius: 5px;
+    background-color: #19547b;
+    border: 1px solid #426983;
+    color: aliceblue;
+    padding: 2px;
+}
