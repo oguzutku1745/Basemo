@@ -5,8 +5,6 @@ import MintWalletCards from "../../../src/components/MintWalletCard(s)/MintWalle
 import Header from "../../components/Header";
 import { ethers} from "ethers";
 import FunctionStorer from "../../components/contractFunction(s)/FunctionStorer";
-import MainInput from "../../components/CoreComps/coreInput";
-import AddressInput from "../../components/mintBot/AddressInput";
 
 const Botpage = () => {
     const location = useLocation();
@@ -25,6 +23,11 @@ const Botpage = () => {
         inputType: [],
         functionType: []
       });
+    const [userContractInputs, setUserContractInputs] = useState({
+        functionName: "",
+        functionParams: [],
+        functionInputs: [],
+    })
 
     
     function bringIt() {
@@ -42,6 +45,14 @@ const Botpage = () => {
           });
       }
 
+    function getUserInput(name, params, inputs) {
+        setUserContractInputs((
+            contractFunctions.map((functions) => {
+                return functions.name === name ? {...functions, name: functions.name  } : functions      
+            })
+        ))
+    }
+
     async function resolveContract(address, ABI) {
         const provider = new ethers.InfuraProvider("goerli", "Infura Key");
         const contract = new ethers.Contract(address, ABI, provider);
@@ -53,8 +64,8 @@ const Botpage = () => {
         const updatedArray = filteredfunct.map((item,i) => {
             const functionName = item.split("function ")[1].split("(")[0]; // extract function name
             const paramMatch = item.match(/\((.*?)\)/); // extract parameter string inside parentheses (optional)
-            const paramName = paramMatch ? paramMatch[1] : ""; // extract parameter string or set to empty string
-            const inputType = paramName ? paramName.split(" ")[0] : ""; // extract input type from parameter string or set to empty string
+            const paramName = paramMatch ? paramMatch[1].split(",").map(param => param.trim()) : []; // extract parameter names array or set to empty array
+            const inputType = paramName.map(param => param.split(" ")[0]); // extract input types from parameter names
             const functionType = item.includes("view") ? "read" : "write"; // check if function is read or write
           
             return { id:i, name: functionName, paramName, inputType, functionType };
@@ -169,6 +180,7 @@ const Botpage = () => {
                                 paramName={fn.paramName}
                                 inputType={fn.inputType}
                                 functionType={fn.functionType}
+                                getUserInput={getUserInput}
                             />
                         ))}
                 
