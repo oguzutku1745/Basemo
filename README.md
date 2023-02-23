@@ -21,5 +21,6 @@ Then run:
 cd server
 npm run dev
 ```
+GET or POST request for contracts are made by "Etherscan" and "InfuraProvider" commands in Botpage.js. You should write your own keys to relevant functions to fetch the data correctly.
 
 Built with <3
