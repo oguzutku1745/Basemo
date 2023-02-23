@@ -12,19 +12,20 @@ export default function FunctionStorer(props) {
     const {index, nameoffunction, inputparam} = event.target.dataset
     setUserContractInputs((prevFormData) => {
       const newFunctionInputs = [...prevFormData.functionInputs];
+      const nameSetter = prevFormData.functionName;
+      const paramSetter = prevFormData.functionParams;
       newFunctionInputs[index] = value;
-  
-      const newFunctionParams = [...prevFormData.functionParams];
-      newFunctionParams[index] = inputparam;
+      paramSetter[index] = inputparam;
   
       return {
         ...prevFormData,
-        functionName: nameoffunction,
-        functionParams: newFunctionParams,
         functionInputs: newFunctionInputs,
+        functionName: nameoffunction,
+        functionParams: paramSetter,
       };
     });
   }
+  
 
   return (
     <div className="functionDisplay">

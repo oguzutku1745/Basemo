@@ -31,7 +31,7 @@ const Botpage = () => {
 
     
     function bringIt() {
-        fetch(`https://api-goerli.etherscan.io/api?module=contract&action=getabi&address=${contractInputs.contractAddress}&apikey=Etherscan Key`
+        fetch(`https://api-goerli.etherscan.io/api?module=contract&action=getabi&address=${contractInputs.contractAddress}&apikey=Etherscan Ke`
         )
         .then((response) => response.json())
         .then((data) => {
@@ -45,12 +45,9 @@ const Botpage = () => {
           });
       }
 
-    function getUserInput(name, params, inputs) {
-        setUserContractInputs((
-            contractFunctions.map((functions) => {
-                return functions.name === name ? {...functions, name: functions.name  } : functions      
-            })
-        ))
+    function handleUserContractInputsChange(updatedInputs) {
+      setUserContractInputs(updatedInputs);
+      console.log(userContractInputs)
     }
 
     async function resolveContract(address, ABI) {
@@ -180,7 +177,7 @@ const Botpage = () => {
                                 paramName={fn.paramName}
                                 inputType={fn.inputType}
                                 functionType={fn.functionType}
-                                getUserInput={getUserInput}
+                                handleUserContractInputsChange={handleUserContractInputsChange}
                             />
                         ))}
                 
@@ -193,6 +190,7 @@ const Botpage = () => {
                                 paramName={fn.paramName}
                                 inputType={fn.inputType}
                                 functionType={fn.functionType}
+                                handleUserContractInputsChange={handleUserContractInputsChange}
                             />
                         ))}
                     </>
