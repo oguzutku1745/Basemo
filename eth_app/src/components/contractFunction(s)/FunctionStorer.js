@@ -1,22 +1,26 @@
-import React, {useState} from "react";
+import React, {useState, useMemo} from "react";
 
 export default function FunctionStorer(props) {
-  const [userContractInputs, setUserContractInputs] = useState({
+  const [userContractInputsChild, setUserContractInputsChild] = useState({
     functionName: "",
     functionParams: [],
     functionInputs: [],
   })
-  console.log(userContractInputs)
+
   function handleChange(event) {
     const {name, value} = event.target
     const {index, nameoffunction, inputparam} = event.target.dataset
-    setUserContractInputs((prevFormData) => {
+    setUserContractInputsChild((prevFormData) => {
       const newFunctionInputs = [...prevFormData.functionInputs];
-      const nameSetter = prevFormData.functionName;
       const paramSetter = prevFormData.functionParams;
       newFunctionInputs[index] = value;
       paramSetter[index] = inputparam;
-  
+      
+      props.handleChildStateChange({        
+        functionInputs: newFunctionInputs,
+        functionName: nameoffunction,
+        functionParams: paramSetter,}
+        );
       return {
         ...prevFormData,
         functionInputs: newFunctionInputs,
@@ -24,6 +28,7 @@ export default function FunctionStorer(props) {
         functionParams: paramSetter,
       };
     });
+    
   }
   
 
@@ -41,7 +46,7 @@ export default function FunctionStorer(props) {
                 name="functionInputs"
                 data-index={index}
                 onChange={handleChange} 
-                value={userContractInputs.functionInputs[index] || ""}
+                value={userContractInputsChild.functionInputs[index] || ""}
                 placeholder={props.inputType[index]}
               />
             </form>

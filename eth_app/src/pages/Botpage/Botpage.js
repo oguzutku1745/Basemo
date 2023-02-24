@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import CreateWallet from "../../scripts/CreateWallet";
 import MintWalletCards from "../../../src/components/MintWalletCard(s)/MintWalletCards";
@@ -29,9 +29,10 @@ const Botpage = () => {
         functionInputs: [],
     })
 
+    console.log(userContractInputs.functionName)
     
     function bringIt() {
-        fetch(`https://api-goerli.etherscan.io/api?module=contract&action=getabi&address=${contractInputs.contractAddress}&apikey=Etherscan Ke`
+        fetch(`https://api-goerli.etherscan.io/api?module=contract&action=getabi&address=${contractInputs.contractAddress}&apikey=JPSQTE69QA7PW7WMHUPEXDB9S5HF15QI5I`
         )
         .then((response) => response.json())
         .then((data) => {
@@ -45,19 +46,17 @@ const Botpage = () => {
           });
       }
 
-    function handleUserContractInputsChange(updatedInputs) {
-      setUserContractInputs(updatedInputs);
-      console.log(userContractInputs)
-    }
+      const handleChildStateChange = useCallback((childState) => {
+        setUserContractInputs(prevState => ({ ...prevState, ...childState }));
+      }, []);
 
     async function resolveContract(address, ABI) {
-        const provider = new ethers.InfuraProvider("goerli", "Infura Key");
+        const provider = new ethers.InfuraProvider("goerli", "774dc13131de491b93419ad07613b6c4");
         const contract = new ethers.Contract(address, ABI, provider);
         const resolved = new ethers.Interface(ABI)
         const FormatTypes = ethers.formatEther;
         const funct = resolved.format(FormatTypes.json)
         const filteredfunct = funct.filter(str =>str.includes("function")); // Filters the events
-        console.log(funct)
         const updatedArray = filteredfunct.map((item,i) => {
             const functionName = item.split("function ")[1].split("(")[0]; // extract function name
             const paramMatch = item.match(/\((.*?)\)/); // extract parameter string inside parentheses (optional)
@@ -69,16 +68,12 @@ const Botpage = () => {
           });
         
         setContractFunctions(updatedArray);
-
-        console.log(updatedArray)
-        console.log(contractFunctions)
     };
         
 
     
 
     function handleChange(event) {
-        console.log(event.target)
         const {name, value} = event.target
         setContractInputs(prevFormData => {
             return {
@@ -118,10 +113,8 @@ const Botpage = () => {
     ////////////////////////////////////////////////////////////////////////
     //// BU KISIMDAN SONRAKİ KISIM BOT İÇİN
     /*const [verifiedContractAddress, setVerifiedContractAddress] = useState("");
-
     const loadVerifiedContract = async (address = null) => {
         const queryContractAddress = address ?? verifiedContractAddress;
-
         let contract;
         try {
             const providerOrSigner = userSigner ?? localProvider;
@@ -134,7 +127,6 @@ const Botpage = () => {
             message.error(e.message);
             return;
         }
-
         setLoadedContract(contract);
         return contract.address;
     };
@@ -177,7 +169,7 @@ const Botpage = () => {
                                 paramName={fn.paramName}
                                 inputType={fn.inputType}
                                 functionType={fn.functionType}
-                                handleUserContractInputsChange={handleUserContractInputsChange}
+                                handleChildStateChange={handleChildStateChange}
                             />
                         ))}
                 
@@ -190,7 +182,7 @@ const Botpage = () => {
                                 paramName={fn.paramName}
                                 inputType={fn.inputType}
                                 functionType={fn.functionType}
-                                handleUserContractInputsChange={handleUserContractInputsChange}
+                                handleChildStateChange={handleChildStateChange}
                             />
                         ))}
                     </>
@@ -214,3 +206,4 @@ const Botpage = () => {
 
 
 export default Botpage;
+
