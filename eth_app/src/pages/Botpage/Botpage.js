@@ -6,9 +6,11 @@ import Header from "../../components/Header";
 import { ethers } from "ethers";
 import FunctionStorer from "../../components/contractFunction(s)/FunctionStorer";
 
-var GlobalProvider;
+var GlobalProvider = new ethers.InfuraProvider(
+    "goerli",
+    "774dc13131de491b93419ad07613b6c4"
+);
 var GlobalContractAddress;
-var GlobalContractABI;
 var GlobalContractInterface;
 var GlobalContract;
 
@@ -34,11 +36,11 @@ const Botpage = () => {
         functionInputs: [],
     });
 
-    console.log(userContractInputs);
+    //console.log(userContractInputs);
 
     function bringIt() {
         fetch(
-            `https://api-goerli.etherscan.io/api?module=contract&action=getabi&address=${contractInputs.contractAddress}&apikey=JPSQTE69QA7PW7WMHUPEXDB9S5HF15QI5I`
+            `https://api-goerli.etherscan.io/api?module=contract&action=getabi&address=${contractInputs.contractAddress}&apikey=EY4HQCTINHG9CEVSNDFND3AKXNIU8KBZA4`
         )
             .then((response) => response.json())
             .then((data) => {
@@ -49,7 +51,6 @@ const Botpage = () => {
                     };
                 });
                 GlobalContractAddress = contractInputs.contractAddress;
-                GlobalContractABI = data.result;
                 resolveContract(contractInputs.contractAddress, data.result);
             });
     }
@@ -59,17 +60,13 @@ const Botpage = () => {
     }, []);
 
     async function sendTxn(Input) {
-        console.log(GlobalContractAddress);
+        //console.log(GlobalContractAddress);
         var functionName = Input.functionName;
         const result = await GlobalContract[functionName]();
         console.log(result);
     }
 
     async function resolveContract(address, ABI) {
-        GlobalProvider = new ethers.InfuraProvider(
-            "goerli",
-            "774dc13131de491b93419ad07613b6c4"
-        );
         GlobalContractInterface = new ethers.Interface(ABI);
         GlobalContract = new ethers.Contract(
             GlobalContractAddress,
