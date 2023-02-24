@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import MintWalletCard from "./MintWalletCard";
 
 const MintWalletCards = ({ mint_wallets, SetTheWallet }) => {
-    const handleClick = (mint_wallet) => {
-        alert(
-            `Avcı ne kadar tuzak bilirse, ayı da o kadar yol bilir. Tıkladığın yere dikkat et yeğenim: ${mint_wallet}`
-        );
+    const [selectedWalletIndex, setSelectedWalletIndex] = useState(null);
+
+    const handleSelectWallet = (index) => {
+        setSelectedWalletIndex(index);
+        SetTheWallet(index);
     };
 
     return (
@@ -17,8 +18,8 @@ const MintWalletCards = ({ mint_wallets, SetTheWallet }) => {
                             <MintWalletCard
                                 mint_wallet={mint_wallet}
                                 index={index}
-                                SetTheWallet={SetTheWallet}
-                                onClick={() => handleClick(mint_wallet)}
+                                isSelected={selectedWalletIndex === index}
+                                onSelect={() => handleSelectWallet(index)}
                             />
                         </div>
                     </li>
