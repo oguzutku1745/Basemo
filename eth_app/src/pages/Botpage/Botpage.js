@@ -21,6 +21,7 @@ const Botpage = () => {
     const [mint_wallets, setMint_wallets] = useState([]);
     const [private_keys, setPrivate_keys] = useState([]);
     const [selectedPrivate_key, setselectedPrivate_key] = useState("");
+    const [gasPrice, setGasPrice] = useState(0);
 
     const [contractInputs, setContractInputs] = useState({
         contractAddress: "",
@@ -56,6 +57,19 @@ const Botpage = () => {
                 resolveContract(contractInputs.contractAddress, data.result);
             });
     }
+    ////// API REQUEST FOR GETTING GAS PRICE
+    useEffect(() => {
+        const interval = setInterval(async () => {
+            const response = await fetch(
+                "https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=EY4HQCTINHG9CEVSNDFND3AKXNIU8KBZA4"
+            );
+            const data = await response.json();
+            setGasPrice(data.result.ProposeGasPrice);
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, []);
+    //////////////////////////////////////////
 
     const handleChildStateChange = useCallback((childState) => {
         setUserContractInputs((prevState) => ({ ...prevState, ...childState }));
@@ -179,6 +193,8 @@ const Botpage = () => {
 
                 <div className="right-side">
                     <div className="functionContainers">
+                        <h3>Gas Price: {gasPrice}</h3>
+
                         {contractFunctions.length > 0 && (
                             <>
                                 <h2>READ</h2>
