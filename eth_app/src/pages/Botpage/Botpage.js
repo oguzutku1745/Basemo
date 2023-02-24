@@ -66,6 +66,19 @@ const Botpage = () => {
         console.log(result);
     }
 
+    async function sendWriteTxn(Input) {
+        var functionName = Input.functionName;
+        const wallet = new ethers.Wallet(
+            "PRIVATE KEYINIZI GİRİN",
+            GlobalProvider
+        );
+        const signer = wallet.connect(GlobalProvider);
+        const transaction = await GlobalContract.connect(signer)[functionName](
+            ...Input.functionInputs
+        );
+        console.log(transaction);
+    }
+
     async function resolveContract(address, ABI) {
         GlobalContractInterface = new ethers.Interface(ABI);
         GlobalContract = new ethers.Contract(
@@ -176,6 +189,7 @@ const Botpage = () => {
                                                 handleChildStateChange
                                             }
                                             sendTxn={sendTxn}
+                                            sendWriteTxn={sendWriteTxn}
                                         />
                                     ))}
 
@@ -193,6 +207,8 @@ const Botpage = () => {
                                             handleChildStateChange={
                                                 handleChildStateChange
                                             }
+                                            sendWriteTxn={sendWriteTxn}
+                                            sendTxn={sendTxn}
                                         />
                                     ))}
                             </>

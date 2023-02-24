@@ -32,7 +32,9 @@ export default function FunctionStorer(props) {
 
     function handleButtonClick() {
         props.handleChildStateChange(userContractInputsChild);
-        props.sendTxn(userContractInputsChild);
+        if (props.functionType === "read")
+            props.sendTxn(userContractInputsChild);
+        else props.sendWriteTxn(userContractInputsChild);
     }
 
     return (
