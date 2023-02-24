@@ -20,6 +20,8 @@ const Botpage = () => {
     //const [backendData, setBackendData] = useState([{}]);
     const [mint_wallets, setMint_wallets] = useState([]);
     const [private_keys, setPrivate_keys] = useState([]);
+    const [selectedPrivate_key, setselectedPrivate_key] = useState("");
+
     const [contractInputs, setContractInputs] = useState({
         contractAddress: "",
         contractABI: "",
@@ -68,16 +70,20 @@ const Botpage = () => {
 
     async function sendWriteTxn(Input) {
         var functionName = Input.functionName;
-        const wallet = new ethers.Wallet(
-            "PRIVATE KEYINIZI GİRİN",
-            GlobalProvider
-        );
+        const wallet = new ethers.Wallet(selectedPrivate_key, GlobalProvider);
         const signer = wallet.connect(GlobalProvider);
         const transaction = await GlobalContract.connect(signer)[functionName](
             ...Input.functionInputs
         );
         console.log(transaction);
     }
+
+    function SetTheWallet(index) {
+        console.log(mint_wallets[index]);
+        setselectedPrivate_key(private_keys[index]);
+    }
+
+    console.log(selectedPrivate_key);
 
     async function resolveContract(address, ABI) {
         GlobalContractInterface = new ethers.Interface(ABI);
@@ -166,6 +172,7 @@ const Botpage = () => {
                         <MintWalletCards
                             mint_wallets={mint_wallets}
                             private_keys={private_keys}
+                            SetTheWallet={SetTheWallet}
                         />
                     </div>
                 </div>

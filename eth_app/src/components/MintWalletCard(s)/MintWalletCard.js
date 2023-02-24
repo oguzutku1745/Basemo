@@ -11,7 +11,7 @@ async function GetBalance(address, setBalance) {
     setBalance(ethers.formatEther(balance));
 }
 
-const MintWalletCard = ({ mint_wallet, onClick }) => {
+const MintWalletCard = ({ mint_wallet, onClick, SetTheWallet, index }) => {
     const [balance, setBalance] = useState(null);
 
     useEffect(() => {
@@ -21,7 +21,11 @@ const MintWalletCard = ({ mint_wallet, onClick }) => {
     return (
         <div onClick={onClick}>
             <label htmlFor="isFriendly">{mint_wallet}</label>
-            <input type="checkbox" id="isFriendly" />
+            <input
+                type="checkbox"
+                id="isFriendly"
+                onClick={() => SetTheWallet(index)}
+            />
             <p>Balance: {balance}</p>
         </div>
     );

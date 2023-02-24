@@ -1,7 +1,7 @@
 import React from "react";
 import MintWalletCard from "./MintWalletCard";
 
-const MintWalletCards = ({ mint_wallets }) => {
+const MintWalletCards = ({ mint_wallets, SetTheWallet }) => {
     const handleClick = (mint_wallet) => {
         alert(
             `Avcı ne kadar tuzak bilirse, ayı da o kadar yol bilir. Tıkladığın yere dikkat et yeğenim: ${mint_wallet}`
@@ -16,6 +16,8 @@ const MintWalletCards = ({ mint_wallets }) => {
                         <div className="mint-wallet-card">
                             <MintWalletCard
                                 mint_wallet={mint_wallet}
+                                index={index}
+                                SetTheWallet={SetTheWallet}
                                 onClick={() => handleClick(mint_wallet)}
                             />
                         </div>
