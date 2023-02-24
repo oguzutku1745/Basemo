@@ -14,8 +14,8 @@ code {
 
 input {
     border-radius: 10px;
-    margin:5px;
-    padding:5px;
+    margin: 5px;
+    padding: 5px;
 }
 
 .mint-wallet-list {
@@ -58,7 +58,7 @@ h1 {
 
 input[type="checkbox"] {
     margin-left: 10px;
-  }
+}
 
 .create-wallet,
 .mint-wallet-cards {
@@ -76,13 +76,17 @@ input[type="checkbox"] {
     margin-bottom: 15px;
     border-radius: 5px;
 }
-.functionContainers{
+.functionContainers {
     padding: 10px;
 }
-.buttons{
+.buttons {
     border-radius: 5px;
     background-color: #19547b;
     border: 1px solid #426983;
     color: aliceblue;
     padding: 2px;
+}
+
+.buttons:hover {
+    background-color: #33aafa;
 }
