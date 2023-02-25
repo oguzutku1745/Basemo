@@ -8,7 +8,7 @@ import FunctionStorer from "../../components/contractFunction(s)/FunctionStorer"
 
 var GlobalProvider = new ethers.InfuraProvider(
     "goerli",
-    "774dc13131de491b93419ad07613b6c4"
+    "0fe302203e9f42fc9dffae2ccb1494c2"
 );
 var GlobalContractAddress;
 var GlobalContractInterface;
@@ -21,7 +21,7 @@ const Botpage = () => {
     const [mint_wallets, setMint_wallets] = useState([]);
     const [private_keys, setPrivate_keys] = useState([]);
     const [selectedPrivate_key, setselectedPrivate_key] = useState("");
-    const [gasPrice, setGasPrice] = useState(0);
+    const [NetworkGasPrice, setNetworkGasPrice] = useState(0);
     const [UserGasPrice, setUserGasPrice] = useState("");
 
     const [contractInputs, setContractInputs] = useState({
@@ -65,7 +65,7 @@ const Botpage = () => {
                 "https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=EY4HQCTINHG9CEVSNDFND3AKXNIU8KBZA4"
             );
             const data = await response.json();
-            setGasPrice(data.result.FastGasPrice);
+            setNetworkGasPrice(data.result.FastGasPrice);
         }, 1000);
 
         return () => clearInterval(interval);
@@ -90,7 +90,7 @@ const Botpage = () => {
 
         const gasPriceToUse = UserGasPrice
             ? ethers.parseUnits(UserGasPrice.toString(), "gwei")
-            : ethers.parseUnits(gasPrice, "gwei");
+            : ethers.parseUnits(NetworkGasPrice.toString(), "gwei");
 
         const transaction = await GlobalContract.connect(signer)[functionName](
             ...Input.functionInputs,
@@ -203,7 +203,7 @@ const Botpage = () => {
 
                 <div className="right-side">
                     <div className="functionContainers">
-                        <h3>Gas Price: {gasPrice}</h3>
+                        <h3>Gas Price: {NetworkGasPrice}</h3>
                         <form>
                             <input
                                 onChange={handleGasChange}
