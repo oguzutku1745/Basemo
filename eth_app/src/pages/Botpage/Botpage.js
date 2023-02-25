@@ -90,7 +90,7 @@ const Botpage = () => {
 
         const gasPriceToUse = UserGasPrice
             ? ethers.parseUnits(UserGasPrice.toString(), "gwei")
-            : ethers.parseUnits(gasPrice, "gwei"); // default gas price of 10 Gwei
+            : ethers.parseUnits(gasPrice, "gwei");
 
         const transaction = await GlobalContract.connect(signer)[functionName](
             ...Input.functionInputs,
@@ -104,8 +104,6 @@ const Botpage = () => {
         console.log(mint_wallets[index]);
         setselectedPrivate_key(private_keys[index]);
     }
-
-    console.log(selectedPrivate_key);
 
     async function resolveContract(address, ABI) {
         GlobalContractInterface = new ethers.Interface(ABI);
