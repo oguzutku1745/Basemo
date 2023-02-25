@@ -22,6 +22,7 @@ const Botpage = () => {
     const [private_keys, setPrivate_keys] = useState([]);
     const [selectedPrivate_key, setselectedPrivate_key] = useState("");
     const [gasPrice, setGasPrice] = useState(0);
+    const [UserGasPrice, setUserGasPrice] = useState("");
 
     const [contractInputs, setContractInputs] = useState({
         contractAddress: "",
@@ -64,7 +65,7 @@ const Botpage = () => {
                 "https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=EY4HQCTINHG9CEVSNDFND3AKXNIU8KBZA4"
             );
             const data = await response.json();
-            setGasPrice(data.result.ProposeGasPrice);
+            setGasPrice(data.result.FastGasPrice);
         }, 1000);
 
         return () => clearInterval(interval);
@@ -86,9 +87,16 @@ const Botpage = () => {
         var functionName = Input.functionName;
         const wallet = new ethers.Wallet(selectedPrivate_key, GlobalProvider);
         const signer = wallet.connect(GlobalProvider);
+
+        const gasPriceToUse = UserGasPrice
+            ? ethers.parseUnits(UserGasPrice.toString(), "gwei")
+            : ethers.parseUnits(gasPrice, "gwei"); // default gas price of 10 Gwei
+
         const transaction = await GlobalContract.connect(signer)[functionName](
-            ...Input.functionInputs
+            ...Input.functionInputs,
+            { gasPrice: gasPriceToUse }
         );
+
         console.log(transaction);
     }
 
@@ -165,6 +173,10 @@ const Botpage = () => {
         });
     }
 
+    async function handleGasChange(event) {
+        setUserGasPrice(event.target.value);
+    }
+
     return (
         <div>
             <Header wallet={user_wallet} />
@@ -194,6 +206,13 @@ const Botpage = () => {
                 <div className="right-side">
                     <div className="functionContainers">
                         <h3>Gas Price: {gasPrice}</h3>
+                        <form>
+                            <input
+                                onChange={handleGasChange}
+                                placeholder="Enter your desired Gas"
+                                value={UserGasPrice}
+                            />
+                        </form>
 
                         {contractFunctions.length > 0 && (
                             <>
