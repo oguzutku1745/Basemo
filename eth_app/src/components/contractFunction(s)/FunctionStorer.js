@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState} from "react";
 
 export default function FunctionStorer(props) {
     const [userContractInputsChild, setUserContractInputsChild] = useState({
@@ -6,7 +6,8 @@ export default function FunctionStorer(props) {
         functionParams: [],
         functionInputs: [],
     });
-
+    const [showResult, setShowResult] = useState(false);
+    console.log(props.functionResult)
     function handleChange(event) {
         const { name, value } = event.target;
         const { index, nameoffunction, inputparam } = event.target.dataset;
@@ -31,6 +32,10 @@ export default function FunctionStorer(props) {
     }
 
     function handleButtonClick() {
+        setShowResult(false);
+        setTimeout(() => {
+            setShowResult(true); 
+          }, 300);
         props.handleChildStateChange(userContractInputsChild);
         if (props.functionType === "read")
             props.sendTxn(userContractInputsChild);
@@ -62,8 +67,10 @@ export default function FunctionStorer(props) {
                                 />
                             </form>
                         )}
+                        {showResult && props.functionResult}
                     </div>
                 ))}
+                
             <button className="buttons" onClick={handleButtonClick}>
                 {props.functionType === "read" ? "read" : "write"}
             </button>

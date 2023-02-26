@@ -25,6 +25,7 @@ const Botpage = () => {
     const [selectedPrivate_key, setselectedPrivate_key] = useState("");
     const [NetworkGasPrice, setNetworkGasPrice] = useState(0);
     const [UserGasPrice, setUserGasPrice] = useState("");
+    const [functionResult, setFunctionResult] = useState("");
 
     const [contractInputs, setContractInputs] = useState({
         contractAddress: "",
@@ -69,7 +70,7 @@ const Botpage = () => {
         //console.log(GlobalContractAddress);
         var functionName = Input.functionName;
         const result = await GlobalContract[functionName]();
-        console.log(result);
+        setFunctionResult(result)
     }
 
     async function sendWriteTxn(Input) {
@@ -231,6 +232,7 @@ const Botpage = () => {
                                                         handleChildStateChange={
                                                             handleChildStateChange
                                                         }
+                                                        functionResult={userContractInputs.functionName === fn.name ? functionResult : null}
                                                         sendTxn={sendTxn}
                                                         sendWriteTxn={sendWriteTxn}
                                                     />
