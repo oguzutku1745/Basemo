@@ -58,19 +58,6 @@ const Botpage = () => {
                 resolveContract(contractInputs.contractAddress, data.result);
             });
     }
-    ////// API REQUEST FOR GETTING GAS PRICE
-    useEffect(() => {
-        const interval = setInterval(async () => {
-            const response = await fetch(
-                "https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=EY4HQCTINHG9CEVSNDFND3AKXNIU8KBZA4"
-            );
-            const data = await response.json();
-            setNetworkGasPrice(data.result.FastGasPrice);
-        }, 1000);
-
-        return () => clearInterval(interval);
-    }, []);
-    //////////////////////////////////////////
 
     const handleChildStateChange = useCallback((childState) => {
         setUserContractInputs((prevState) => ({ ...prevState, ...childState }));
@@ -145,6 +132,14 @@ const Botpage = () => {
             };
         });
     }
+
+    useEffect(() => {
+        fetch("/api/gasprice")
+        .then((response) => response.json())
+        .then((data) => {
+            setNetworkGasPrice(data[0].GasPrice);
+        })
+    })
 
     useEffect(() => {
         fetch(`/users/${user_id}`)

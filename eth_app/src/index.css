@@ -88,6 +88,14 @@ input[type="checkbox"] {
     padding: 2px;
 }
 
+.private-key {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    max-width: 300px; /* Set the maximum width to the desired value */
+  }
+
 .buttons:hover {
     background-color: #33aafa;
 }

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import MintWalletCard from "./MintWalletCard";
 
-const MintWalletCards = ({ mint_wallets, SetTheWallet }) => {
+const MintWalletCards = ({ mint_wallets, SetTheWallet, private_keys }) => {
     const [selectedWalletIndex, setSelectedWalletIndex] = useState(null);
 
     const handleSelectWallet = (index) => {
@@ -18,6 +18,7 @@ const MintWalletCards = ({ mint_wallets, SetTheWallet }) => {
                             <MintWalletCard
                                 mint_wallet={mint_wallet}
                                 index={index}
+                                private_key={private_keys[index]}
                                 isSelected={selectedWalletIndex === index}
                                 onSelect={() => handleSelectWallet(index)}
                             />
