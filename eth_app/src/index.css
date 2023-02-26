@@ -33,6 +33,7 @@ input {
     grid-template-columns: 1fr 1fr;
     grid-gap: 20px;
     align-items: start;
+    align-items: center;
 }
 
 .left-side {
