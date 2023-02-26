@@ -104,3 +104,9 @@ input[type="checkbox"] {
 .buttons:hover {
     background-color: #33aafa;
 }
+
+/* Add this CSS to your stylesheet */
+.functionDisplay label:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
