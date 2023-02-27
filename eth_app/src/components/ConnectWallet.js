@@ -4,6 +4,7 @@ import MintButton from "./MintButton";
 import metamask from "./Metamask.png";
 import Web3 from "web3";
 import { AuthContext } from "../utils/AuthContext";
+import gifBackground from './a6.gif';
 
 const ConnectWallet = (props) => {
     const navigate = useNavigate();
@@ -584,13 +585,15 @@ const ConnectWallet = (props) => {
 
     return (
         <div
-            style={{
-                backgroundColor: "#2e2ca6",
-                height: "100vh",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-            }}
+        style={{
+            backgroundImage: `url(${gifBackground})`,
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+            height: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
         >
             <div style={{ width: "50%", textAlign: "center" }}>
                 <div
@@ -605,15 +608,27 @@ const ConnectWallet = (props) => {
                         alt="Metamask"
                         style={{
                             width: "300px",
-                            marginBottom: "20px",
+                            marginBottom: "40px",
                             display: "block",
-                            margin: "0auto",
+                            margin: "0 auto",
+                            backgroundColor: "#000001",
+                            padding: "10px",
+                            borderRadius: "10%",
+                            transition: "box-shadow 0.3s", // add this line to make the transition smooth
+                        }}
+                        onMouseEnter={(e) => {
+                            e.target.style.boxShadow = "0 0 200px #9526E9"; // add this line to change the background color on hover
+                        }}
+                        onMouseLeave={(e) => {
+                            e.target.style.boxShadow = "none"; // add this line to reset the background color when leaving the hover
                         }}
                     />
+
+
                 </div>
                 <div
                     style={{
-                        backgroundColor: "rgba(255, 255, 255, 0.3)",
+                        backgroundColor: "",
                         padding: "20px",
                         borderRadius: "10px",
                     }}
@@ -637,14 +652,26 @@ const ConnectWallet = (props) => {
                     ) : (
                         <button
                             style={{
-                                backgroundColor: "orange",
+                                backgroundColor: "#975E08",
                                 color: "white",
                                 padding: "15px 30px",
-                                fontSize: "20px",
+                                fontSize: "25px",
                                 border: "none",
                                 borderRadius: "5px",
                                 cursor: "pointer",
                                 marginTop: "20px",
+                                transition: "all 0.3s",
+                                textShadow: "0 0 10px orange",
+                            }}
+                            onMouseEnter={(e) => {
+                                e.target.style.boxShadow = "0 0 40px pink";
+                                e.target.style.transform = "translateY(-12px)";
+                                e.target.style.textShadow = "0 0 20px orange";
+                            }}
+                            onMouseLeave={(e) => {
+                                e.target.style.boxShadow = "none"; 
+                                e.target.style.transform = "";
+                                e.target.style.textShadow = "0 0 10px orange";
                             }}
                             onClick={handleConnect}
                         >
