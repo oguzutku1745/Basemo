@@ -9,7 +9,7 @@ export default function FunctionStorer(props) {
     const [showResult, setShowResult] = useState(false);
     console.log(props.functionResult);
     function handleChange(event) {
-        const { name, value } = event.target;
+        const { value } = event.target;
         const { index, nameoffunction, inputparam } = event.target.dataset;
         setUserContractInputsChild((prevFormData) => {
             const newFunctionInputs = [...prevFormData.functionInputs];
