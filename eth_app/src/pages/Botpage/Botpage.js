@@ -46,6 +46,7 @@ const Botpage = () => {
 
     //console.log(userContractInputs);
 
+
     function bringIt() {
         fetch(
             `https://api-goerli.etherscan.io/api?module=contract&action=getabi&address=${contractInputs.contractAddress}&apikey=EY4HQCTINHG9CEVSNDFND3AKXNIU8KBZA4`

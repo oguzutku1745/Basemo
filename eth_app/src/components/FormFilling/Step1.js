@@ -15,12 +15,14 @@ return(
                 name="taskName"
                 placeholder="Preferrably Collection Name"
                 onChange={handleInputChange}
+                value={props.setTheInput.taskName}
                 /><br /> <br />
             Contract Address <br />
                <input
                 name="taskContract"
                 placeholder="Contract of the collection"
                 onChange={handleInputChange}
+                value={props.setTheInput.taskContract}
                 />
             </form>
         </div>

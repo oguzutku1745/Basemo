@@ -31,11 +31,12 @@ export default function HorizontalNonLinearStepper(props) {
         selectedGasPrice: "",
         taskName: "",
         taskContract: "",
+        taskContractFunction: "",
         mintPrice: "",
         eventListener: "",
         eventListenerInput: "",
     });
-
+    console.log(props.contractFunctions)
     console.log(mintSectionInputs);
 
     const totalSteps = () => {
@@ -129,6 +130,7 @@ export default function HorizontalNonLinearStepper(props) {
                             ) : activeStep === 1 ? (
                                 <Step2
                                     contractFunctions={props.contractFunctions}
+                                    setTheInput={setTheInput}
                                 />
                             ) : activeStep === 2 ? (
                                 <Step3
