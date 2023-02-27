@@ -12,6 +12,7 @@ import Step3 from "../FormFilling/Step3";
 import Step4 from "../FormFilling/Step4";
 import Step5 from "../FormFilling/Step5";
 import Step6 from "../FormFilling/Step6";
+import { ethers } from "ethers";
 
 const steps = [
     "Basics",
@@ -21,6 +22,14 @@ const steps = [
     "Event Listeners",
     "Final Review",
 ];
+
+var GlobalProvider = new ethers.InfuraProvider(
+    "goerli",
+    "0fe302203e9f42fc9dffae2ccb1494c2"
+);
+var GlobalContractAddress;
+var GlobalContractInterface;
+var GlobalContract;
 
 export default function HorizontalNonLinearStepper(props) {
     const [activeStep, setActiveStep] = React.useState(0);
@@ -36,8 +45,16 @@ export default function HorizontalNonLinearStepper(props) {
         eventListener: "",
         eventListenerInput: "",
     });
-    console.log(props.contractFunctions)
-    console.log(mintSectionInputs);
+    const [contractInputs, setContractInputs] = useState({
+        contractAddress: "",
+        contractABI: "",
+    });
+    const [contractFunctions, setContractFunctions] = useState({
+        name: [],
+        paramName: [],
+        inputType: [],
+        functionType: [],
+    });
 
     const totalSteps = () => {
         return steps.length;
@@ -94,6 +111,57 @@ export default function HorizontalNonLinearStepper(props) {
         setCompleted({});
     };
 
+    ///////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////
+    // CONTRACT API REQUEST
+    React.useEffect(() => {
+        fetch(
+            `https://api-goerli.etherscan.io/api?module=contract&action=getabi&address=${mintSectionInputs.taskContract}&apikey=EY4HQCTINHG9CEVSNDFND3AKXNIU8KBZA4`
+        )
+            .then((response) => response.json())
+            .then((data) => {
+                setContractInputs((prevState) => {
+                    return {
+                        ...prevState,
+                        contractABI: data.result,
+                    };
+                });
+                GlobalContractAddress = contractInputs.contractAddress;
+                resolveContract_Event(data.result);
+            });
+    }, [mintSectionInputs.taskContract]);
+
+    async function resolveContract_Event(ABI) {
+        GlobalContractInterface = new ethers.Interface(ABI);
+        GlobalContract = new ethers.Contract(
+            GlobalContractAddress,
+            GlobalContractInterface,
+            GlobalProvider
+        );
+        const filteredfunct = GlobalContractInterface.format(
+            ethers.formatEther.json
+        ).filter((str) => str.includes("function"));
+        const updatedArray = filteredfunct.map((item, i) => {
+            const functionName = item.split("function ")[1].split("(")[0]; // extract function name
+            const paramMatch = item.match(/\((.*?)\)/); // extract parameter string inside parentheses (optional)
+            const paramName = paramMatch
+                ? paramMatch[1].split(",").map((param) => param.trim())
+                : []; // extract parameter names array or set to empty array
+            const inputType = paramName.map((param) => param.split(" ")[0]); // extract input types from parameter names
+            const functionType = item.includes("view") ? "read" : "write"; // check if function is read or write
+
+            return {
+                id: i,
+                name: functionName,
+                paramName,
+                inputType,
+                functionType,
+            };
+        });
+
+        setContractFunctions(updatedArray);
+    }
+
     return (
         <Box sx={{ marginLeft: "180px", width: "80%" }}>
             <Stepper nonLinear activeStep={activeStep}>
@@ -129,7 +197,7 @@ export default function HorizontalNonLinearStepper(props) {
                                 <Step1 setTheInput={setTheInput} />
                             ) : activeStep === 1 ? (
                                 <Step2
-                                    contractFunctions={props.contractFunctions}
+                                    contractFunctions={contractFunctions}
                                     setTheInput={setTheInput}
                                 />
                             ) : activeStep === 2 ? (

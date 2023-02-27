@@ -46,7 +46,6 @@ const Botpage = () => {
 
     //console.log(userContractInputs);
 
-
     function bringIt() {
         fetch(
             `https://api-goerli.etherscan.io/api?module=contract&action=getabi&address=${contractInputs.contractAddress}&apikey=EY4HQCTINHG9CEVSNDFND3AKXNIU8KBZA4`
@@ -60,7 +59,7 @@ const Botpage = () => {
                     };
                 });
                 GlobalContractAddress = contractInputs.contractAddress;
-                resolveContract(contractInputs.contractAddress, data.result);
+                resolveContract(data.result);
             });
     }
 
@@ -97,7 +96,7 @@ const Botpage = () => {
         setselectedPrivate_key(private_keys[index]);
     }
 
-    async function resolveContract(address, ABI) {
+    async function resolveContract(ABI) {
         GlobalContractInterface = new ethers.Interface(ABI);
         GlobalContract = new ethers.Contract(
             GlobalContractAddress,
