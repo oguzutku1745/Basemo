@@ -7,7 +7,7 @@ import { ethers } from "ethers";
 import FunctionStorer from "../../components/contractFunction(s)/FunctionStorer";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
-import EventListen from "../../components/mintBotcomps/eventListen";
+import EventListen from "../../components/mintBotcomps/EventListen";
 
 var GlobalProvider = new ethers.InfuraProvider(
     "goerli",
@@ -295,8 +295,8 @@ const Botpage = () => {
                         </button>
                     </div>
                 </Tab>
-                <Tab eventKey="contact" title="Event Listeners">
-                    <EventListen />
+                <Tab eventKey="contact" title="Set Up Mint Task">
+                    <EventListen contractFunctions={contractFunctions} />
                 </Tab>
             </Tabs>
             <div className="container"></div>
