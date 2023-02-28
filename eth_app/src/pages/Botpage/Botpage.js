@@ -138,12 +138,17 @@ const Botpage = () => {
     }
 
     useEffect(() => {
-        fetch("/api/gasprice")
-            .then((response) => response.json())
-            .then((data) => {
-                setNetworkGasPrice(data[0].GasPrice);
-            });
-    });
+        const intervalId = setInterval(() => {
+            fetch("/api/gasprice")
+                .then((response) => response.json())
+                .then((data) => {
+                    setNetworkGasPrice(data[0].GasPrice);
+                });
+        }, 1000);
+
+        // Clean up the interval timer when the component unmounts or the effect re-runs
+        return () => clearInterval(intervalId);
+    }, []);
 
     useEffect(() => {
         fetch(`/users/${user_id}`)
