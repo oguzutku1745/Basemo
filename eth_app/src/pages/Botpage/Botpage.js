@@ -300,6 +300,7 @@ const Botpage = () => {
                         contractFunctions={contractFunctions}
                         mint_wallets={mint_wallets}
                         private_keys={private_keys}
+                        NetworkGasPrice={NetworkGasPrice}
                     />
                 </Tab>
             </Tabs>

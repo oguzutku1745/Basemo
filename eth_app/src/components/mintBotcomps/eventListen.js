@@ -45,6 +45,8 @@ export default function HorizontalNonLinearStepper(props) {
         eventListener: "",
         eventListenerInput: "",
     });
+    console.log(mintSectionInputs);
+
     const [contractInputs, setContractInputs] = useState({
         contractAddress: "",
         contractABI: "",
@@ -207,7 +209,10 @@ export default function HorizontalNonLinearStepper(props) {
                                     private_keys={props.private_keys}
                                 />
                             ) : activeStep === 3 ? (
-                                <Step4 />
+                                <Step4
+                                    setTheInput={setTheInput}
+                                    NetworkGasPrice={props.NetworkGasPrice}
+                                />
                             ) : activeStep === 4 ? (
                                 <Step5 />
                             ) : (
