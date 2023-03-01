@@ -117,6 +117,7 @@ export default function HorizontalNonLinearStepper(props) {
     ///////////////////////////////////////////////////////
     // CONTRACT API REQUEST
     React.useEffect(() => {
+        if (mintSectionInputs.taskContract.length > 0) {
         fetch(
             `https://api-goerli.etherscan.io/api?module=contract&action=getabi&address=${mintSectionInputs.taskContract}&apikey=EY4HQCTINHG9CEVSNDFND3AKXNIU8KBZA4`
         )
@@ -131,7 +132,7 @@ export default function HorizontalNonLinearStepper(props) {
                 GlobalContractAddress = contractInputs.contractAddress;
                 resolveContract_Event(data.result);
             });
-    }, [mintSectionInputs.taskContract]);
+    }}, [mintSectionInputs.taskContract]);
 
     async function resolveContract_Event(ABI) {
         GlobalContractInterface = new ethers.Interface(ABI);

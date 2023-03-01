@@ -5,11 +5,14 @@ export default function Step2(props) {
     const [writeFunctions, setWriteFunctions] = useState([]);
     const [selectedOption, setSelectedOption] = useState(null);
     useEffect(() => {
-        const filteredFunctionNames = props.contractFunctions
+        // Check if props.contractFunctions has data
+        if (props.contractFunctions.length > 0) {
+          const filteredFunctionNames = props.contractFunctions
             .filter((func) => func.functionType === "write")
             .map((func) => func.name);
-        setWriteFunctions(filteredFunctionNames);
-    }, [props.contractFunctions]);
+          setWriteFunctions(filteredFunctionNames);
+        }
+      }, [props.contractFunctions]);
     console.log(writeFunctions);
 
     const options = writeFunctions.map((name, index) => ({
