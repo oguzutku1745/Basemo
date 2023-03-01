@@ -43,6 +43,7 @@ export default function HorizontalNonLinearStepper(props) {
         taskContractFunction: "",
         mintPrice: "",
         eventListener: "",
+        eventListenerFunction: "",
         eventListenerInput: "",
     });
     console.log(mintSectionInputs);
@@ -74,6 +75,27 @@ export default function HorizontalNonLinearStepper(props) {
         return completedSteps() === totalSteps();
     };
 
+    function sendRequestToBackend(contractAddress, ABI, targetFunction, targetValue) {
+        const requestData = {
+            contractAddress, // value of contractAddress,
+            ABI, // value of ABI,
+            targetFunction, // value of targetFunction,
+            targetValue // value of targetValue
+        };
+        fetch("/api/listen", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(requestData)
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data);
+        });
+    };
+    
+
     const handleNext = () => {
         const newActiveStep =
             isLastStep() && !allStepsCompleted()
@@ -96,8 +118,14 @@ export default function HorizontalNonLinearStepper(props) {
         const newCompleted = completed;
         newCompleted[activeStep] = true;
         setCompleted(newCompleted);
-        handleNext();
-    };
+        
+        if (completedSteps() === totalSteps()) {
+            sendRequestToBackend(contractInputs.contractAddress, contractInputs.contractABI, mintSectionInputs.eventListenerFunction, mintSectionInputs.eventListenerInput);
+            handleNext();
+        } else {
+          handleNext();
+        }
+      };
 
     const setTheInput = (name, value) => {
         setMintSectionInputs((prevState) => {
@@ -215,7 +243,10 @@ export default function HorizontalNonLinearStepper(props) {
                                     NetworkGasPrice={props.NetworkGasPrice}
                                 />
                             ) : activeStep === 4 ? (
-                                <Step5 />
+                                <Step5
+                                contractFunctions={contractFunctions}
+                                setTheInput={setTheInput}
+                                />
                             ) : (
                                 <Step6 />
                             )}

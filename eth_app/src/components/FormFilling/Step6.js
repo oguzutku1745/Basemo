@@ -1,9 +1,9 @@
 import React from "react";
 
-export default function Step4() {
+export default function Step6() {
 return(
     <div>
-        Step 4 bu test
+        Step 6 bu test
     </div>
 )    
 }

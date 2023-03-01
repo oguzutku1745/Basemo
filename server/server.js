@@ -34,18 +34,33 @@ var provider = new ethers.providers.InfuraProvider(
     "0fe302203e9f42fc9dffae2ccb1494c2"
 );
 
+app.post("/api/listen", (req, res) => {
+    console.log(req.body)
+    const { contractAddress, ABI, targetFunction, targetValue } = req.body;
+    //listenToVariable(contractAddress, ABI, targetFunction, targetValue, () => {
+    //    console.log(
+    //        `Target value ${targetValue} reached for variable ${targetFunction} on contract ${contractAddress}`
+    //    );
+    //});
+
+    res.status(200).json({
+        message: `Started listening for variable ${targetFunction} on contract ${contractAddress}`,
+    });
+}
+);
+
 // Function to start listening to a specific contract variable and target value
 const listenToVariable = (
     contractAddress,
     ABI,
-    variableName,
+    targetFunction,
     targetValue,
     callback
 ) => {
     const contract = new ethers.Contract(contractAddress, ABI, provider);
 
     // Start listening for the contract variable's "set" event
-    contract.on(variableName, (newValue) => {
+    contract.on(targetFunction, (newValue) => {
         console.log(
             `Variable ${variableName} changed to ${newValue.toString()}`
         );
@@ -95,19 +110,7 @@ const stopListening = (contractAddress, variableName) => {
 };
 
 // Example API endpoint to handle a new listening request from the frontend
-app.post("/api/listen", (req, res) => {
-    const { contractAddress, ABI, variableName, targetValue } = req.body;
 
-    listenToVariable(contractAddress, ABI, variableName, targetValue, () => {
-        console.log(
-            `Target value ${targetValue} reached for variable ${variableName} on contract ${contractAddress}`
-        );
-    });
-
-    res.status(200).json({
-        message: `Started listening for variable ${variableName} on contract ${contractAddress}`,
-    });
-});
 
 // Example API endpoint to handle stopping a listening request from the frontend
 app.post("/api/stop", (req, res) => {
