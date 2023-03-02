@@ -1,6 +1,7 @@
 //////////// GAS STEP
-import React from "react";
-import Select from "react-select";
+import React, { useState, useEffect } from "react";
+
+import GasComponent from "../NetworkGas";
 
 export default function Step4(props) {
     const handleInputChange = (event) => {
@@ -11,7 +12,7 @@ export default function Step4(props) {
 
     return (
         <div>
-            Network Gas Price = {props.NetworkGasPrice}
+            <GasComponent />
             <br></br>
             <br></br>
             <form>

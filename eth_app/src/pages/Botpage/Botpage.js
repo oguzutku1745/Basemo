@@ -8,6 +8,7 @@ import FunctionStorer from "../../components/contractFunction(s)/FunctionStorer"
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import HorizontalNonLinearStepper from "../../components/mintBotcomps/eventListen";
+import GasComponent from "../../components/NetworkGas";
 
 var GlobalProvider = new ethers.InfuraProvider(
     "goerli",
@@ -24,7 +25,6 @@ const Botpage = () => {
     const [mint_wallets, setMint_wallets] = useState([]);
     const [private_keys, setPrivate_keys] = useState([]);
     const [selectedPrivate_key, setselectedPrivate_key] = useState("");
-    const [NetworkGasPrice, setNetworkGasPrice] = useState(0);
     const [UserGasPrice, setUserGasPrice] = useState("");
     const [functionResult, setFunctionResult] = useState("");
 
@@ -78,6 +78,7 @@ const Botpage = () => {
         var functionName = Input.functionName;
         const wallet = new ethers.Wallet(selectedPrivate_key, GlobalProvider);
         const signer = wallet.connect(GlobalProvider);
+        const NetworkGasPrice = 40;
 
         const gasPriceToUse = UserGasPrice
             ? ethers.parseUnits(UserGasPrice.toString(), "gwei")
@@ -136,24 +137,6 @@ const Botpage = () => {
             };
         });
     }
-
-    useEffect(() => {
-        const intervalId = setInterval(() => {
-          fetch("/api/gasprice")
-            .then(response => response.json())
-            .then(data => {
-              setNetworkGasPrice(prevGasPrice => {
-                if (prevGasPrice !== data[0].GasPrice) {
-                  return data[0].GasPrice;
-                }
-                return prevGasPrice;
-              });
-            });
-        }, 2000);
-      
-        // Clean up the interval timer when the component unmounts or the effect re-runs
-        return () => clearInterval(intervalId);
-      }, []);
 
     useEffect(() => {
         fetch(`/users/${user_id}`)
@@ -217,7 +200,9 @@ const Botpage = () => {
                 </Tab>
                 <Tab eventKey="profile" title="Contract">
                     <div className="container">
-                        <h3>Gas Price: {NetworkGasPrice}</h3>
+                        <h3>
+                            <GasComponent />
+                        </h3>
                         <form>
                             <input
                                 onChange={handleGasChange}
@@ -310,7 +295,6 @@ const Botpage = () => {
                         contractFunctions={contractFunctions}
                         mint_wallets={mint_wallets}
                         private_keys={private_keys}
-                        NetworkGasPrice={NetworkGasPrice}
                     />
                 </Tab>
             </Tabs>
