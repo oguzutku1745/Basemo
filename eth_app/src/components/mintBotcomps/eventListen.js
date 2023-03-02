@@ -125,7 +125,7 @@ export default function HorizontalNonLinearStepper(props) {
 
         if (completedSteps() === totalSteps()) {
             sendRequestToBackend(
-                contractInputs.contractAddress,
+                mintSectionInputs.taskContract,
                 contractInputs.contractABI,
                 mintSectionInputs.eventListenerFunction,
                 mintSectionInputs.eventListenerInput

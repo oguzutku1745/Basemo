@@ -37,11 +37,11 @@ var provider = new ethers.providers.InfuraProvider(
 app.post("/api/listen", (req, res) => {
     console.log(req.body)
     const { contractAddress, ABI, targetFunction, targetValue } = req.body;
-    //listenToVariable(contractAddress, ABI, targetFunction, targetValue, () => {
-    //    console.log(
-    //        `Target value ${targetValue} reached for variable ${targetFunction} on contract ${contractAddress}`
-    //    );
-    //});
+    listenToVariable(contractAddress, ABI, targetFunction, targetValue, () => {
+        console.log(
+            `Target value ${targetValue} reached for variable ${targetFunction} on contract ${contractAddress}`
+        );
+    });
 
     res.status(200).json({
         message: `Started listening for variable ${targetFunction} on contract ${contractAddress}`,
@@ -50,7 +50,7 @@ app.post("/api/listen", (req, res) => {
 );
 
 // Function to start listening to a specific contract variable and target value
-const listenToVariable = (
+const listenToVariable = async (
     contractAddress,
     ABI,
     targetFunction,
@@ -59,67 +59,72 @@ const listenToVariable = (
 ) => {
     const contract = new ethers.Contract(contractAddress, ABI, provider);
 
-    // Start listening for the contract variable's "set" event
-    contract.on(targetFunction, (newValue) => {
-        console.log(
-            `Variable ${variableName} changed to ${newValue.toString()}`
-        );
-
-        // Check if the new value matches the target value
-        if (newValue.toString() === targetValue.toString()) {
-            // Trigger the callback function and remove the request from the array
+    let currentValue = await contract[targetFunction]();
+    const intervalId = setInterval(async () => {
+        const newValue = await contract[targetFunction]();
+        console.log(newValue)
+        if (newValue.toString() !== currentValue.toString() && newValue.toString() === targetValue.toString()) {
             callback();
-            contract.removeAllListeners(variableName);
-            requests = requests.filter(
-                (req) =>
-                    req.contractAddress !== contractAddress ||
-                    req.variableName !== variableName
-            );
+            clearInterval(intervalId); // stop listening after callback is called
         }
-    });
+        currentValue = newValue;
+    }, 1000); // poll every 1 second
 
     // Add the request to the array
     requests.push({
         contractAddress,
         ABI,
-        variableName,
+        targetFunction,
         targetValue,
         callback,
+        intervalId // store intervalId for later use
     });
     console.log(
-        `Started listening for variable ${variableName} on contract ${contractAddress}`
+        `Started listening for variable ${targetFunction} on contract ${contractAddress}`
     );
 };
 
 // Function to stop listening to a specific contract variable and target value
-const stopListening = (contractAddress, variableName) => {
+const stopListening = (contractAddress, targetFunction) => {
     const contract = new ethers.Contract(contractAddress, abi, provider);
 
-    // Stop listening for the contract variable's "set" event
-    contract.removeAllListeners(variableName);
+    // Stop the interval by clearing the intervalId
+    const request = requests.find(
+        (req) =>
+            req.contractAddress === contractAddress &&
+            req.targetFunction === targetFunction
+    );
+    if (request) {
+        clearInterval(request.intervalId);
+        console.log(
+            `Stopped listening for variable ${targetFunction} on contract ${contractAddress}`
+        );
+    } else {
+        console.log(
+            `No request found for variable ${targetFunction} on contract ${contractAddress}`
+        );
+    }
 
     // Remove the request from the array
     requests = requests.filter(
         (req) =>
             req.contractAddress !== contractAddress ||
-            req.variableName !== variableName
-    );
-    console.log(
-        `Stopped listening for variable ${variableName} on contract ${contractAddress}`
+            req.targetFunction !== targetFunction
     );
 };
+
 
 // Example API endpoint to handle a new listening request from the frontend
 
 
 // Example API endpoint to handle stopping a listening request from the frontend
 app.post("/api/stop", (req, res) => {
-    const { contractAddress, variableName } = req.body;
+    const { contractAddress, targetFunction } = req.body;
 
-    stopListening(contractAddress, variableName);
+    stopListening(contractAddress, targetFunction);
 
     res.status(200).json({
-        message: `Stopped listening for variable ${variableName} on contract ${contractAddress}`,
+        message: `Stopped listening for variable ${targetFunction} on contract ${contractAddress}`,
     });
 });
 /// END OF EVENT LISTENERS
