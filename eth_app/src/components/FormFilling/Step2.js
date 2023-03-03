@@ -5,6 +5,7 @@ export default function Step2(props) {
   const [writeFunctions, setWriteFunctions] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
   const [functionInputs, setFunctionInputs] = useState([]);
+  const [selectedFunction, setSelectedFunction] = useState(null);
 
   useEffect(() => {
     if (props.contractFunctions.length > 0) {
@@ -24,17 +25,20 @@ export default function Step2(props) {
   function handleSelect(selected) {
     setSelectedOption(selected);
     props.setTheInput("taskContractFunction", selected.value);
-
+  
     const selectedFunction = props.contractFunctions.find(
       (func) => func.name === selected.value
     );
-
-    // Create an array of input placeholders for the function parameters
-    const inputs = selectedFunction.paramName.map((name) => ({
-      name,
-      value: "",
-    }));
-    setFunctionInputs(inputs);
+    setSelectedFunction(selectedFunction);
+    setFunctionInputs([]); // reset the input values
+  
+    if (selectedFunction && selectedFunction.paramName.some(str => str.trim().length > 0)) {
+      const inputs = selectedFunction.paramName.map((name) => ({
+        name,
+        value: "",
+      }));
+      setFunctionInputs(inputs);
+    }
   }
 
   function handleInput(event, index) {
@@ -45,9 +49,7 @@ export default function Step2(props) {
     inputs[index].value = value;
     setFunctionInputs(inputs);
 
-    
     const inputValues = inputs.map((input) => input.value);
-    // Bu kısımda array olarak tutmak istersek .join kısmını silebiliriz.
     props.setTheInput("taskContractFunctionInput", inputValues.join(","));
   }
 
@@ -55,7 +57,7 @@ export default function Step2(props) {
     <div>
       <Select options={options} value={selectedOption} onChange={handleSelect} />
       <br />
-      {selectedOption && (
+      {selectedFunction && selectedFunction.paramName.length > 0 && (
         <form>
           {functionInputs.map((input, index) => (
             <div key={index}>
