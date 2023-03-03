@@ -14,7 +14,6 @@ export default function Step4(props) {
         <div>
             <GasComponent />
             <br></br>
-            <br></br>
             <form>
                 Desired Gas:
                 <br></br>
