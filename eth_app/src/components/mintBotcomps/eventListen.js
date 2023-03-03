@@ -41,7 +41,7 @@ export default function HorizontalNonLinearStepper(props) {
         taskName: "",
         taskContract: "",
         taskContractFunction: "",
-        mintPrice: "",
+        taskContractFunctionInput: "",
         eventListener: "",
         eventListenerFunction: "",
         eventListenerInput: "",

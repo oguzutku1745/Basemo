@@ -44,7 +44,6 @@ const Botpage = () => {
         functionInputs: [],
     });
 
-    //console.log(userContractInputs);
 
     function bringIt() {
         fetch(
