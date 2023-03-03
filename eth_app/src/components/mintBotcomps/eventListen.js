@@ -160,6 +160,18 @@ export default function HorizontalNonLinearStepper(props) {
     const handleReset = () => {
         setActiveStep(0);
         setCompleted({});
+        setMintSectionInputs({
+            mintWallet: "",
+            mintPrivateKey: "",
+            selectedGasPrice: "",
+            taskName: "",
+            taskContract: "",
+            taskContractFunction: "",
+            taskContractFunctionInput: "",
+            eventListener: "",
+            eventListenerFunction: "",
+            eventListenerInput: "",
+        });
     };
 
     ///////////////////////////////////////////////////////
