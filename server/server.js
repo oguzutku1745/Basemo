@@ -35,7 +35,7 @@ var provider = new ethers.providers.InfuraProvider(
 );
 
 app.post("/api/listen", (req, res) => {
-    console.log(req.body)
+    console.log(req.body);
     const { contractAddress, ABI, targetFunction, targetValue } = req.body;
     listenToVariable(contractAddress, ABI, targetFunction, targetValue, () => {
         console.log(
@@ -46,9 +46,24 @@ app.post("/api/listen", (req, res) => {
     res.status(200).json({
         message: `Started listening for variable ${targetFunction} on contract ${contractAddress}`,
     });
-}
-);
+});
 
+app.post("/api/listenFunction", (req, res) => {
+    console.log(req.body);
+    const { contractAddress, ABI, targetFunction } = req.body;
+    listenToFunction(contractAddress, ABI, targetFunction);
+
+    res.status(200).json({
+        message: `Started listening for variable ${targetFunction} on contract ${contractAddress}`,
+    });
+});
+const listenToFunction = async (contractAddress, ABI, targetFunction) => {
+    const contract = new ethers.Contract(contractAddress, ABI, provider);
+    contract.on(targetFunction, (args) => {
+        // This code will be executed when the function call is detected
+        console.log("myFunction was called with values", args);
+    });
+};
 // Function to start listening to a specific contract variable and target value
 const listenToVariable = async (
     contractAddress,
@@ -62,8 +77,11 @@ const listenToVariable = async (
     let currentValue = await contract[targetFunction]();
     const intervalId = setInterval(async () => {
         const newValue = await contract[targetFunction]();
-        console.log(newValue)
-        if (newValue.toString() !== currentValue.toString() && newValue.toString() === targetValue.toString()) {
+        console.log(newValue);
+        if (
+            newValue.toString() !== currentValue.toString() &&
+            newValue.toString() === targetValue.toString()
+        ) {
             callback();
             clearInterval(intervalId); // stop listening after callback is called
         }
@@ -77,7 +95,7 @@ const listenToVariable = async (
         targetFunction,
         targetValue,
         callback,
-        intervalId // store intervalId for later use
+        intervalId, // store intervalId for later use
     });
     console.log(
         `Started listening for variable ${targetFunction} on contract ${contractAddress}`
@@ -113,9 +131,7 @@ const stopListening = (contractAddress, targetFunction) => {
     );
 };
 
-
 // Example API endpoint to handle a new listening request from the frontend
-
 
 // Example API endpoint to handle stopping a listening request from the frontend
 app.post("/api/stop", (req, res) => {
