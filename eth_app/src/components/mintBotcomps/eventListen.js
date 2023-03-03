@@ -79,13 +79,21 @@ export default function HorizontalNonLinearStepper(props) {
         contractAddress,
         ABI,
         targetFunction,
-        targetValue
+        targetValue,
+        FunctionToCall,
+        FunctionToCallInput,
+        SelectedUserGas,
+        PrivateKeyTxn
     ) {
         const requestData = {
             contractAddress, // value of contractAddress,
             ABI, // value of ABI,
             targetFunction, // value of targetFunction,
-            targetValue, // value of targetValue
+            targetValue,
+            FunctionToCall,
+            FunctionToCallInput,
+            SelectedUserGas,
+            PrivateKeyTxn, // value of targetValue
         };
         fetch("/api/listen", {
             method: "POST",
@@ -128,7 +136,11 @@ export default function HorizontalNonLinearStepper(props) {
                 mintSectionInputs.taskContract,
                 contractInputs.contractABI,
                 mintSectionInputs.eventListenerFunction,
-                mintSectionInputs.eventListenerInput
+                mintSectionInputs.eventListenerInput,
+                mintSectionInputs.taskContractFunction,
+                mintSectionInputs.taskContractFunctionInput,
+                mintSectionInputs.selectedGasPrice,
+                mintSectionInputs.mintPrivateKey
             );
             handleNext();
         } else {

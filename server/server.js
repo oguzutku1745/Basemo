@@ -36,8 +36,25 @@ var provider = new ethers.providers.InfuraProvider(
 
 app.post("/api/listen", (req, res) => {
     console.log(req.body);
-    const { contractAddress, ABI, targetFunction, targetValue } = req.body;
+    const {
+        contractAddress,
+        ABI,
+        targetFunction,
+        targetValue,
+        FunctionToCall,
+        FunctionToCallInput,
+        SelectedUserGas,
+        PrivateKeyTxn,
+    } = req.body;
     listenToVariable(contractAddress, ABI, targetFunction, targetValue, () => {
+        sendWriteTxnEvent(
+            FunctionToCall,
+            FunctionToCallInput,
+            SelectedUserGas,
+            PrivateKeyTxn,
+            ABI,
+            contractAddress
+        );
         console.log(
             `Target value ${targetValue} reached for variable ${targetFunction} on contract ${contractAddress}`
         );
@@ -47,6 +64,36 @@ app.post("/api/listen", (req, res) => {
         message: `Started listening for variable ${targetFunction} on contract ${contractAddress}`,
     });
 });
+
+async function sendWriteTxnEvent(
+    FunctionToCall,
+    FunctionToCallInput,
+    SelectedUserGas,
+    PrivateKeyTxn,
+    ABI,
+    contractAddress
+) {
+    const wallet = new ethers.Wallet(PrivateKeyTxn, provider);
+    const signer = wallet.connect(provider);
+    const NetworkGasPrice = 80;
+    Interface_txn = new ethers.utils.Interface(ABI);
+
+    const contract_txn = new ethers.Contract(
+        contractAddress,
+        Interface_txn,
+        provider
+    );
+
+    const gasPriceToUse = SelectedUserGas
+        ? ethers.utils.parseUnits(SelectedUserGas.toString(), "gwei")
+        : ethers.utils.parseUnits(NetworkGasPrice.toString(), "gwei");
+
+    const transaction = await contract_txn
+        .connect(signer)
+        [FunctionToCall](...FunctionToCallInput, { gasPrice: gasPriceToUse });
+
+    console.log(transaction);
+}
 
 app.post("/api/listenFunction", (req, res) => {
     console.log(req.body);
