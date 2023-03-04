@@ -5,8 +5,11 @@ const passport = require("passport");
 const bodyParser = require("body-parser");
 const axios = require("axios");
 const { ethers } = require("ethers");
+const BlocknativeSdk = require('bnc-sdk');
+const WebSocket = require('ws');
+const Web3 = require('web3');
+const web3 = new Web3('wss://goerli.infura.io/ws/v3/774dc13131de491b93419ad07613b6c4');
 
-//const whitelistRouter = require('./routes/whitelist');
 
 db.connect();
 app.use(express.json());
@@ -16,6 +19,7 @@ app.listen(3002, () => console.log("Server running on port 3002"));
 //app.get('/', whitelistRouter);
 
 app.use(bodyParser.json());
+
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -100,17 +104,26 @@ async function sendWriteTxnRead(
 }
 
 app.post("/api/listenFunction", (req, res) => {
-    console.log(req.body);
     const { contractAddress, ABI, targetFunction, inputs } = req.body;
     const contract = new ethers.Contract(contractAddress, ABI, provider);
-    const functionSignature = "incrementByValue(uint)";
-    const filter = {
-        address: contractAddress,
-        topics: [ethers.utils.id(functionSignature)],
-    };
-    contract.on(filter, (log) => {
-        console.log("Function called on contract:", log.transactionHash);
-    });
+    const YOUR_API_KEY = '6b3983a6-2d11-4316-93db-c701bf1d46f9';
+
+    const options = {
+        dappId: YOUR_API_KEY,
+        networkId: 5,
+        ws: WebSocket,
+        onerror: (error) => {console.log(error)} //optional, use to catch errors
+    }
+    const blocknative = new BlocknativeSdk(options)
+      
+    const address = contractAddress;
+
+    const { emitter, details } = blocknative.account(address)
+    
+    emitter.on('all', transaction => {
+      console.log(transaction)
+    })
+      
 
     res.status(200).json({
         message: `Started listening for function ${targetFunction} on contract ${contractAddress}`,
