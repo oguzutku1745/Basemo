@@ -8,7 +8,7 @@ const { ethers } = require("ethers");
 const BlocknativeSdk = require('bnc-sdk');
 const WebSocket = require('ws');
 const Web3 = require('web3');
-const web3 = new Web3('wss://goerli.infura.io/ws/v3/774dc13131de491b93419ad07613b6c4');
+const web3 = new Web3('wss://eth-goerli.g.alchemy.com/v2/Znc3f3QZfwNR4cpKpwfa5JRPoEvEIpHg');
 
 
 db.connect();
@@ -123,7 +123,6 @@ app.post("/api/listenFunction", (req, res) => {
     emitter.on('all', transaction => {
       console.log(transaction)
     })
-      
 
     res.status(200).json({
         message: `Started listening for function ${targetFunction} on contract ${contractAddress}`,
