@@ -45,6 +45,7 @@ app.post("/api/listen", (req, res) => {
         SelectedUserGas,
         PrivateKeyTxn,
     } = req.body;
+    console.log(req.body);
     listenToVariable(contractAddress, ABI, targetFunction, targetValue, () => {
         sendWriteTxnRead(
             FunctionToCall,
@@ -87,9 +88,13 @@ async function sendWriteTxnRead(
         ? ethers.utils.parseUnits(SelectedUserGas.toString(), "gwei")
         : ethers.utils.parseUnits(NetworkGasPrice.toString(), "gwei");
 
+    const inputs = Array.isArray(FunctionToCallInput)
+        ? FunctionToCallInput
+        : [FunctionToCallInput];
+
     const transaction = await contract_txn
         .connect(signer)
-        [FunctionToCall](...FunctionToCallInput, { gasPrice: gasPriceToUse });
+        [FunctionToCall](...inputs, { gasPrice: gasPriceToUse });
 
     console.log(transaction);
 }
