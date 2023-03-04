@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Select from "react-select";
 
 export default function Step5(props) {
-    const [selectedMethod, setselectedMethod] = useState("Read");
     const [readFunctions, setReadFunctions] = useState([]);
     const [selectedOption, setSelectedOption] = useState(null);
     useEffect(() => {
@@ -31,10 +30,62 @@ export default function Step5(props) {
         const { value } = event.target;
         props.setTheInput("eventListenerInput", value);
     }
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    // OPTION 2
+    const [writeFunctions, setWriteFunctions] = useState([]);
+    const [selectedOptionFunction, setSelectedOptionFunction] = useState(null);
+    const [functionInputs, setFunctionInputs] = useState([]);
+    const [selectedFunction, setSelectedFunction] = useState(null);
 
-    const handleSelectChangeMethod = (event) => {
-        setselectedMethod(event.target.value);
-    };
+    useEffect(() => {
+        if (props.contractFunctions.length > 0) {
+            const filteredFunctions = props.contractFunctions.filter(
+                (func) => func.functionType === "write"
+            );
+            setWriteFunctions(filteredFunctions.map((func) => func.name));
+        }
+    }, [props.contractFunctions]);
+
+    const optionsWrite = writeFunctions.map((name, index) => ({
+        index: index,
+        value: name,
+        label: name,
+    }));
+
+    function handleSelectFunction(selected) {
+        setSelectedOptionFunction(selected);
+        props.setTheInput("eventListenerFunction", selected.value);
+
+        const selectedFunction = props.contractFunctions.find(
+            (func) => func.name === selected.value
+        );
+        setSelectedFunction(selectedFunction);
+        setFunctionInputs([]); // reset the input values
+
+        if (
+            selectedFunction &&
+            selectedFunction.paramName.some((str) => str.trim().length > 0)
+        ) {
+            const inputs = selectedFunction.paramName.map((name) => ({
+                name,
+                value: "",
+            }));
+            setFunctionInputs(inputs);
+        }
+    }
+
+    function handleInput(event, index) {
+        const { name, value } = event.target;
+        const inputs = [...functionInputs];
+
+        // Update the value of the input placeholder at the specified index
+        inputs[index].value = value;
+        setFunctionInputs(inputs);
+
+        const inputValues = inputs.map((input) => input.value);
+        props.setTheInput("eventListenerInput", inputValues.join(","));
+    }
 
     return (
         <div>
@@ -55,8 +106,8 @@ export default function Step5(props) {
                 <label htmlFor="select">Select an option:</label>
                 <select
                     id="select"
-                    value={selectedMethod}
-                    onChange={handleSelectChangeMethod}
+                    value={props.selectedMethod}
+                    onChange={props.handleSelectChangeMethod}
                 >
                     <option value="Read">
                         Listen the Read function results
@@ -65,7 +116,7 @@ export default function Step5(props) {
                 </select>
             </div>
             <br></br>
-            {selectedMethod === "Read" ? (
+            {props.selectedMethod === "Read" ? (
                 <div>
                     Read Function
                     <Select
@@ -85,7 +136,32 @@ export default function Step5(props) {
                     </form>
                 </div>
             ) : (
-                <div>deneme</div>
+                <div>
+                    Write Function
+                    <Select
+                        options={optionsWrite}
+                        value={selectedOptionFunction}
+                        onChange={handleSelectFunction}
+                    />
+                    <br />
+                    {selectedFunction &&
+                        selectedFunction.paramName.length > 0 && (
+                            <form>
+                                {functionInputs.map((input, index) => (
+                                    <div key={index}>
+                                        <label>{input.name}: </label>
+                                        <input
+                                            name={input.name}
+                                            onChange={(event) =>
+                                                handleInput(event, index)
+                                            }
+                                            value={input.value}
+                                        />
+                                    </div>
+                                ))}
+                            </form>
+                        )}
+                </div>
             )}
         </div>
     );

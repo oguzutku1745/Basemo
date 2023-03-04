@@ -35,7 +35,6 @@ var provider = new ethers.providers.InfuraProvider(
 );
 
 app.post("/api/listen", (req, res) => {
-    console.log(req.body);
     const {
         contractAddress,
         ABI,
@@ -47,7 +46,7 @@ app.post("/api/listen", (req, res) => {
         PrivateKeyTxn,
     } = req.body;
     listenToVariable(contractAddress, ABI, targetFunction, targetValue, () => {
-        sendWriteTxnEvent(
+        sendWriteTxnRead(
             FunctionToCall,
             FunctionToCallInput,
             SelectedUserGas,
@@ -65,7 +64,7 @@ app.post("/api/listen", (req, res) => {
     });
 });
 
-async function sendWriteTxnEvent(
+async function sendWriteTxnRead(
     FunctionToCall,
     FunctionToCallInput,
     SelectedUserGas,
@@ -97,20 +96,22 @@ async function sendWriteTxnEvent(
 
 app.post("/api/listenFunction", (req, res) => {
     console.log(req.body);
-    const { contractAddress, ABI, targetFunction } = req.body;
-    listenToFunction(contractAddress, ABI, targetFunction);
+    const { contractAddress, ABI, targetFunction, inputs } = req.body;
+    const contract = new ethers.Contract(contractAddress, ABI, provider);
+    const functionSignature = "incrementByValue(uint)";
+    const filter = {
+        address: contractAddress,
+        topics: [ethers.utils.id(functionSignature)],
+    };
+    contract.on(filter, (log) => {
+        console.log("Function called on contract:", log.transactionHash);
+    });
 
     res.status(200).json({
-        message: `Started listening for variable ${targetFunction} on contract ${contractAddress}`,
+        message: `Started listening for function ${targetFunction} on contract ${contractAddress}`,
     });
 });
-const listenToFunction = async (contractAddress, ABI, targetFunction) => {
-    const contract = new ethers.Contract(contractAddress, ABI, provider);
-    contract.on(targetFunction, (args) => {
-        // This code will be executed when the function call is detected
-        console.log("myFunction was called with values", args);
-    });
-};
+
 // Function to start listening to a specific contract variable and target value
 const listenToVariable = async (
     contractAddress,

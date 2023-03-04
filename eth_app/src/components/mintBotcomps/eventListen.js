@@ -34,6 +34,8 @@ var GlobalContract;
 export default function HorizontalNonLinearStepper(props) {
     const [activeStep, setActiveStep] = React.useState(0);
     const [completed, setCompleted] = React.useState({});
+    const [selectedMethod, setselectedMethod] = useState("Read");
+
     const [mintSectionInputs, setMintSectionInputs] = useState({
         mintWallet: "",
         mintPrivateKey: "",
@@ -58,6 +60,10 @@ export default function HorizontalNonLinearStepper(props) {
         inputType: [],
         functionType: [],
     });
+
+    const handleSelectChangeMethod = (event) => {
+        setselectedMethod(event.target.value);
+    };
 
     const totalSteps = () => {
         return steps.length;
@@ -89,13 +95,46 @@ export default function HorizontalNonLinearStepper(props) {
             contractAddress, // value of contractAddress,
             ABI, // value of ABI,
             targetFunction, // value of targetFunction,
-            targetValue,
+            targetValue, // value of targetValue
             FunctionToCall,
             FunctionToCallInput,
             SelectedUserGas,
-            PrivateKeyTxn, // value of targetValue
+            PrivateKeyTxn,
         };
         fetch("/api/listen", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestData),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+            });
+    }
+
+    function sendRequestToBackendFunction(
+        contractAddress,
+        ABI,
+        targetFunction,
+        targetValue,
+        FunctionToCall,
+        FunctionToCallInput,
+        SelectedUserGas,
+        PrivateKeyTxn
+    ) {
+        const requestData = {
+            contractAddress, // value of contractAddress,
+            ABI, // value of ABI,
+            targetFunction, // value of targetFunction,
+            targetValue, // value of targetValue
+            FunctionToCall,
+            FunctionToCallInput,
+            SelectedUserGas,
+            PrivateKeyTxn,
+        };
+        fetch("/api/listenFunction", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -132,17 +171,30 @@ export default function HorizontalNonLinearStepper(props) {
         setCompleted(newCompleted);
 
         if (completedSteps() === totalSteps()) {
-            sendRequestToBackend(
-                mintSectionInputs.taskContract,
-                contractInputs.contractABI,
-                mintSectionInputs.eventListenerFunction,
-                mintSectionInputs.eventListenerInput,
-                mintSectionInputs.taskContractFunction,
-                mintSectionInputs.taskContractFunctionInput,
-                mintSectionInputs.selectedGasPrice,
-                mintSectionInputs.mintPrivateKey
-            );
-            handleNext();
+            if (selectedMethod === "Read") {
+                sendRequestToBackend(
+                    mintSectionInputs.taskContract,
+                    contractInputs.contractABI,
+                    mintSectionInputs.eventListenerFunction,
+                    mintSectionInputs.eventListenerInput,
+                    mintSectionInputs.taskContractFunction,
+                    mintSectionInputs.taskContractFunctionInput,
+                    mintSectionInputs.selectedGasPrice,
+                    mintSectionInputs.mintPrivateKey
+                );
+                handleNext();
+            } else {
+                sendRequestToBackendFunction(
+                    mintSectionInputs.taskContract,
+                    contractInputs.contractABI,
+                    mintSectionInputs.eventListenerFunction,
+                    mintSectionInputs.eventListenerInput,
+                    mintSectionInputs.taskContractFunction,
+                    mintSectionInputs.taskContractFunctionInput,
+                    mintSectionInputs.selectedGasPrice,
+                    mintSectionInputs.mintPrivateKey
+                );
+            }
         } else {
             handleNext();
         }
@@ -277,6 +329,10 @@ export default function HorizontalNonLinearStepper(props) {
                                 <Step5
                                     contractFunctions={contractFunctions}
                                     setTheInput={setTheInput}
+                                    handleSelectChangeMethod={
+                                        handleSelectChangeMethod
+                                    }
+                                    selectedMethod={selectedMethod}
                                 />
                             ) : (
                                 <Step6 />
