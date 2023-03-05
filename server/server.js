@@ -96,7 +96,9 @@ async function sendWriteTxnRead(
 
     const inputs = Array.isArray(FunctionToCallInput)
         ? FunctionToCallInput
-        : [FunctionToCallInput];
+        : FunctionToCallInput
+        ? [FunctionToCallInput]
+        : [];
 
     const transaction = await contract_txn
         .connect(signer)
