@@ -1,31 +1,45 @@
-import React, { useState } from "react";
-import Select from "react-select";
+import React, { useState, useEffect } from "react";
 
 export default function Step3(props) {
-    const [selectedOption, setSelectedOption] = useState(null);
+    const [selectedWallets, setSelectedWallets] = useState([]);
 
-    const options = props.mint_wallets.map((wallet, index) => ({
-        index: index,
-        value: wallet,
-        label: wallet,
-    }));
-
-    const handleSelect = (selected) => {
-        const selectedIndex = options.findIndex(
-            (option) => option.value === selected.value
+    useEffect(() => {
+        const selected_mint_wallets_array = selectedWallets.map(
+            (index) => props.mint_wallets[index]
         );
-        setSelectedOption(selected);
-        props.setTheInput("mintWallet", selected.value);
-        props.setTheInput("mintPrivateKey", props.private_keys[selectedIndex]);
+        const selected_mint_wallet_privateKey_array = selectedWallets.map(
+            (index) => props.private_keys[index]
+        );
+        props.setTheInput("mintWallet", selected_mint_wallets_array);
+        props.setTheInput(
+            "mintPrivateKey",
+            selected_mint_wallet_privateKey_array
+        );
+    }, [selectedWallets]);
+
+    const handleWalletSelect = (index) => (event) => {
+        const selected = event.target.checked;
+        setSelectedWallets((prev) => {
+            if (selected) {
+                return [...prev, index];
+            } else {
+                return prev.filter((i) => i !== index);
+            }
+        });
     };
 
     return (
         <div>
-            <Select
-                options={options}
-                value={selectedOption}
-                onChange={handleSelect}
-            />
+            {props.mint_wallets.map((wallet, index) => (
+                <div key={index}>
+                    <input
+                        type="checkbox"
+                        checked={selectedWallets.includes(index)}
+                        onChange={handleWalletSelect(index)}
+                    />
+                    <label>{wallet}</label>
+                </div>
+            ))}
         </div>
     );
 }

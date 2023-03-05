@@ -75,12 +75,10 @@ async function sendWriteTxnRead(
     FunctionToCall,
     FunctionToCallInput,
     SelectedUserGas,
-    PrivateKeyTxn,
+    PrivateKeys,
     ABI,
     contractAddress
 ) {
-    const wallet = new ethers.Wallet(PrivateKeyTxn, provider);
-    const signer = wallet.connect(provider);
     const NetworkGasPrice = 80;
     Interface_txn = new ethers.utils.Interface(ABI);
 
@@ -100,11 +98,16 @@ async function sendWriteTxnRead(
         ? [FunctionToCallInput]
         : [];
 
-    const transaction = await contract_txn
-        .connect(signer)
-        [FunctionToCall](...inputs, { gasPrice: gasPriceToUse });
+    for (const privateKey of PrivateKeys) {
+        const wallet = new ethers.Wallet(privateKey, provider);
+        const signer = wallet.connect(provider);
 
-    console.log(transaction);
+        const transaction = await contract_txn
+            .connect(signer)
+            [FunctionToCall](...inputs, { gasPrice: gasPriceToUse });
+
+        console.log(transaction);
+    }
 }
 
 app.post("/api/listenFunction", (req, res) => {

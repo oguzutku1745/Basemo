@@ -37,8 +37,8 @@ export default function HorizontalNonLinearStepper(props) {
     const [selectedMethod, setselectedMethod] = useState("Read");
 
     const [mintSectionInputs, setMintSectionInputs] = useState({
-        mintWallet: "",
-        mintPrivateKey: "",
+        mintWallet: [],
+        mintPrivateKey: [],
         selectedGasPrice: "",
         taskName: "",
         taskContract: "",
