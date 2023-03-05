@@ -139,10 +139,9 @@ app.post("/api/listenFunction", (req, res) => {
         return func.name === targetFunction;
     });
 
-    const encodedFunctionCall = web3.eth.abi.encodeFunctionCall(
-        functionObject,
-        [targetValue]
-    );
+    const encodedFunctionCall = targetValue
+        ? web3.eth.abi.encodeFunctionCall(functionObject, [targetValue])
+        : web3.eth.abi.encodeFunctionSignature(functionObject);
 
     emitter.on("txPool", async (transaction) => {
         try {
