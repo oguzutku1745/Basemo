@@ -49,6 +49,7 @@ export default function HorizontalNonLinearStepper(props) {
         eventListenerInput: "",
     });
     console.log(mintSectionInputs);
+   
 
     const [contractInputs, setContractInputs] = useState({
         contractAddress: "",
@@ -84,6 +85,7 @@ export default function HorizontalNonLinearStepper(props) {
     function sendRequestToBackend(
         contractAddress,
         ABI,
+        inputType,
         targetFunction,
         targetValue,
         FunctionToCall,
@@ -94,6 +96,7 @@ export default function HorizontalNonLinearStepper(props) {
         const requestData = {
             contractAddress, // value of contractAddress,
             ABI, // value of ABI,
+            inputType,
             targetFunction, // value of targetFunction,
             targetValue, // value of targetValue
             FunctionToCall,
@@ -117,6 +120,7 @@ export default function HorizontalNonLinearStepper(props) {
     function sendRequestToBackendFunction(
         contractAddress,
         ABI,
+        inputType,
         targetFunction,
         targetValue,
         FunctionToCall,
@@ -126,7 +130,8 @@ export default function HorizontalNonLinearStepper(props) {
     ) {
         const requestData = {
             contractAddress, // value of contractAddress,
-            ABI, // value of ABI,
+            ABI,
+            inputType, // value of ABI,
             targetFunction, // value of targetFunction,
             targetValue, // value of targetValue
             FunctionToCall,
@@ -187,6 +192,7 @@ export default function HorizontalNonLinearStepper(props) {
                 sendRequestToBackendFunction(
                     mintSectionInputs.taskContract,
                     contractInputs.contractABI,
+                    contractInputs.inputType,
                     mintSectionInputs.eventListenerFunction,
                     mintSectionInputs.eventListenerInput,
                     mintSectionInputs.taskContractFunction,
@@ -226,7 +232,7 @@ export default function HorizontalNonLinearStepper(props) {
         });
     };
 
-    ///////////////////////////////////////////////////////
+
     ///////////////////////////////////////////////////////
     // CONTRACT API REQUEST
     React.useEffect(() => {

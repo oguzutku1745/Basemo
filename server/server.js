@@ -8,7 +8,7 @@ const { ethers } = require("ethers");
 const BlocknativeSdk = require('bnc-sdk');
 const WebSocket = require('ws');
 const Web3 = require('web3');
-const web3 = new Web3('wss://eth-goerli.g.alchemy.com/v2/Znc3f3QZfwNR4cpKpwfa5JRPoEvEIpHg');
+const web3 = new Web3(new Web3.providers.WebsocketProvider('wss://eth-goerli.g.alchemy.com/v2/Znc3f3QZfwNR4cpKpwfa5JRPoEvEIpHg'));
 
 
 db.connect();
@@ -104,7 +104,7 @@ async function sendWriteTxnRead(
 }
 
 app.post("/api/listenFunction", (req, res) => {
-    const { contractAddress, ABI, targetFunction, inputs } = req.body;
+    const { contractAddress, ABI, targetFunction, inputType , targetValue, inputs } = req.body;
     const contract = new ethers.Contract(contractAddress, ABI, provider);
     const YOUR_API_KEY = '6b3983a6-2d11-4316-93db-c701bf1d46f9';
 
@@ -115,14 +115,34 @@ app.post("/api/listenFunction", (req, res) => {
         onerror: (error) => {console.log(error)} //optional, use to catch errors
     }
     const blocknative = new BlocknativeSdk(options)
-      
     const address = contractAddress;
-
+    const abi = JSON.parse(ABI);
     const { emitter, details } = blocknative.account(address)
+
     
-    emitter.on('all', transaction => {
-      console.log(transaction)
-    })
+
+    const functionObject = abi.find((func) => {
+        return func.name === targetFunction;
+      });
+    
+    const encodedFunctionCall = web3.eth.abi.encodeFunctionCall(functionObject, [targetValue])
+    
+    emitter.on('all', async (transaction) => {
+      try {
+        const input = transaction.input
+      
+        const contract = new web3.eth.Contract(abi, contractAddress)
+    
+        // Check if the encoded function call matches the input data of the transaction
+        if (transaction.to === contractAddress && input === encodedFunctionCall) {
+          console.log("MATCH")
+        } else {
+          console.log("DID NOT MATCH")
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    } )
 
     res.status(200).json({
         message: `Started listening for function ${targetFunction} on contract ${contractAddress}`,

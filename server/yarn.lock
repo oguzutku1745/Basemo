@@ -274,6 +274,14 @@
   "resolved" "https://registry.npmjs.org/abbrev/-/abbrev-1.1.1.tgz"
   "version" "1.1.1"
 
+"abi-decoder@^2.4.0":
+  "integrity" "sha512-TOLU2q1HgYOjs1GKGtVzaqrYkar6I2fT9a80rzx6/9EJ/5crb4nCGuro0grZayixem93T7omrajYmLiMkYDLDA=="
+  "resolved" "https://registry.npmjs.org/abi-decoder/-/abi-decoder-2.4.0.tgz"
+  "version" "2.4.0"
+  dependencies:
+    "web3-eth-abi" "^1.2.1"
+    "web3-utils" "^1.2.1"
+
 "abortcontroller-polyfill@^1.7.3":
   "integrity" "sha512-JMJ5soJWP18htbbxJjG7bG6yuI6pRhgJ0scHHTfkUjf6wjP912xZWvM+A4sJK3gqd9E8fcPbDnOefbA9Th/FIQ=="
   "resolved" "https://registry.npmjs.org/abortcontroller-polyfill/-/abortcontroller-polyfill-1.7.5.tgz"
@@ -2487,7 +2495,7 @@
     "web3-core-requestmanager" "1.8.2"
     "web3-utils" "1.8.2"
 
-"web3-eth-abi@1.8.2":
+"web3-eth-abi@^1.2.1", "web3-eth-abi@1.8.2":
   "integrity" "sha512-Om9g3kaRNjqiNPAgKwGT16y+ZwtBzRe4ZJFGjLiSs6v5I7TPNF+rRMWuKnR6jq0azQZDj6rblvKFMA49/k48Og=="
   "resolved" "https://registry.npmjs.org/web3-eth-abi/-/web3-eth-abi-1.8.2.tgz"
   "version" "1.8.2"
@@ -2623,7 +2631,7 @@
     "web3-core-subscriptions" "1.8.2"
     "web3-net" "1.8.2"
 
-"web3-utils@1.8.2":
+"web3-utils@^1.2.1", "web3-utils@1.8.2":
   "integrity" "sha512-v7j6xhfLQfY7xQDrUP0BKbaNrmZ2/+egbqP9q3KYmOiPpnvAfol+32slgL0WX/5n8VPvKCK5EZ1HGrAVICSToA=="
   "resolved" "https://registry.npmjs.org/web3-utils/-/web3-utils-1.8.2.tgz"
   "version" "1.8.2"
