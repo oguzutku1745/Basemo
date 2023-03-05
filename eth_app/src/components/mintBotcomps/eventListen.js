@@ -49,7 +49,6 @@ export default function HorizontalNonLinearStepper(props) {
         eventListenerInput: "",
     });
     console.log(mintSectionInputs);
-   
 
     const [contractInputs, setContractInputs] = useState({
         contractAddress: "",
@@ -85,7 +84,6 @@ export default function HorizontalNonLinearStepper(props) {
     function sendRequestToBackend(
         contractAddress,
         ABI,
-        inputType,
         targetFunction,
         targetValue,
         FunctionToCall,
@@ -96,7 +94,6 @@ export default function HorizontalNonLinearStepper(props) {
         const requestData = {
             contractAddress, // value of contractAddress,
             ABI, // value of ABI,
-            inputType,
             targetFunction, // value of targetFunction,
             targetValue, // value of targetValue
             FunctionToCall,
@@ -231,7 +228,6 @@ export default function HorizontalNonLinearStepper(props) {
             eventListenerInput: "",
         });
     };
-
 
     ///////////////////////////////////////////////////////
     // CONTRACT API REQUEST
