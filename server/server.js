@@ -31,6 +31,7 @@ app.use(function (req, res, next) {
     );
     next();
 });
+var gasPriceNetwork;
 /////////////////////////////////////////////////
 // START OF THE EVENT LISTENERS
 // Define an array to hold all the listening requests
@@ -79,7 +80,6 @@ async function sendWriteTxnRead(
     ABI,
     contractAddress
 ) {
-    const NetworkGasPrice = 80;
     Interface_txn = new ethers.utils.Interface(ABI);
 
     const contract_txn = new ethers.Contract(
@@ -90,7 +90,7 @@ async function sendWriteTxnRead(
 
     const gasPriceToUse = SelectedUserGas
         ? ethers.utils.parseUnits(SelectedUserGas.toString(), "gwei")
-        : ethers.utils.parseUnits(NetworkGasPrice.toString(), "gwei");
+        : ethers.utils.parseUnits(gasPriceNetwork.toString(), "gwei");
 
     const inputs = Array.isArray(FunctionToCallInput)
         ? FunctionToCallInput
@@ -299,11 +299,11 @@ const fetchDataAndUpdateDB = () => {
             "https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=EY4HQCTINHG9CEVSNDFND3AKXNIU8KBZA4"
         )
         .then((response) => {
-            const gasPrice = response.data.result.ProposeGasPrice;
+            gasPriceNetwork = response.data.result.ProposeGasPrice;
 
             // Update database with new gas price value
             const sql = "UPDATE Etherscan_requests SET GasPrice = ?";
-            const data = [gasPrice];
+            const data = [gasPriceNetwork];
             db.query(sql, data, (err, results) => {
                 if (err) throw err;
             });
