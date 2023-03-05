@@ -109,10 +109,14 @@ app.post("/api/listenFunction", (req, res) => {
     const {
         contractAddress,
         ABI,
-        targetFunction,
         inputType,
+        targetFunction,
+
         targetValue,
-        inputs,
+        FunctionToCall,
+        FunctionToCallInput,
+        SelectedUserGas,
+        PrivateKeyTxn,
     } = req.body;
     const YOUR_API_KEY = "6b3983a6-2d11-4316-93db-c701bf1d46f9";
 
@@ -147,6 +151,15 @@ app.post("/api/listenFunction", (req, res) => {
                 input === encodedFunctionCall
             ) {
                 console.log("MATCH");
+                emitter.off("txPool");
+                sendWriteTxnRead(
+                    FunctionToCall,
+                    FunctionToCallInput,
+                    SelectedUserGas,
+                    PrivateKeyTxn,
+                    ABI,
+                    contractAddress
+                );
             } else {
                 console.log("DID NOT MATCH");
             }
@@ -170,14 +183,10 @@ const listenToVariable = async (
 ) => {
     const contract = new ethers.Contract(contractAddress, ABI, provider);
 
-    let currentValue = await contract[targetFunction]();
     const intervalId = setInterval(async () => {
         const newValue = await contract[targetFunction]();
         console.log(newValue);
-        if (
-            newValue.toString() !== currentValue.toString() &&
-            newValue.toString() === targetValue.toString()
-        ) {
+        if (newValue.toString() === targetValue.toString()) {
             callback();
             clearInterval(intervalId); // stop listening after callback is called
         }
