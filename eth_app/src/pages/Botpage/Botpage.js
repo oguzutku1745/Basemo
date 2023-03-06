@@ -183,7 +183,7 @@ const Botpage = () => {
                 id="uncontrolled-tab-example"
                 className="mb-3"
             > <Tab eventKey="home" title="Dashboard">
-                <DashboardCards />
+                <DashboardCards contractInputs={contractInputs} />
                 </Tab>
                 <Tab eventKey="wallets" title="Wallets">
                     <div className="left-side">

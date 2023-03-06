@@ -114,7 +114,6 @@ app.post("/api/listenFunction", (req, res) => {
     const {
         contractAddress,
         ABI,
-        inputType,
         targetFunction,
 
         targetValue,

@@ -27,7 +27,13 @@ input {
     padding: 10px;
     margin-bottom: 2px;
 }
-
+.body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
 .container {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -100,13 +106,23 @@ input[type="checkbox"] {
     background-color: bisque;
     padding: 5px;
 }
+
 .taskNameColor {
     color: rgb(53, 94, 133);
 }
+
+.dashboardInformer {
+    color:rgb(187, 26, 109)
+}
+
 .dashboard-Taskinputs {
     padding: 5px;
     justify-content: left;
     text-align: left;
+}
+
+.nothingness {
+    text-align: center;
 }
 
 .dashboard-Container {

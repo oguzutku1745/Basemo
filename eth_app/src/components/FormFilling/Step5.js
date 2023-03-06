@@ -118,7 +118,7 @@ export default function Step5(props) {
                     <option value="Read">
                         Listen the Read function results
                     </option>
-                    <option value="option2">Listen the function call</option>
+                    <option value="Mempool">Listen the function call</option>
                 </select>
             </div>
             <br></br>

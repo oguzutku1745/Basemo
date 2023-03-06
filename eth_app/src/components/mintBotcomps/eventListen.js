@@ -44,6 +44,7 @@ export default function HorizontalNonLinearStepper(props) {
         selectedGasPrice: "",
         taskName: "",
         taskContract: "",
+        taskContractABI: "",
         taskContractFunction: "",
         taskContractFunctionInput: "",
         eventListener: "",
@@ -52,14 +53,13 @@ export default function HorizontalNonLinearStepper(props) {
         eventListenerPending: false,
     });
 
-    
-
-    console.log(mintSectionInputs);
+    console.log(mintSectionInputs)
 
     const [contractInputs, setContractInputs] = useState({
         contractAddress: "",
         contractABI: "",
     });
+
     const [contractFunctions, setContractFunctions] = useState({
         name: [],
         paramName: [],
@@ -69,6 +69,7 @@ export default function HorizontalNonLinearStepper(props) {
 
     const handleSelectChangeMethod = (event) => {
         setselectedMethod(event.target.value);
+        setTheInput("eventListener", event.target.value)
     };
 
     const totalSteps = () => {
@@ -87,75 +88,7 @@ export default function HorizontalNonLinearStepper(props) {
         return completedSteps() === totalSteps();
     };
 
-    function sendRequestToBackend(
-        contractAddress,
-        ABI,
-        targetFunction,
-        targetValue,
-        FunctionToCall,
-        FunctionToCallInput,
-        SelectedUserGas,
-        PrivateKeyTxn
-    ) {
-        const requestData = {
-            contractAddress, // value of contractAddress,
-            ABI, // value of ABI,
-            targetFunction, // value of targetFunction,
-            targetValue, // value of targetValue
-            FunctionToCall,
-            FunctionToCallInput,
-            SelectedUserGas,
-            PrivateKeyTxn,
-        };
-        fetch("/api/listen", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(requestData),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log(data);
-            });
-    }
-
-    function sendRequestToBackendFunction(
-        contractAddress,
-        ABI,
-        inputType,
-        targetFunction,
-        targetValue,
-        FunctionToCall,
-        FunctionToCallInput,
-        SelectedUserGas,
-        PrivateKeyTxn,
-        pendingStatus
-    ) {
-        const requestData = {
-            contractAddress, // value of contractAddress,
-            ABI,
-            inputType, // value of ABI,
-            targetFunction, // value of targetFunction,
-            targetValue, // value of targetValue
-            FunctionToCall,
-            FunctionToCallInput,
-            SelectedUserGas,
-            PrivateKeyTxn,
-            pendingStatus
-        };
-        fetch("/api/listenFunction", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(requestData),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log(data);
-            });
-    }
+    
 
     const handleNext = () => {
         const newActiveStep =
@@ -182,32 +115,7 @@ export default function HorizontalNonLinearStepper(props) {
 
         if (completedSteps() === totalSteps()) {
             setSharedState(mintSectionInputs)
-            if (selectedMethod === "Read") {
-                sendRequestToBackend(
-                    mintSectionInputs.taskContract,
-                    contractInputs.contractABI,
-                    mintSectionInputs.eventListenerFunction,
-                    mintSectionInputs.eventListenerInput,
-                    mintSectionInputs.taskContractFunction,
-                    mintSectionInputs.taskContractFunctionInput,
-                    mintSectionInputs.selectedGasPrice,
-                    mintSectionInputs.mintPrivateKey
-                );
-                handleNext();
-            } else {
-                sendRequestToBackendFunction(
-                    mintSectionInputs.taskContract,
-                    contractInputs.contractABI,
-                    contractInputs.inputType,
-                    mintSectionInputs.eventListenerFunction,
-                    mintSectionInputs.eventListenerInput,
-                    mintSectionInputs.taskContractFunction,
-                    mintSectionInputs.taskContractFunctionInput,
-                    mintSectionInputs.selectedGasPrice,
-                    mintSectionInputs.mintPrivateKey,
-                    mintSectionInputs.eventListenerPending
-                );
-            }
+
         } else {
             handleNext();
         }
@@ -254,6 +162,12 @@ export default function HorizontalNonLinearStepper(props) {
                             contractABI: data.result,
                         };
                     });
+                    setMintSectionInputs((prevData) => {
+                        return {
+                            ...prevData,
+                            taskContractABI: data.result,
+                        }
+                    })
                     GlobalContractAddress = contractInputs.contractAddress;
                     resolveContract_Event(data.result);
                 });
@@ -348,7 +262,7 @@ export default function HorizontalNonLinearStepper(props) {
                                     selectedMethod={selectedMethod}
                                 />
                             ) : (
-                                <Step6 />
+                                <Step6 mintSectionInputs={mintSectionInputs} />
                             )}
                         </Typography>
                         <Box
