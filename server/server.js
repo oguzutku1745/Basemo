@@ -122,6 +122,7 @@ app.post("/api/listenFunction", (req, res) => {
         FunctionToCallInput,
         SelectedUserGas,
         PrivateKeyTxn,
+        pendingStatus
     } = req.body;
     const YOUR_API_KEY = "6b3983a6-2d11-4316-93db-c701bf1d46f9";
 
@@ -146,24 +147,41 @@ app.post("/api/listenFunction", (req, res) => {
         ? web3.eth.abi.encodeFunctionCall(functionObject, [targetValue])
         : web3.eth.abi.encodeFunctionSignature(functionObject);
 
-    emitter.on("txPool", async (transaction) => {
+    emitter.on("all", async (transaction) => {
         try {
             const input = transaction.input;
             // Check if the encoded function call matches the input data of the transaction
             if (
                 transaction.to === contractAddress &&
                 input === encodedFunctionCall
-            ) {
-                console.log("MATCH");
-                emitter.off("txPool");
-                sendWriteTxnRead(
+            ){console.log(pendingStatus) 
+            if (pendingStatus) {
+                if (transaction.status === "pending") {
+                  console.log("MATCH for pending");
+                  emitter.off("all");
+                  sendWriteTxnRead(
                     FunctionToCall,
                     FunctionToCallInput,
                     SelectedUserGas,
                     PrivateKeyTxn,
                     ABI,
                     contractAddress
-                );
+                  );
+                }
+              } else {
+                if (transaction.status === "confirmed") {
+                  console.log("MATCH for confirmed");
+                  emitter.off("all");
+                  sendWriteTxnRead(
+                    FunctionToCall,
+                    FunctionToCallInput,
+                    SelectedUserGas,
+                    PrivateKeyTxn,
+                    ABI,
+                    contractAddress
+                  );
+                }
+              }
             } else {
                 console.log("DID NOT MATCH");
             }

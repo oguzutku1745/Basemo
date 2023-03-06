@@ -47,6 +47,7 @@ export default function HorizontalNonLinearStepper(props) {
         eventListener: "",
         eventListenerFunction: "",
         eventListenerInput: "",
+        eventListenerPending: false,
     });
     console.log(mintSectionInputs);
 
@@ -123,7 +124,8 @@ export default function HorizontalNonLinearStepper(props) {
         FunctionToCall,
         FunctionToCallInput,
         SelectedUserGas,
-        PrivateKeyTxn
+        PrivateKeyTxn,
+        pendingStatus
     ) {
         const requestData = {
             contractAddress, // value of contractAddress,
@@ -135,6 +137,7 @@ export default function HorizontalNonLinearStepper(props) {
             FunctionToCallInput,
             SelectedUserGas,
             PrivateKeyTxn,
+            pendingStatus
         };
         fetch("/api/listenFunction", {
             method: "POST",
@@ -195,7 +198,8 @@ export default function HorizontalNonLinearStepper(props) {
                     mintSectionInputs.taskContractFunction,
                     mintSectionInputs.taskContractFunctionInput,
                     mintSectionInputs.selectedGasPrice,
-                    mintSectionInputs.mintPrivateKey
+                    mintSectionInputs.mintPrivateKey,
+                    mintSectionInputs.eventListenerPending
                 );
             }
         } else {
@@ -330,6 +334,7 @@ export default function HorizontalNonLinearStepper(props) {
                             ) : activeStep === 4 ? (
                                 <Step5
                                     contractFunctions={contractFunctions}
+                                    mintSectionInputs={mintSectionInputs}
                                     setTheInput={setTheInput}
                                     handleSelectChangeMethod={
                                         handleSelectChangeMethod
