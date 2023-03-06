@@ -93,6 +93,32 @@ input[type="checkbox"] {
     padding: 2px;
 }
 
+.dashboard-Card {
+    border: 1px solid #0f1011;
+    margin-left: 10px;
+    border-radius: 3px;
+    background-color: bisque;
+    padding: 5px;
+}
+.taskNameColor {
+    color: rgb(53, 94, 133);
+}
+.dashboard-Taskinputs {
+    padding: 5px;
+    justify-content: left;
+    text-align: left;
+}
+
+.dashboard-Container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px;
+    align-items: start;
+    align-items: top;
+    justify-content: center;
+    text-align: center; /* centers text within element */
+}
+
 .private-key {
     overflow: hidden;
     text-overflow: ellipsis;

@@ -8,7 +8,9 @@ import FunctionStorer from "../../components/contractFunction(s)/FunctionStorer"
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import HorizontalNonLinearStepper from "../../components/mintBotcomps/eventListen";
+import DashboardCards from "../../components/Dashboard/DashboardCards";
 import GasComponent from "../../components/NetworkGas";
+import { createContext } from 'react';
 
 var GlobalProvider = new ethers.InfuraProvider(
     "goerli",
@@ -17,6 +19,10 @@ var GlobalProvider = new ethers.InfuraProvider(
 var GlobalContractAddress;
 var GlobalContractInterface;
 var GlobalContract;
+
+
+
+export const userInputs = createContext();
 
 const Botpage = () => {
     const location = useLocation();
@@ -27,6 +33,8 @@ const Botpage = () => {
     const [selectedPrivate_key, setselectedPrivate_key] = useState("");
     const [UserGasPrice, setUserGasPrice] = useState("");
     const [functionResult, setFunctionResult] = useState("");
+    const [sharedState, setSharedState] = useState({});
+
 
     const [contractInputs, setContractInputs] = useState({
         contractAddress: "",
@@ -169,12 +177,15 @@ const Botpage = () => {
     return (
         <div>
             <Header wallet={user_wallet} />
+            <userInputs.Provider value={{ sharedState, setSharedState }}>
             <Tabs
                 defaultActiveKey="profile"
                 id="uncontrolled-tab-example"
                 className="mb-3"
-            >
-                <Tab eventKey="home" title="Wallets">
+            > <Tab eventKey="home" title="Dashboard">
+                <DashboardCards />
+                </Tab>
+                <Tab eventKey="wallets" title="Wallets">
                     <div className="left-side">
                         <div>
                             <h1>Welcome to the BotPage!</h1>
@@ -297,6 +308,7 @@ const Botpage = () => {
                     />
                 </Tab>
             </Tabs>
+            </userInputs.Provider>
             <div className="container"></div>
         </div>
     );

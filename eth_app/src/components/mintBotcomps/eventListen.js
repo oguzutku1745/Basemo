@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
@@ -13,6 +13,7 @@ import Step4 from "../FormFilling/Step4";
 import Step5 from "../FormFilling/Step5";
 import Step6 from "../FormFilling/Step6";
 import { ethers } from "ethers";
+import { userInputs } from '../../pages/Botpage/Botpage';
 
 const steps = [
     "Basics",
@@ -32,6 +33,7 @@ var GlobalContractInterface;
 var GlobalContract;
 
 export default function HorizontalNonLinearStepper(props) {
+    const { sharedState, setSharedState } = useContext(userInputs);
     const [activeStep, setActiveStep] = React.useState(0);
     const [completed, setCompleted] = React.useState({});
     const [selectedMethod, setselectedMethod] = useState("Read");
@@ -49,6 +51,9 @@ export default function HorizontalNonLinearStepper(props) {
         eventListenerInput: "",
         eventListenerPending: false,
     });
+
+    
+
     console.log(mintSectionInputs);
 
     const [contractInputs, setContractInputs] = useState({
@@ -176,6 +181,7 @@ export default function HorizontalNonLinearStepper(props) {
         setCompleted(newCompleted);
 
         if (completedSteps() === totalSteps()) {
+            setSharedState(mintSectionInputs)
             if (selectedMethod === "Read") {
                 sendRequestToBackend(
                     mintSectionInputs.taskContract,
