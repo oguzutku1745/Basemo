@@ -506,42 +506,31 @@ const ConnectWallet = (props) => {
     ];
     const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
-    useEffect(() => {
-        fetch("/api")
-            .then((response) => response.json())
-            .then((data) => {
-                setBackendData(data);
-            });
-    }, []);
-
     const checkWhitelistedStatus = async () => {
         try {
-            const currentDate = new Date();
-            const dbdata = backendData.find(
-                (item) => item.user_wallet === accounts[0]
-            );
+          const currentDate = new Date();
+          const response = await fetch(`/api/${accounts[0]}`);
+          const dbdata = await response.json();
+          console.log(dbdata.expiry_date)
+          
+          if (dbdata) {
+            const expiryDate = new Date(dbdata.expiry_date);
             setUser_id(dbdata.user_id);
             setUser_wallet(dbdata.user_wallet);
-            console.log(user_wallet);
-            if (dbdata) {
-                console.log(dbdata.expiry_date);
-                const expiryDate = new Date(dbdata.expiry_date);
-                setUser_id(dbdata.user_id);
-                setExistWallet(true);
-                if (currentDate > expiryDate) {
-                    console.log(`Expiry date has passed`);
-                    setExpired(true);
-                } else {
-                    setAllowed(true);
-                    console.log(`Expiry date has not passed`);
-                }
+            setExistWallet(true);
+            
+            if (currentDate > expiryDate) {
+              setExpired(true);
             } else {
-                console.log(`${accounts[0]} is not whitelisted`);
+              setAllowed(true);
             }
+          } else {
+            console.log(`${accounts[0]} is not whitelisted`);
+          }
         } catch (error) {
-            console.error(error);
+          console.error(error);
         }
-    };
+      };
 
     const handleConnect = async () => {
         try {

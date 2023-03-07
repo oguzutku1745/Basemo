@@ -272,17 +272,6 @@ app.post("/api/stop", (req, res) => {
 /// END OF EVENT LISTENERS
 /////////////////////////////////////////////////////////////////////////////////////////
 
-app.get("/api", (req, res) => {
-    const query = "SELECT * FROM users";
-
-    db.query(query, (err, data) => {
-        if (err) {
-            res.status(500).json({ error: err });
-        } else {
-            res.json(data);
-        }
-    });
-});
 
 app.get("/users/:user_id", (req, res) => {
     const user_id = req.params.user_id;
@@ -341,6 +330,19 @@ app.get("/api/gasprice", (req, res) => {
             res.status(500).json({ error: err });
         } else {
             res.json(data);
+        }
+    });
+});
+
+app.get("/api/:account", (req, res) => {
+    const account = req.params.account;
+    const query = `SELECT * FROM users WHERE user_wallet = '${account}'`;
+
+    db.query(query, (err, data) => {
+        if (err) {
+            res.status(500).json({ error: err });
+        } else {
+            res.json(data[0]);
         }
     });
 });

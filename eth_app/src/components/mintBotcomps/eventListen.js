@@ -220,7 +220,7 @@ export default function HorizontalNonLinearStepper(props) {
                 {allStepsCompleted() ? (
                     <React.Fragment>
                         <Typography sx={{ mt: 2, mb: 1 }}>
-                            All steps completed - you&apos;re finished
+                            Head to Dashboard to track the progress!
                         </Typography>
                         <Box
                             sx={{

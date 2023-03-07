@@ -6,6 +6,7 @@ import Botpage from './pages/Botpage/Botpage';
 import ProtectedRoutes from './pages/Appage/Protectedroute';
 import { AuthContext } from './utils/AuthContext';
 import {ethers} from 'ethers';
+import Profilepage from './pages/Profilepage/Profilepage';
 
 
 
@@ -19,7 +20,7 @@ function App() {
           <Route path="app" element={<Appage />} />
           <Route element={<ProtectedRoutes />}>
             <Route element={<Botpage/>} path="botpage" component={Botpage} />
-            
+            <Route element={<Profilepage />} path="profilepage" component={Profilepage} />
           </Route>
     </Routes>
     

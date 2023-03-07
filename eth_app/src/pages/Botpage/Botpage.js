@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import CreateWallet from "../../scripts/CreateWallet";
 import MintWalletCards from "../../../src/components/MintWalletCard(s)/MintWalletCards";
 import Header from "../../components/Header";
@@ -25,6 +25,7 @@ var GlobalContract;
 export const userInputs = createContext();
 
 const Botpage = () => {
+    const navigate = useNavigate();
     const location = useLocation();
     const { user_id, user_wallet } = location.state;
     //const [backendData, setBackendData] = useState([{}]);
@@ -135,6 +136,10 @@ const Botpage = () => {
         setContractFunctions(updatedArray);
     }
 
+    function handleRoute () {
+        navigate("/profilepage")
+    }
+
     function handleChange(event) {
         const { name, value } = event.target;
         setContractInputs((prevFormData) => {
@@ -176,7 +181,7 @@ const Botpage = () => {
 
     return (
         <div>
-            <Header wallet={user_wallet} />
+            <Header wallet={user_wallet} handleRoute={handleRoute} />
             <userInputs.Provider value={{ sharedState, setSharedState }}>
             <Tabs
                 defaultActiveKey="profile"

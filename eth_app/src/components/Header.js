@@ -1,8 +1,9 @@
 import React from "react";
 
-const Header = ({ wallet }) => {
+const Header = ({ wallet, handleRoute }) => {
     const Box = ({ text }) => (
-        <div
+
+        <div 
             style={{
                 width: "450px",
                 height: "50px",
@@ -14,6 +15,7 @@ const Header = ({ wallet }) => {
                 fontSize: "16px",
                 borderRadius: "15px",
             }}
+            onClick={handleRoute}
         >
             User: {text}
         </div>
