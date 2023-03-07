@@ -133,7 +133,7 @@ const Botpage = () => {
     }
 
     function handleRoute () {
-        navigate("/profilepage")
+        navigate("/profilepage", {state: { user_id, user_wallet }})
     }
 
     function handleChange(event) {
