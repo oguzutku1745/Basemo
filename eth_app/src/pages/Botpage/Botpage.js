@@ -10,7 +10,7 @@ import Tabs from "react-bootstrap/Tabs";
 import HorizontalNonLinearStepper from "../../components/mintBotcomps/eventListen";
 import DashboardCards from "../../components/Dashboard/DashboardCards";
 import GasComponent from "../../components/NetworkGas";
-import { createContext } from 'react';
+import { createContext } from "react";
 
 var GlobalProvider = new ethers.InfuraProvider(
     "goerli",
@@ -19,8 +19,6 @@ var GlobalProvider = new ethers.InfuraProvider(
 var GlobalContractAddress;
 var GlobalContractInterface;
 var GlobalContract;
-
-
 
 export const userInputs = createContext();
 
@@ -35,7 +33,6 @@ const Botpage = () => {
     const [UserGasPrice, setUserGasPrice] = useState("");
     const [functionResult, setFunctionResult] = useState("");
     const [sharedState, setSharedState] = useState({});
-
 
     const [contractInputs, setContractInputs] = useState({
         contractAddress: "",
@@ -52,7 +49,6 @@ const Botpage = () => {
         functionParams: [],
         functionInputs: [],
     });
-
 
     function bringIt() {
         fetch(
@@ -183,136 +179,148 @@ const Botpage = () => {
         <div>
             <Header wallet={user_wallet} handleRoute={handleRoute} />
             <userInputs.Provider value={{ sharedState, setSharedState }}>
-            <Tabs
-                defaultActiveKey="profile"
-                id="uncontrolled-tab-example"
-                className="mb-3"
-            > <Tab eventKey="home" title="Dashboard">
-                <DashboardCards contractInputs={contractInputs} />
-                </Tab>
-                <Tab eventKey="wallets" title="Wallets">
-                    <div className="left-side">
-                        <div>
-                            <h1>Welcome to the BotPage!</h1>
-                        </div>
+                <Tabs
+                    defaultActiveKey="profile"
+                    id="uncontrolled-tab-example"
+                    className="mb-3"
+                >
+                    {" "}
+                    <Tab eventKey="home" title="Dashboard">
+                        <DashboardCards contractInputs={contractInputs} />
+                    </Tab>
+                    <Tab eventKey="wallets" title="Wallets">
+                        <div className="left-side">
+                            <div>
+                                <h1>Welcome to the BotPage!</h1>
+                            </div>
 
-                        <div className="create-wallet">
-                            <CreateWallet
-                                user_id={user_id}
-                                changeStateMintWallets={changeStateMintWallets}
-                                changeStatePrivateKeys={changeStatePrivateKeys}
-                            />
-                        </div>
+                            <div className="create-wallet">
+                                <CreateWallet
+                                    user_id={user_id}
+                                    changeStateMintWallets={
+                                        changeStateMintWallets
+                                    }
+                                    changeStatePrivateKeys={
+                                        changeStatePrivateKeys
+                                    }
+                                />
+                            </div>
 
-                        <div className="mint-wallet-cards">
-                            <MintWalletCards
-                                mint_wallets={mint_wallets}
-                                private_keys={private_keys}
-                                SetTheWallet={SetTheWallet}
-                            />
+                            <div className="mint-wallet-cards">
+                                <MintWalletCards
+                                    mint_wallets={mint_wallets}
+                                    private_keys={private_keys}
+                                    SetTheWallet={SetTheWallet}
+                                />
+                            </div>
                         </div>
-                    </div>
-                </Tab>
-                <Tab eventKey="profile" title="Contract">
-                    <div className="container">
-                        <h3>
-                            <GasComponent />
-                        </h3>
-                        <form>
-                            <input
-                                onChange={handleGasChange}
-                                placeholder="Enter your desired Gas"
-                                value={UserGasPrice}
-                            />
-                        </form>
-                        {contractFunctions.length > 0 && (
-                            <>
-                                {" "}
-                                <div className="left-side">
-                                    <div className="functionContainers">
-                                        <h2>READ</h2>
-                                        {contractFunctions
-                                            .filter(
-                                                (fn) =>
-                                                    fn.functionType === "read"
-                                            )
-                                            .map((fn) => (
-                                                <FunctionStorer
-                                                    key={fn.id}
-                                                    id={fn.id}
-                                                    name={fn.name}
-                                                    paramName={fn.paramName}
-                                                    inputType={fn.inputType}
-                                                    functionType={
-                                                        fn.functionType
-                                                    }
-                                                    handleChildStateChange={
-                                                        handleChildStateChange
-                                                    }
-                                                    functionResult={
-                                                        userContractInputs.functionName ===
-                                                        fn.name
-                                                            ? functionResult
-                                                            : null
-                                                    }
-                                                    sendTxn={sendTxn}
-                                                    sendWriteTxn={sendWriteTxn}
-                                                />
-                                            ))}
+                    </Tab>
+                    <Tab eventKey="profile" title="Contract">
+                        <div className="container">
+                            <h3>
+                                <GasComponent />
+                            </h3>
+                            <form>
+                                <input
+                                    onChange={handleGasChange}
+                                    placeholder="Enter your desired Gas"
+                                    value={UserGasPrice}
+                                />
+                            </form>
+                            {contractFunctions.length > 0 && (
+                                <>
+                                    {" "}
+                                    <div className="left-side">
+                                        <div className="functionContainers">
+                                            <h2>READ</h2>
+                                            {contractFunctions
+                                                .filter(
+                                                    (fn) =>
+                                                        fn.functionType ===
+                                                        "read"
+                                                )
+                                                .map((fn) => (
+                                                    <FunctionStorer
+                                                        key={fn.id}
+                                                        id={fn.id}
+                                                        name={fn.name}
+                                                        paramName={fn.paramName}
+                                                        inputType={fn.inputType}
+                                                        functionType={
+                                                            fn.functionType
+                                                        }
+                                                        handleChildStateChange={
+                                                            handleChildStateChange
+                                                        }
+                                                        functionResult={
+                                                            userContractInputs.functionName ===
+                                                            fn.name
+                                                                ? functionResult
+                                                                : null
+                                                        }
+                                                        sendTxn={sendTxn}
+                                                        sendWriteTxn={
+                                                            sendWriteTxn
+                                                        }
+                                                    />
+                                                ))}
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="right-side">
-                                    <div className="functionContainers">
-                                        <h2>WRITE</h2>
-                                        {contractFunctions
-                                            .filter(
-                                                (fn) =>
-                                                    fn.functionType === "write"
-                                            )
-                                            .map((fn) => (
-                                                <FunctionStorer
-                                                    key={fn.id}
-                                                    id={fn.id}
-                                                    name={fn.name}
-                                                    paramName={fn.paramName}
-                                                    inputType={fn.inputType}
-                                                    functionType={
-                                                        fn.functionType
-                                                    }
-                                                    handleChildStateChange={
-                                                        handleChildStateChange
-                                                    }
-                                                    sendWriteTxn={sendWriteTxn}
-                                                    sendTxn={sendTxn}
-                                                />
-                                            ))}
+                                    <div className="right-side">
+                                        <div className="functionContainers">
+                                            <h2>WRITE</h2>
+                                            {contractFunctions
+                                                .filter(
+                                                    (fn) =>
+                                                        fn.functionType ===
+                                                        "write"
+                                                )
+                                                .map((fn) => (
+                                                    <FunctionStorer
+                                                        key={fn.id}
+                                                        id={fn.id}
+                                                        name={fn.name}
+                                                        paramName={fn.paramName}
+                                                        inputType={fn.inputType}
+                                                        functionType={
+                                                            fn.functionType
+                                                        }
+                                                        handleChildStateChange={
+                                                            handleChildStateChange
+                                                        }
+                                                        sendWriteTxn={
+                                                            sendWriteTxn
+                                                        }
+                                                        sendTxn={sendTxn}
+                                                    />
+                                                ))}
+                                        </div>
                                     </div>
-                                </div>
-                            </>
-                        )}
-                        <form>
-                            <input
-                                onChange={handleChange}
-                                type="text"
-                                value={contractInputs.contractAddress}
-                                name="contractAddress"
-                                placeholder="Paste the contract address..."
-                            />{" "}
-                        </form>{" "}
-                        <br />
-                        <button className="buttons" onClick={bringIt}>
-                            Bring the contract
-                        </button>
-                    </div>
-                </Tab>
-                <Tab eventKey="contact" title="Set Up Mint Task">
-                    <HorizontalNonLinearStepper
-                        contractFunctions={contractFunctions}
-                        mint_wallets={mint_wallets}
-                        private_keys={private_keys}
-                    />
-                </Tab>
-            </Tabs>
+                                </>
+                            )}
+                            <form>
+                                <input
+                                    onChange={handleChange}
+                                    type="text"
+                                    value={contractInputs.contractAddress}
+                                    name="contractAddress"
+                                    placeholder="Paste the contract address..."
+                                />{" "}
+                            </form>{" "}
+                            <br />
+                            <button className="buttons" onClick={bringIt}>
+                                Bring the contract
+                            </button>
+                        </div>
+                    </Tab>
+                    <Tab eventKey="contact" title="Set Up Mint Task">
+                        <HorizontalNonLinearStepper
+                            contractFunctions={contractFunctions}
+                            mint_wallets={mint_wallets}
+                            private_keys={private_keys}
+                        />
+                    </Tab>
+                </Tabs>
             </userInputs.Provider>
             <div className="container"></div>
         </div>
