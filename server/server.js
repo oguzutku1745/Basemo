@@ -53,23 +53,34 @@ app.post("/api/listen", (req, res) => {
         PrivateKeyTxn,
     } = req.body;
     console.log(req.body);
-    listenToVariable(contractAddress, ABI, targetFunction, targetValue, () => {
-        sendWriteTxnRead(
-            FunctionToCall,
-            FunctionToCallInput,
-            SelectedUserGas,
-            PrivateKeyTxn,
-            ABI,
-            contractAddress
-        );
-        console.log(
-            `Target value ${targetValue} reached for variable ${targetFunction} on contract ${contractAddress}`
-        );
-    });
-
-    res.status(200).json({
-        message: `Started listening for variable ${targetFunction} on contract ${contractAddress}`,
-    });
+    var result;
+    listenToVariable(
+        contractAddress,
+        ABI,
+        targetFunction,
+        targetValue,
+        async () => {
+            try {
+                result = await sendWriteTxnRead(
+                    FunctionToCall,
+                    FunctionToCallInput,
+                    SelectedUserGas,
+                    PrivateKeyTxn,
+                    ABI,
+                    contractAddress
+                );
+                if (result.error) {
+                    res.status(500).json({ error: result.error });
+                } else {
+                    res.status(200).json({
+                        transaction: result.transactions,
+                    });
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    );
 });
 
 async function sendWriteTxnRead(
@@ -81,6 +92,7 @@ async function sendWriteTxnRead(
     contractAddress
 ) {
     Interface_txn = new ethers.utils.Interface(ABI);
+    transactions = [];
 
     const contract_txn = new ethers.Contract(
         contractAddress,
@@ -99,15 +111,23 @@ async function sendWriteTxnRead(
         : [];
 
     for (const privateKey of PrivateKeys) {
-        const wallet = new ethers.Wallet(privateKey, provider);
-        const signer = wallet.connect(provider);
+        try {
+            const wallet = new ethers.Wallet(privateKey, provider);
+            const signer = wallet.connect(provider);
 
-        const transaction = await contract_txn
-            .connect(signer)
-            [FunctionToCall](...inputs, { gasPrice: gasPriceToUse });
+            const transaction = await contract_txn
+                .connect(signer)
+                [FunctionToCall](...inputs, { gasPrice: gasPriceToUse });
 
-        console.log(transaction);
+            console.log(transaction);
+
+            transactions.push(transaction); // Return true if the transaction was successful
+        } catch (error) {
+            console.log(error);
+            return { error };
+        }
     }
+    return { transactions };
 }
 
 app.post("/api/listenFunction", (req, res) => {
@@ -115,16 +135,15 @@ app.post("/api/listenFunction", (req, res) => {
         contractAddress,
         ABI,
         targetFunction,
-
         targetValue,
         FunctionToCall,
         FunctionToCallInput,
         SelectedUserGas,
         PrivateKeyTxn,
-        pendingStatus
+        pendingStatus,
     } = req.body;
-    const YOUR_API_KEY = "6b3983a6-2d11-4316-93db-c701bf1d46f9";
 
+    const YOUR_API_KEY = "6b3983a6-2d11-4316-93db-c701bf1d46f9";
     const options = {
         dappId: YOUR_API_KEY,
         networkId: 5,
@@ -137,6 +156,7 @@ app.post("/api/listenFunction", (req, res) => {
     const address = contractAddress;
     const abi = JSON.parse(ABI);
     const { emitter, details } = blocknative.account(address);
+    var result;
 
     const functionObject = abi.find((func) => {
         return func.name === targetFunction;
@@ -153,44 +173,55 @@ app.post("/api/listenFunction", (req, res) => {
             if (
                 transaction.to === contractAddress &&
                 input === encodedFunctionCall
-            ){console.log(pendingStatus) 
-            if (pendingStatus) {
-                if (transaction.status === "pending") {
-                  console.log("MATCH for pending");
-                  emitter.off("all");
-                  sendWriteTxnRead(
-                    FunctionToCall,
-                    FunctionToCallInput,
-                    SelectedUserGas,
-                    PrivateKeyTxn,
-                    ABI,
-                    contractAddress
-                  );
+            ) {
+                console.log(pendingStatus);
+                if (pendingStatus) {
+                    if (transaction.status === "pending") {
+                        console.log("MATCH for pending");
+                        emitter.off("all");
+                        result = await sendWriteTxnRead(
+                            FunctionToCall,
+                            FunctionToCallInput,
+                            SelectedUserGas,
+                            PrivateKeyTxn,
+                            ABI,
+                            contractAddress
+                        );
+                        if (result.error) {
+                            res.status(500).json({ error: result.error });
+                        } else {
+                            res.status(200).json({
+                                transaction: result.transaction,
+                            });
+                        }
+                    }
+                } else {
+                    if (transaction.status === "confirmed") {
+                        console.log("MATCH for confirmed");
+                        emitter.off("all");
+                        result = await sendWriteTxnRead(
+                            FunctionToCall,
+                            FunctionToCallInput,
+                            SelectedUserGas,
+                            PrivateKeyTxn,
+                            ABI,
+                            contractAddress
+                        );
+                        if (result.error) {
+                            res.status(500).json({ error: result.error });
+                        } else {
+                            res.status(200).json({
+                                transaction: result.transactions,
+                            });
+                        }
+                    }
                 }
-              } else {
-                if (transaction.status === "confirmed") {
-                  console.log("MATCH for confirmed");
-                  emitter.off("all");
-                  sendWriteTxnRead(
-                    FunctionToCall,
-                    FunctionToCallInput,
-                    SelectedUserGas,
-                    PrivateKeyTxn,
-                    ABI,
-                    contractAddress
-                  );
-                }
-              }
             } else {
                 console.log("DID NOT MATCH");
             }
         } catch (error) {
             console.log(error);
         }
-    });
-
-    res.status(200).json({
-        message: `Started listening for function ${targetFunction} on contract ${contractAddress}`,
     });
 });
 

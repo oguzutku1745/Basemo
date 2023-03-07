@@ -1,11 +1,14 @@
-import React, {useContext, Button} from "react";
+import React, { useContext, Button, useState } from "react";
 import { userInputs } from "../../pages/Botpage/Botpage";
 
 export default function DashboardCards() {
     const { sharedState } = useContext(userInputs);
-    console.log("shared State is: ",sharedState)
+    const [Status, setStatus] = useState("Steady");
+
+    console.log("shared State is: ", sharedState);
 
     function handleClick() {
+        setStatus("Active");
         if (sharedState.eventListener === "Read") {
             sendRequestToBackend(
                 sharedState.taskContract,
@@ -52,7 +55,7 @@ export default function DashboardCards() {
             FunctionToCallInput,
             SelectedUserGas,
             PrivateKeyTxn,
-            pendingStatus
+            pendingStatus,
         };
         fetch("/api/listenFunction", {
             method: "POST",
@@ -63,7 +66,14 @@ export default function DashboardCards() {
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log(data);
+                if (data.error) {
+                    console.log(data.error);
+                    setStatus("Error");
+                } else {
+                    console.log(data.transaction);
+                    setStatus("Completed");
+                    // handle successful transaction
+                }
             });
     }
 
@@ -96,34 +106,64 @@ export default function DashboardCards() {
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log(data);
+                if (data.error) {
+                    console.log(data.error);
+                    setStatus("Error");
+                } else {
+                    console.log(data.transaction);
+                    setStatus("Completed");
+                    // handle successful transaction
+                }
             });
     }
+    const statusColors = {
+        Steady: "gray",
+        Active: "yellow",
+        Completed: "green",
+        Error: "red",
+    };
 
-    return(
-        <div className="body" >
-            {sharedState.taskName ?(
-            <div className="dashboard-Card">
-                <h3 className="taskNameColor">{sharedState.taskName}</h3>
-                <h4>{sharedState.taskContract}</h4>
-                <hr />
-                <div className="dashboard-Taskinputs">
-                Mint Wallet: {sharedState.mintWallet} <br />
-                State Change Type: {sharedState.eventListener} <br />
-                Targeted Function To Listen: {sharedState.eventListenerFunction} <br />
-                Targeted Input To Listen: {sharedState.eventListenerInput} <br />
-                Function Tx Will Send: {sharedState.taskContractFunction} <br />
-                Input For The Tx: {sharedState.taskContractFunctionInput} <br />
-                Setted Gas: {sharedState.selectedGasPrice}
+    return (
+        <div className="body">
+            {sharedState.taskName ? (
+                <div
+                    className="dashboard-Card"
+                    style={{ backgroundColor: statusColors[Status] }}
+                >
+                    <h3 className="taskNameColor">{sharedState.taskName}</h3>
+                    <h4>{sharedState.taskContract}</h4>
+                    <hr />
+                    <div className="dashboard-Taskinputs">
+                        Mint Wallet: {sharedState.mintWallet} <br />
+                        State Change Type: {sharedState.eventListener} <br />
+                        Targeted Function To Listen:{" "}
+                        {sharedState.eventListenerFunction} <br />
+                        Targeted Input To Listen:{" "}
+                        {sharedState.eventListenerInput} <br />
+                        Function Tx Will Send:{" "}
+                        {sharedState.taskContractFunction} <br />
+                        Input For The Tx:{" "}
+                        {sharedState.taskContractFunctionInput} <br />
+                        Setted Gas: {sharedState.selectedGasPrice}
+                    </div>
+                    <div className="Statu">
+                        {Status === "Steady" ? (
+                            <button className="buttons" onClick={handleClick}>
+                                {" "}
+                                FIRE{" "}
+                            </button>
+                        ) : Status === "Active" ? (
+                            <div>Statu: Active</div>
+                        ) : Status === "Completed" ? (
+                            <div> Statu: Completed </div>
+                        ) : (
+                            Status === "Error" && <div> Statu: False </div>
+                        )}
+                    </div>
                 </div>
-                <button className="buttons" onClick={handleClick}> FIRE </button>
-            </div>
-            ):(
-            <div className="nothingness">
-                Nothing to see here
-            </div>
-            )
-            }
+            ) : (
+                <div className="nothingness">Nothing to see here</div>
+            )}
         </div>
-    )
+    );
 }
