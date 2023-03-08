@@ -83,6 +83,21 @@ app.post("/api/listen", (req, res) => {
     );
 });
 
+app.get('/getABI/:contractAddress', async (req, res) => {
+    const { contractAddress } = req.params;
+    const apiKey = 'EY4HQCTINHG9CEVSNDFND3AKXNIU8KBZA4';
+    const url = `https://api-goerli.etherscan.io/api?module=contract&action=getabi&address=${contractAddress}&apikey=${apiKey}`;
+  
+    try {
+      const response = await axios.get(url);
+      const data = response.data.result;
+      res.status(200).json(data);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send('Something went wrong');
+    }
+  });
+
 async function sendWriteTxnRead(
     FunctionToCall,
     FunctionToCallInput,

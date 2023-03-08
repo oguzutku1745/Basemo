@@ -51,21 +51,19 @@ const Botpage = () => {
     });
 
     function bringIt() {
-        fetch(
-            `https://api-goerli.etherscan.io/api?module=contract&action=getabi&address=${contractInputs.contractAddress}&apikey=EY4HQCTINHG9CEVSNDFND3AKXNIU8KBZA4`
-        )
-            .then((response) => response.json())
-            .then((data) => {
-                setContractInputs((prevState) => {
-                    return {
-                        ...prevState,
-                        contractABI: data.result,
-                    };
-                });
-                GlobalContractAddress = contractInputs.contractAddress;
-                resolveContract(data.result);
+        fetch(`/getABI/${contractInputs.contractAddress}`)
+          .then((response) => response.json())
+          .then((data) => {
+            setContractInputs((prevState) => {
+              return {
+                ...prevState,
+                contractABI: data,
+              };
             });
-    }
+            GlobalContractAddress = contractInputs.contractAddress;
+            resolveContract(data);
+          });
+      }
 
     const handleChildStateChange = useCallback((childState) => {
         setUserContractInputs((prevState) => ({ ...prevState, ...childState }));

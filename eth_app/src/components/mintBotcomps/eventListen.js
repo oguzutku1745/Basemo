@@ -109,17 +109,48 @@ export default function HorizontalNonLinearStepper(props) {
     };
 
     const handleComplete = () => {
-        const newCompleted = completed;
-        newCompleted[activeStep] = true;
-        setCompleted(newCompleted);
-
-        if (completedSteps() === totalSteps()) {
-            setSharedState(mintSectionInputs)
-
-        } else {
-            handleNext();
+        let isAnyEmpty = false;
+        let newCompleted = { ...completed };
+      
+        switch (activeStep) {
+          case 0:
+            isAnyEmpty =
+              !mintSectionInputs.taskName.trim() || !mintSectionInputs.taskContract.trim();
+            break;
+          case 1:
+            isAnyEmpty =
+              !mintSectionInputs.taskContractFunction.trim() ||
+              !mintSectionInputs.taskContractFunctionInput.trim();
+            break;
+          case 2:
+            isAnyEmpty =
+              !mintSectionInputs.mintWallet.trim() || !mintSectionInputs.mintPrivateKey.trim();
+            break;
+          case 3:
+            isAnyEmpty = !mintSectionInputs.selectedGasPrice.trim();
+            break;
+          case 4:
+            isAnyEmpty =
+              !mintSectionInputs.eventListenerFunction.trim() ||
+              !mintSectionInputs.eventListenerInput.trim();
+            break;
+          default:
+            break;
         }
-    };
+      
+        if (isAnyEmpty) {
+          alert("Please fill in all required fields.");
+        } else {
+          newCompleted[activeStep] = true;
+          setCompleted(newCompleted);
+      
+          if (completedSteps() === totalSteps()) {
+            setSharedState(mintSectionInputs);
+          } else {
+            handleNext();
+          }
+        }
+      };
 
     const setTheInput = (name, value) => {
         setMintSectionInputs((prevState) => {
@@ -151,28 +182,26 @@ export default function HorizontalNonLinearStepper(props) {
     // CONTRACT API REQUEST
     React.useEffect(() => {
         if (mintSectionInputs.taskContract.length > 0) {
-            fetch(
-                `https://api-goerli.etherscan.io/api?module=contract&action=getabi&address=${mintSectionInputs.taskContract}&apikey=EY4HQCTINHG9CEVSNDFND3AKXNIU8KBZA4`
-            )
-                .then((response) => response.json())
-                .then((data) => {
-                    setContractInputs((prevState) => {
-                        return {
-                            ...prevState,
-                            contractABI: data.result,
-                        };
-                    });
-                    setMintSectionInputs((prevData) => {
-                        return {
-                            ...prevData,
-                            taskContractABI: data.result,
-                        }
-                    })
-                    GlobalContractAddress = contractInputs.contractAddress;
-                    resolveContract_Event(data.result);
-                });
+          fetch(`/getABI/${mintSectionInputs.taskContract}`)
+            .then((response) => response.json())
+            .then((data) => {
+              setContractInputs((prevState) => {
+                return {
+                  ...prevState,
+                  contractABI: data,
+                };
+              });
+              setMintSectionInputs((prevData) => {
+                return {
+                  ...prevData,
+                  taskContractABI: data,
+                }
+              })
+              GlobalContractAddress = contractInputs.contractAddress;
+              resolveContract_Event(data);
+            });
         }
-    }, [mintSectionInputs.taskContract]);
+      }, [mintSectionInputs.taskContract]);
 
     async function resolveContract_Event(ABI) {
         GlobalContractInterface = new ethers.Interface(ABI);
