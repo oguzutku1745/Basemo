@@ -107,14 +107,42 @@ export default function EventListen(props) {
     };
 
     const handleComplete = () => {
-        const newCompleted = completed;
-        newCompleted[activeStep] = true;
-        setCompleted(newCompleted);
+        let isAnyEmpty = false;
+        let newCompleted = { ...completed };
 
-        if (completedSteps() === totalSteps()) {
-            props.changeStateTasks(mintSectionInputs);
+        switch (activeStep) {
+            case 0:
+                isAnyEmpty =
+                    !mintSectionInputs.taskName.trim() ||
+                    !mintSectionInputs.taskContract.trim();
+                break;
+            case 1:
+                isAnyEmpty = !mintSectionInputs.taskContractFunction.trim();
+                break;
+            case 2:
+                isAnyEmpty = mintSectionInputs.mintWallet.length === 0;
+                break;
+            case 3:
+                isAnyEmpty = !mintSectionInputs.selectedGasPrice.trim();
+                break;
+            case 4:
+                isAnyEmpty = !mintSectionInputs.eventListenerFunction.trim();
+                break;
+            default:
+                break;
+        }
+
+        if (isAnyEmpty) {
+            alert("Please fill in all required fields.");
         } else {
-            handleNext();
+            newCompleted[activeStep] = true;
+            setCompleted(newCompleted);
+
+            if (completedSteps() === totalSteps()) {
+                props.changeStateTasks(mintSectionInputs);
+            } else {
+                handleNext();
+            }
         }
     };
 
@@ -131,16 +159,18 @@ export default function EventListen(props) {
         setActiveStep(0);
         setCompleted({});
         setMintSectionInputs({
-            mintWallet: "",
-            mintPrivateKey: "",
+            mintWallet: [],
+            mintPrivateKey: [],
             selectedGasPrice: "",
             taskName: "",
             taskContract: "",
+            taskContractABI: "",
             taskContractFunction: "",
             taskContractFunctionInput: "",
             eventListener: "",
             eventListenerFunction: "",
             eventListenerInput: "",
+            eventListenerPending: false,
         });
     };
 
