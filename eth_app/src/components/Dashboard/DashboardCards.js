@@ -134,7 +134,14 @@ export default function DashboardCards(props) {
                     <h4>{sharedState.taskContract}</h4>
                     <hr />
                     <div className="dashboard-Taskinputs">
-                        Mint Wallet: {sharedState.mintWallet} <br />
+                        Mint Wallet(s):
+                        {sharedState.mintWallet.map((mint_wallet) => (
+                            <div>
+                                {" "}
+                                {mint_wallet} <br></br>
+                            </div>
+                        ))}{" "}
+                        <br />
                         State Change Type: {sharedState.eventListener} <br />
                         Targeted Function To Listen:{" "}
                         {sharedState.eventListenerFunction} <br />
