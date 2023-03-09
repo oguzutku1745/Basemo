@@ -7,7 +7,7 @@ import { ethers } from "ethers";
 import FunctionStorer from "../../components/contractFunction(s)/FunctionStorer";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
-import HorizontalNonLinearStepper from "../../components/mintBotcomps/eventListen";
+import EventListen from "../../components/mintBotcomps/eventListen";
 import DashboardCards from "../../components/Dashboard/DashboardCards";
 import GasComponent from "../../components/NetworkGas";
 import { createContext } from "react";
@@ -33,6 +33,7 @@ const Botpage = () => {
     const [UserGasPrice, setUserGasPrice] = useState("");
     const [functionResult, setFunctionResult] = useState("");
     const [sharedState, setSharedState] = useState({});
+    const [tasks, setTasks] = useState([]);
 
     const [contractInputs, setContractInputs] = useState({
         contractAddress: "",
@@ -50,20 +51,26 @@ const Botpage = () => {
         functionInputs: [],
     });
 
+    function changeStateTasks(new_task) {
+        setTasks((prev) => {
+            return [...prev, new_task];
+        });
+    }
+
     function bringIt() {
         fetch(`/getABI/${contractInputs.contractAddress}`)
-          .then((response) => response.json())
-          .then((data) => {
-            setContractInputs((prevState) => {
-              return {
-                ...prevState,
-                contractABI: data,
-              };
+            .then((response) => response.json())
+            .then((data) => {
+                setContractInputs((prevState) => {
+                    return {
+                        ...prevState,
+                        contractABI: data,
+                    };
+                });
+                GlobalContractAddress = contractInputs.contractAddress;
+                resolveContract(data);
             });
-            GlobalContractAddress = contractInputs.contractAddress;
-            resolveContract(data);
-          });
-      }
+    }
 
     const handleChildStateChange = useCallback((childState) => {
         setUserContractInputs((prevState) => ({ ...prevState, ...childState }));
@@ -130,8 +137,8 @@ const Botpage = () => {
         setContractFunctions(updatedArray);
     }
 
-    function handleRoute () {
-        navigate("/profilepage", {state: { user_id, user_wallet }})
+    function handleRoute() {
+        navigate("/profilepage", { state: { user_id, user_wallet } });
     }
 
     function handleChange(event) {
@@ -184,7 +191,17 @@ const Botpage = () => {
                 >
                     {" "}
                     <Tab eventKey="home" title="Dashboard">
-                        <DashboardCards contractInputs={contractInputs} />
+                        {tasks &&
+                            tasks.map((task, index) => (
+                                <li key={index}>
+                                    <div>
+                                        <DashboardCards
+                                            index={index}
+                                            task={tasks[index]}
+                                        />
+                                    </div>
+                                </li>
+                            ))}
                     </Tab>
                     <Tab eventKey="wallets" title="Wallets">
                         <div className="left-side">
@@ -312,10 +329,11 @@ const Botpage = () => {
                         </div>
                     </Tab>
                     <Tab eventKey="contact" title="Set Up Mint Task">
-                        <HorizontalNonLinearStepper
+                        <EventListen
                             contractFunctions={contractFunctions}
                             mint_wallets={mint_wallets}
                             private_keys={private_keys}
+                            changeStateTasks={changeStateTasks}
                         />
                     </Tab>
                 </Tabs>

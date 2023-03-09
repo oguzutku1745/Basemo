@@ -13,7 +13,7 @@ import Step4 from "../FormFilling/Step4";
 import Step5 from "../FormFilling/Step5";
 import Step6 from "../FormFilling/Step6";
 import { ethers } from "ethers";
-import { userInputs } from '../../pages/Botpage/Botpage';
+import { userInputs } from "../../pages/Botpage/Botpage";
 
 const steps = [
     "Basics",
@@ -32,8 +32,8 @@ var GlobalContractAddress;
 var GlobalContractInterface;
 var GlobalContract;
 
-export default function HorizontalNonLinearStepper(props) {
-    const { sharedState, setSharedState } = useContext(userInputs);
+export default function EventListen(props) {
+    //const { sharedState, setSharedState } = useContext(userInputs);
     const [activeStep, setActiveStep] = React.useState(0);
     const [completed, setCompleted] = React.useState({});
     const [selectedMethod, setselectedMethod] = useState("Read");
@@ -53,7 +53,7 @@ export default function HorizontalNonLinearStepper(props) {
         eventListenerPending: false,
     });
 
-    console.log(mintSectionInputs)
+    console.log(mintSectionInputs);
 
     const [contractInputs, setContractInputs] = useState({
         contractAddress: "",
@@ -69,7 +69,7 @@ export default function HorizontalNonLinearStepper(props) {
 
     const handleSelectChangeMethod = (event) => {
         setselectedMethod(event.target.value);
-        setTheInput("eventListener", event.target.value)
+        setTheInput("eventListener", event.target.value);
     };
 
     const totalSteps = () => {
@@ -87,8 +87,6 @@ export default function HorizontalNonLinearStepper(props) {
     const allStepsCompleted = () => {
         return completedSteps() === totalSteps();
     };
-
-    
 
     const handleNext = () => {
         const newActiveStep =
@@ -109,48 +107,16 @@ export default function HorizontalNonLinearStepper(props) {
     };
 
     const handleComplete = () => {
-        let isAnyEmpty = false;
-        let newCompleted = { ...completed };
-      
-        switch (activeStep) {
-          case 0:
-            isAnyEmpty =
-              !mintSectionInputs.taskName.trim() || !mintSectionInputs.taskContract.trim();
-            break;
-          case 1:
-            isAnyEmpty =
-              !mintSectionInputs.taskContractFunction.trim() ||
-              !mintSectionInputs.taskContractFunctionInput.trim();
-            break;
-          case 2:
-            isAnyEmpty =
-              !mintSectionInputs.mintWallet.trim() || !mintSectionInputs.mintPrivateKey.trim();
-            break;
-          case 3:
-            isAnyEmpty = !mintSectionInputs.selectedGasPrice.trim();
-            break;
-          case 4:
-            isAnyEmpty =
-              !mintSectionInputs.eventListenerFunction.trim() ||
-              !mintSectionInputs.eventListenerInput.trim();
-            break;
-          default:
-            break;
-        }
-      
-        if (isAnyEmpty) {
-          alert("Please fill in all required fields.");
+        const newCompleted = completed;
+        newCompleted[activeStep] = true;
+        setCompleted(newCompleted);
+
+        if (completedSteps() === totalSteps()) {
+            props.changeStateTasks(mintSectionInputs);
         } else {
-          newCompleted[activeStep] = true;
-          setCompleted(newCompleted);
-      
-          if (completedSteps() === totalSteps()) {
-            setSharedState(mintSectionInputs);
-          } else {
             handleNext();
-          }
         }
-      };
+    };
 
     const setTheInput = (name, value) => {
         setMintSectionInputs((prevState) => {
@@ -182,26 +148,26 @@ export default function HorizontalNonLinearStepper(props) {
     // CONTRACT API REQUEST
     React.useEffect(() => {
         if (mintSectionInputs.taskContract.length > 0) {
-          fetch(`/getABI/${mintSectionInputs.taskContract}`)
-            .then((response) => response.json())
-            .then((data) => {
-              setContractInputs((prevState) => {
-                return {
-                  ...prevState,
-                  contractABI: data,
-                };
-              });
-              setMintSectionInputs((prevData) => {
-                return {
-                  ...prevData,
-                  taskContractABI: data,
-                }
-              })
-              GlobalContractAddress = contractInputs.contractAddress;
-              resolveContract_Event(data);
-            });
+            fetch(`/getABI/${mintSectionInputs.taskContract}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    setContractInputs((prevState) => {
+                        return {
+                            ...prevState,
+                            contractABI: data,
+                        };
+                    });
+                    setMintSectionInputs((prevData) => {
+                        return {
+                            ...prevData,
+                            taskContractABI: data,
+                        };
+                    });
+                    GlobalContractAddress = contractInputs.contractAddress;
+                    resolveContract_Event(data);
+                });
         }
-      }, [mintSectionInputs.taskContract]);
+    }, [mintSectionInputs.taskContract]);
 
     async function resolveContract_Event(ABI) {
         GlobalContractInterface = new ethers.Interface(ABI);

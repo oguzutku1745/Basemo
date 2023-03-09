@@ -31,7 +31,7 @@ input {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    height: 40vh;
     margin: 0;
 }
 .container {
@@ -112,7 +112,7 @@ input[type="checkbox"] {
 }
 
 .dashboardInformer {
-    color:rgb(187, 26, 109)
+    color: rgb(187, 26, 109);
 }
 
 .dashboard-Taskinputs {

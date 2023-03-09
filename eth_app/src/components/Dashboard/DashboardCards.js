@@ -1,9 +1,9 @@
 import React, { useContext, Button, useState } from "react";
 import { userInputs } from "../../pages/Botpage/Botpage";
 
-export default function DashboardCards() {
-    const { sharedState } = useContext(userInputs);
+export default function DashboardCards(props) {
     const [Status, setStatus] = useState("Steady");
+    const sharedState = props.task;
 
     console.log("shared State is: ", sharedState);
 
@@ -153,11 +153,11 @@ export default function DashboardCards() {
                                 FIRE{" "}
                             </button>
                         ) : Status === "Active" ? (
-                            <div>Statu: Active</div>
+                            <div>Status: Active</div>
                         ) : Status === "Completed" ? (
-                            <div> Statu: Completed </div>
+                            <div> Status: Completed </div>
                         ) : (
-                            Status === "Error" && <div> Statu: False </div>
+                            Status === "Error" && <div> Status: False </div>
                         )}
                     </div>
                 </div>
