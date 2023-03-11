@@ -83,20 +83,20 @@ app.post("/api/listen", (req, res) => {
     );
 });
 
-app.get('/getABI/:contractAddress', async (req, res) => {
+app.get("/getABI/:contractAddress", async (req, res) => {
     const { contractAddress } = req.params;
-    const apiKey = 'EY4HQCTINHG9CEVSNDFND3AKXNIU8KBZA4';
+    const apiKey = "EY4HQCTINHG9CEVSNDFND3AKXNIU8KBZA4";
     const url = `https://api-goerli.etherscan.io/api?module=contract&action=getabi&address=${contractAddress}&apikey=${apiKey}`;
-  
+
     try {
-      const response = await axios.get(url);
-      const data = response.data.result;
-      res.status(200).json(data);
+        const response = await axios.get(url);
+        const data = response.data.result;
+        res.status(200).json(data);
     } catch (error) {
-      console.log(error);
-      res.status(500).send('Something went wrong');
+        console.log(error);
+        res.status(500).send("Something went wrong");
     }
-  });
+});
 
 async function sendWriteTxnRead(
     FunctionToCall,
@@ -145,7 +145,7 @@ async function sendWriteTxnRead(
     return { transactions };
 }
 
-app.post("/api/listenFunction", (req, res) => {
+app.post("/api/listenFunction", async (req, res) => {
     const {
         contractAddress,
         ABI,
@@ -156,9 +156,13 @@ app.post("/api/listenFunction", (req, res) => {
         SelectedUserGas,
         PrivateKeyTxn,
         pendingStatus,
+        user_id,
     } = req.body;
-
-    const YOUR_API_KEY = "6b3983a6-2d11-4316-93db-c701bf1d46f9";
+    userBlockKey = await getUserBlockNativeKey(user_id);
+    const YOUR_API_KEY = userBlockKey
+        ? userBlockKey
+        : "6b3983a6-2d11-4316-93db-c701bf1d46f9";
+    console.log(YOUR_API_KEY);
     const options = {
         dappId: YOUR_API_KEY,
         networkId: 5,
@@ -318,7 +322,6 @@ app.post("/api/stop", (req, res) => {
 /// END OF EVENT LISTENERS
 /////////////////////////////////////////////////////////////////////////////////////////
 
-
 app.get("/users/:user_id", (req, res) => {
     const user_id = req.params.user_id;
     const query = "SELECT * FROM mint_wallet WHERE user_id = (?)";
@@ -343,6 +346,47 @@ app.post("/api/data", (req, res) => {
         console.log(`Inserted ${results.affectedRows} row(s)`);
     });
 });
+
+app.post("/api/setuserblocknativekey", (req, res) => {
+    const sql = "UPDATE users SET blocknative_key = ? WHERE user_id = ?";
+    const data = [req.body.userBlocknativeKey, req.body.user_id];
+    db.query(sql, data, (err, results) => {
+        if (err) throw err;
+        console.log(`Inserted ${results.affectedRows} row(s)`);
+    });
+});
+
+app.get("/api/getuserblocknativekey", (req, res) => {
+    const user_id = req.query.user_id; // use req.query instead of req.body
+    const query = `SELECT blocknative_key FROM users WHERE user_id = '${user_id}'`;
+
+    db.query(query, (err, data) => {
+        if (err) {
+            res.status(500).json({ error: err });
+        } else {
+            res.json(data);
+        }
+    });
+});
+
+const getUserBlockNativeKey = (user_id) => {
+    return new Promise((resolve, reject) => {
+        const query = `SELECT blocknative_key FROM users WHERE user_id = (?)`;
+        const input = [user_id];
+        db.query(query, input, (err, data) => {
+            if (err) {
+                reject(err);
+            } else {
+                if (data.length === 0) {
+                    // user not found in database
+                    resolve(0);
+                } else {
+                    resolve(data[0].blocknative_key);
+                }
+            }
+        });
+    });
+};
 
 // Function to fetch data from Etherscan API every second and update database
 const fetchDataAndUpdateDB = () => {

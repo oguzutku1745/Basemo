@@ -1,9 +1,9 @@
 import React, { useContext, Button, useState } from "react";
 import { userInputs } from "../../pages/Botpage/Botpage";
 
-export default function DashboardCards(props) {
+export default function DashboardCards({ task, user_id }) {
     const [Status, setStatus] = useState("Steady");
-    const sharedState = props.task;
+    const sharedState = task;
 
     console.log("shared State is: ", sharedState);
 
@@ -30,7 +30,8 @@ export default function DashboardCards(props) {
                 sharedState.taskContractFunctionInput,
                 sharedState.selectedGasPrice,
                 sharedState.mintPrivateKey,
-                sharedState.eventListenerPending
+                sharedState.eventListenerPending,
+                user_id
             );
         }
     }
@@ -44,7 +45,8 @@ export default function DashboardCards(props) {
         FunctionToCallInput,
         SelectedUserGas,
         PrivateKeyTxn,
-        pendingStatus
+        pendingStatus,
+        user_id
     ) {
         const requestData = {
             contractAddress, // value of contractAddress,
@@ -56,6 +58,7 @@ export default function DashboardCards(props) {
             SelectedUserGas,
             PrivateKeyTxn,
             pendingStatus,
+            user_id,
         };
         fetch("/api/listenFunction", {
             method: "POST",

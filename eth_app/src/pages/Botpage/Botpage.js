@@ -198,6 +198,7 @@ const Botpage = () => {
                                         <DashboardCards
                                             index={index}
                                             task={tasks[index]}
+                                            user_id={user_id}
                                         />
                                     </div>
                                 </li>
