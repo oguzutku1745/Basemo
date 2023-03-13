@@ -144,7 +144,7 @@ async function sendWriteTxnRead(
     }
     return { transactions };
 }
-
+const emitters = new Map();
 app.post("/api/listenFunction", async (req, res) => {
     const {
         contractAddress,
@@ -158,6 +158,7 @@ app.post("/api/listenFunction", async (req, res) => {
         pendingStatus,
         user_id,
     } = req.body;
+
     userBlockKey = await getUserBlockNativeKey(user_id);
     const YOUR_API_KEY = userBlockKey
         ? userBlockKey
