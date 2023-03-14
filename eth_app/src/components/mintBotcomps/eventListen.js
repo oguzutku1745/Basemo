@@ -107,16 +107,48 @@ export default function EventListen(props) {
     };
 
     const handleComplete = () => {
-        const newCompleted = completed;
-        newCompleted[activeStep] = true;
-        setCompleted(newCompleted);
-
-        if (completedSteps() === totalSteps()) {
-            props.changeStateTasks(mintSectionInputs);
-        } else {
-            handleNext();
+        let isAnyEmpty = false;
+        const newCompleted = { ...completed };
+        
+        switch (activeStep) {
+          case 0:
+            isAnyEmpty =
+              !mintSectionInputs.taskName.trim() || !mintSectionInputs.taskContract.trim();
+            break;
+          case 1:
+            isAnyEmpty =
+              !mintSectionInputs.taskContractFunction.trim();
+            break;
+          case 2:
+            isAnyEmpty =
+              !String(mintSectionInputs.mintWallet).trim() ||
+              !String(mintSectionInputs.mintPrivateKey).trim();
+            break;
+          case 3:
+            isAnyEmpty = !mintSectionInputs.selectedGasPrice.trim();
+            break;
+          case 4:
+            isAnyEmpty =
+              !mintSectionInputs.eventListenerFunction.trim() ||
+              !mintSectionInputs.eventListenerInput.trim();
+            break;
+          default:
+            break;
         }
-    };
+        
+        if (isAnyEmpty) {
+          alert("Please fill in all required fields.");
+        } else {
+          newCompleted[activeStep] = true;
+          setCompleted(newCompleted);
+          if (completedSteps() === totalSteps() - 1) {
+            props.changeStateTasks(mintSectionInputs);
+          } else {
+            handleNext();
+          }
+        }
+      };     
+      
 
     const setTheInput = (name, value) => {
         setMintSectionInputs((prevState) => {
