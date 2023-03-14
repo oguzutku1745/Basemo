@@ -53,10 +53,10 @@ export default function Step5(props) {
         label: name,
     }));
 
-    function handleChecked(event){
-        const {name, value, checked} = event.target;
-        console.log(checked)
-        props.setTheInput("eventListenerPending", checked)
+    function handleChecked(event) {
+        const { name, value, checked } = event.target;
+        console.log(checked);
+        props.setTheInput("eventListenerPending", checked);
     }
 
     function handleSelectFunction(selected) {
@@ -151,17 +151,22 @@ export default function Step5(props) {
                         onChange={handleSelectFunction}
                     />
                     <br />
-                    {selectedFunction &&
-                    <form>
-                    <input 
-                    type='checkbox'
-                    id='eventListenerPending'
-                    name='eventListenerPending'
-                    checked={props.mintSectionInputs.eventListenerPending}
-                    onChange={handleChecked} />
-                    Select the box if you want to trigger the bot while "Pending"
-                    <br />
-                    </form> }
+                    {selectedFunction && (
+                        <form>
+                            <input
+                                type="checkbox"
+                                id="eventListenerPending"
+                                name="eventListenerPending"
+                                checked={
+                                    props.mintSectionInputs.eventListenerPending
+                                }
+                                onChange={handleChecked}
+                            />
+                            Select the box if you want to trigger the bot while
+                            "Pending"
+                            <br />
+                        </form>
+                    )}
                     {selectedFunction &&
                         selectedFunction.paramName.length > 0 && (
                             <form>

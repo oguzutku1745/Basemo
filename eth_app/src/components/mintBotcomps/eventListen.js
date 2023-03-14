@@ -139,7 +139,7 @@ export default function EventListen(props) {
             taskContractABI: "",
             taskContractFunction: "",
             taskContractFunctionInput: "",
-            eventListener: "",
+            eventListener: "Read",
             eventListenerFunction: "",
             eventListenerInput: "",
             eventListenerPending: false,
