@@ -114,6 +114,7 @@ export default function Step5(props) {
                     id="select"
                     value={props.selectedMethod}
                     onChange={props.handleSelectChangeMethod}
+                    defaultValue= "Read"
                 >
                     <option value="Read">
                         Listen the Read function results

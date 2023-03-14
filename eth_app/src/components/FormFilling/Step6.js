@@ -21,7 +21,7 @@ export default function Step6(props) {
                             )
                         )}{" "}
                         <br />
-                        State Change Type: null <br />
+                        State Change Type: {props.mintSectionInputs.eventListener} <br />
                         Targeted Function To Listen:{" "}
                         {props.mintSectionInputs.eventListenerFunction} <br />
                         Targeted Input To Listen:{" "}
