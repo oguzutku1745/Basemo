@@ -5,9 +5,17 @@ export default function DashboardCards({ task, user_id }) {
     const [Status, setStatus] = useState("Steady");
     const sharedState = task;
 
+    const [fireButtonLastClicked, setFireButtonLastClicked] = useState(0);
+    const [stopButtonLastClicked, setStopButtonLastClicked] = useState(0);
+
     console.log("shared State is: ", sharedState);
 
     function handleClick() {
+        if (stopButtonLastClicked + 1500 > new Date().getTime()) {
+            return;
+        }
+        setStopButtonLastClicked(new Date().getTime());
+
         setStatus("Active");
         if (sharedState.eventListener === "Read") {
             sendRequestToBackend(
@@ -38,9 +46,13 @@ export default function DashboardCards({ task, user_id }) {
     }
 
     function handleClickStop() {
+        if (stopButtonLastClicked + 1500 > new Date().getTime()) {
+            return;
+        }
+        setStopButtonLastClicked(new Date().getTime());
+
         setStatus("Steady");
 
-        console.log("safasf");
         const taskID = task.taskID;
 
         const requestData = {
