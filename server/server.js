@@ -35,7 +35,6 @@ var gasPriceNetwork;
 /////////////////////////////////////////////////
 // START OF THE EVENT LISTENERS
 // Define an array to hold all the listening requests
-let requests = [];
 var provider = new ethers.providers.InfuraProvider(
     "goerli",
     "0fe302203e9f42fc9dffae2ccb1494c2"
@@ -82,6 +81,31 @@ app.post("/api/listen", (req, res) => {
         }
     );
 });
+
+// Function to start listening to a specific contract variable and target value
+const listenToVariable = async (
+    contractAddress,
+    ABI,
+    targetFunction,
+    targetValue,
+    callback
+) => {
+    const contract = new ethers.Contract(contractAddress, ABI, provider);
+
+    const intervalId = setInterval(async () => {
+        const newValue = await contract[targetFunction]();
+        console.log(newValue);
+        if (newValue.toString() === targetValue.toString()) {
+            callback();
+            clearInterval(intervalId); // stop listening after callback is called
+        }
+        currentValue = newValue;
+    }, 1000); // poll every 1 second
+
+    console.log(
+        `Started listening for variable ${targetFunction} on contract ${contractAddress}`
+    );
+};
 
 app.get("/getABI/:contractAddress", async (req, res) => {
     const { contractAddress } = req.params;
@@ -144,7 +168,7 @@ async function sendWriteTxnRead(
     }
     return { transactions };
 }
-const emitters = new Map();
+const emitterMap = new Map();
 app.post("/api/listenFunction", async (req, res) => {
     const {
         contractAddress,
@@ -157,6 +181,7 @@ app.post("/api/listenFunction", async (req, res) => {
         PrivateKeyTxn,
         pendingStatus,
         user_id,
+        taskID,
     } = req.body;
 
     userBlockKey = await getUserBlockNativeKey(user_id);
@@ -185,6 +210,9 @@ app.post("/api/listenFunction", async (req, res) => {
     const encodedFunctionCall = targetValue
         ? web3.eth.abi.encodeFunctionCall(functionObject, [targetValue])
         : web3.eth.abi.encodeFunctionSignature(functionObject);
+
+    emitterMap.set(taskID, blocknative.account(address).emitter);
+    console.log(emitterMap);
 
     emitter.on("all", async (transaction) => {
         try {
@@ -245,81 +273,30 @@ app.post("/api/listenFunction", async (req, res) => {
     });
 });
 
-// Function to start listening to a specific contract variable and target value
-const listenToVariable = async (
-    contractAddress,
-    ABI,
-    targetFunction,
-    targetValue,
-    callback
-) => {
-    const contract = new ethers.Contract(contractAddress, ABI, provider);
+app.post("/api/stopListeningFunction", async (req, res) => {
+    const { taskID } = req.body;
 
-    const intervalId = setInterval(async () => {
-        const newValue = await contract[targetFunction]();
-        console.log(newValue);
-        if (newValue.toString() === targetValue.toString()) {
-            callback();
-            clearInterval(intervalId); // stop listening after callback is called
-        }
-        currentValue = newValue;
-    }, 1000); // poll every 1 second
+    // Generate the composite key
 
-    // Add the request to the array
-    requests.push({
-        contractAddress,
-        ABI,
-        targetFunction,
-        targetValue,
-        callback,
-        intervalId, // store intervalId for later use
-    });
-    console.log(
-        `Started listening for variable ${targetFunction} on contract ${contractAddress}`
-    );
-};
+    // Retrieve the emitter object from the map using the composite key
+    const task = emitterMap.get(taskID);
+    console.log(task);
+    console.log(taskID);
+    if (task) {
+        // Stop listening for events
+        task.off("all");
 
-// Function to stop listening to a specific contract variable and target value
-const stopListening = (contractAddress, targetFunction) => {
-    const contract = new ethers.Contract(contractAddress, abi, provider);
+        // Remove the task from the map
+        emitterMap.delete(taskID);
 
-    // Stop the interval by clearing the intervalId
-    const request = requests.find(
-        (req) =>
-            req.contractAddress === contractAddress &&
-            req.targetFunction === targetFunction
-    );
-    if (request) {
-        clearInterval(request.intervalId);
-        console.log(
-            `Stopped listening for variable ${targetFunction} on contract ${contractAddress}`
-        );
+        res.status(200).json({ message: "Stopped listening" });
+        console.log("stopped");
     } else {
-        console.log(
-            `No request found for variable ${targetFunction} on contract ${contractAddress}`
-        );
+        res.status(404).json({ error: "Task not found" });
+        console.log("Task not found");
     }
-
-    // Remove the request from the array
-    requests = requests.filter(
-        (req) =>
-            req.contractAddress !== contractAddress ||
-            req.targetFunction !== targetFunction
-    );
-};
-
-// Example API endpoint to handle a new listening request from the frontend
-
-// Example API endpoint to handle stopping a listening request from the frontend
-app.post("/api/stop", (req, res) => {
-    const { contractAddress, targetFunction } = req.body;
-
-    stopListening(contractAddress, targetFunction);
-
-    res.status(200).json({
-        message: `Stopped listening for variable ${targetFunction} on contract ${contractAddress}`,
-    });
 });
+
 /// END OF EVENT LISTENERS
 /////////////////////////////////////////////////////////////////////////////////////////
 

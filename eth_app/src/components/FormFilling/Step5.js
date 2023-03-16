@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
+import { v4 as uuidv4 } from "uuid";
 
 export default function Step5(props) {
     const [readFunctions, setReadFunctions] = useState([]);
@@ -45,6 +46,8 @@ export default function Step5(props) {
             );
             setWriteFunctions(filteredFunctions.map((func) => func.name));
         }
+        const taskid = uuidv4();
+        props.setTheInput("taskID", taskid);
     }, [props.contractFunctions]);
 
     const optionsWrite = writeFunctions.map((name, index) => ({
@@ -114,7 +117,7 @@ export default function Step5(props) {
                     id="select"
                     value={props.selectedMethod}
                     onChange={props.handleSelectChangeMethod}
-                    defaultValue= "Read"
+                    defaultValue="Read"
                 >
                     <option value="Read">
                         Listen the Read function results

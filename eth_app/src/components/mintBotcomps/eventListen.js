@@ -14,6 +14,7 @@ import Step5 from "../FormFilling/Step5";
 import Step6 from "../FormFilling/Step6";
 import { ethers } from "ethers";
 import { userInputs } from "../../pages/Botpage/Botpage";
+import { v4 as uuidv4 } from "uuid";
 
 const steps = [
     "Basics",
@@ -51,6 +52,7 @@ export default function EventListen(props) {
         eventListenerFunction: "",
         eventListenerInput: "",
         eventListenerPending: false,
+        taskID: 0,
     });
 
     console.log(mintSectionInputs);
@@ -109,46 +111,45 @@ export default function EventListen(props) {
     const handleComplete = () => {
         let isAnyEmpty = false;
         const newCompleted = { ...completed };
-        
+
         switch (activeStep) {
-          case 0:
-            isAnyEmpty =
-              !mintSectionInputs.taskName.trim() || !mintSectionInputs.taskContract.trim();
-            break;
-          case 1:
-            isAnyEmpty =
-              !mintSectionInputs.taskContractFunction.trim();
-            break;
-          case 2:
-            isAnyEmpty =
-              !String(mintSectionInputs.mintWallet).trim() ||
-              !String(mintSectionInputs.mintPrivateKey).trim();
-            break;
-          case 3:
-            isAnyEmpty = !mintSectionInputs.selectedGasPrice.trim();
-            break;
-          case 4:
-            isAnyEmpty =
-              !mintSectionInputs.eventListenerFunction.trim() ||
-              !mintSectionInputs.eventListenerInput.trim();
-            break;
-          default:
-            break;
+            case 0:
+                isAnyEmpty =
+                    !mintSectionInputs.taskName.trim() ||
+                    !mintSectionInputs.taskContract.trim();
+                break;
+            case 1:
+                isAnyEmpty = !mintSectionInputs.taskContractFunction.trim();
+                break;
+            case 2:
+                isAnyEmpty =
+                    !String(mintSectionInputs.mintWallet).trim() ||
+                    !String(mintSectionInputs.mintPrivateKey).trim();
+                break;
+            case 3:
+                isAnyEmpty = !mintSectionInputs.selectedGasPrice.trim();
+                break;
+            case 4:
+                isAnyEmpty =
+                    !mintSectionInputs.eventListenerFunction.trim() ||
+                    !mintSectionInputs.eventListenerInput.trim();
+                break;
+            default:
+                break;
         }
-        
+
         if (isAnyEmpty) {
-          alert("Please fill in all required fields.");
+            alert("Please fill in all required fields.");
         } else {
-          newCompleted[activeStep] = true;
-          setCompleted(newCompleted);
-          if (completedSteps() === totalSteps() - 1) {
-            props.changeStateTasks(mintSectionInputs);
-          } else {
-            handleNext();
-          }
+            newCompleted[activeStep] = true;
+            setCompleted(newCompleted);
+            if (completedSteps() === totalSteps() - 1) {
+                props.changeStateTasks(mintSectionInputs);
+            } else {
+                handleNext();
+            }
         }
-      };     
-      
+    };
 
     const setTheInput = (name, value) => {
         setMintSectionInputs((prevState) => {

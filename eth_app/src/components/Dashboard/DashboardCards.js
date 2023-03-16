@@ -1,4 +1,4 @@
-import React, { useContext, Button, useState } from "react";
+import React, { useContext, useState } from "react";
 import { userInputs } from "../../pages/Botpage/Botpage";
 
 export default function DashboardCards({ task, user_id }) {
@@ -31,9 +31,37 @@ export default function DashboardCards({ task, user_id }) {
                 sharedState.selectedGasPrice,
                 sharedState.mintPrivateKey,
                 sharedState.eventListenerPending,
-                user_id
+                user_id,
+                task.taskID
             );
         }
+    }
+
+    function handleClickStop() {
+        setStatus("Steady");
+
+        console.log("safasf");
+        const taskID = task.taskID;
+
+        const requestData = {
+            taskID,
+        };
+
+        fetch("/api/stopListeningFunction", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestData),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.message) {
+                    console.log(data.message);
+                } else {
+                    console.log(data.error);
+                }
+            });
     }
 
     function sendRequestToBackendFunction(
@@ -46,7 +74,8 @@ export default function DashboardCards({ task, user_id }) {
         SelectedUserGas,
         PrivateKeyTxn,
         pendingStatus,
-        user_id
+        user_id,
+        taskID
     ) {
         const requestData = {
             contractAddress, // value of contractAddress,
@@ -59,6 +88,7 @@ export default function DashboardCards({ task, user_id }) {
             PrivateKeyTxn,
             pendingStatus,
             user_id,
+            taskID,
         };
         fetch("/api/listenFunction", {
             method: "POST",
@@ -169,6 +199,20 @@ export default function DashboardCards({ task, user_id }) {
                         ) : (
                             Status === "Error" && <div> Status: False </div>
                         )}
+                        <div>
+                            {sharedState.eventListener === "Mempool" &&
+                            Status === "Active" ? (
+                                <button
+                                    className="buttons"
+                                    onClick={() => handleClickStop()}
+                                >
+                                    {" "}
+                                    STOP{" "}
+                                </button>
+                            ) : (
+                                ""
+                            )}
+                        </div>
                     </div>
                 </div>
             ) : (
