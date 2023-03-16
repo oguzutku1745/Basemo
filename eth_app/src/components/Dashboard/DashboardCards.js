@@ -11,7 +11,7 @@ export default function DashboardCards({ task, user_id }) {
     console.log("shared State is: ", sharedState);
 
     function handleClick() {
-        if (stopButtonLastClicked + 1500 > new Date().getTime()) {
+        if (stopButtonLastClicked + 4000 > new Date().getTime()) {
             return;
         }
         setStopButtonLastClicked(new Date().getTime());
@@ -46,7 +46,7 @@ export default function DashboardCards({ task, user_id }) {
     }
 
     function handleClickStop() {
-        if (stopButtonLastClicked + 1500 > new Date().getTime()) {
+        if (stopButtonLastClicked + 4000 > new Date().getTime()) {
             return;
         }
         setStopButtonLastClicked(new Date().getTime());
