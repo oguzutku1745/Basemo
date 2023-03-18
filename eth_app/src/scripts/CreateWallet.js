@@ -33,7 +33,7 @@ const CreateWallet = ({
         <div>
             <button
                 style={{
-                    backgroundColor: "#82bde4",
+                    backgroundColor: "#cb5af8",
                     color: "white",
                     padding: "15px 30px",
                     fontSize: "20px",
