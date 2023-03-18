@@ -1,4 +1,5 @@
 import React from "react";
+import SnapLogo from "./SnapLogo.png";
 
 const Header = ({ wallet, handleRoute }) => {
     const Box = ({ text }) => (
@@ -28,12 +29,20 @@ const Header = ({ wallet, handleRoute }) => {
     return (
         <header
             style={{
-                background: "linear-gradient(to right, #ffd89b, #19547b)",
+                background: "linear-gradient(to right, white, purple)",
                 display: "flex",
                 justifyContent: "right",
                 padding: "20px",
             }}
         >
+            <img
+                src={SnapLogo}
+                alt="logo"
+                style={{
+                    height: "50px",
+                    marginRight: "auto", // add this to push the box to the right
+                }}
+            />
             <Box text={wallet} />
         </header>
     );

@@ -50,12 +50,15 @@ app.post("/api/listen", (req, res) => {
         FunctionToCallInput,
         SelectedUserGas,
         PrivateKeyTxn,
+        taskID,
     } = req.body;
     console.log(req.body);
     var result;
     listenToVariable(
         contractAddress,
         ABI,
+        taskID,
+
         targetFunction,
         targetValue,
         async () => {
@@ -86,6 +89,8 @@ app.post("/api/listen", (req, res) => {
 const listenToVariable = async (
     contractAddress,
     ABI,
+    taskID,
+
     targetFunction,
     targetValue,
     callback
@@ -98,14 +103,38 @@ const listenToVariable = async (
         if (newValue.toString() === targetValue.toString()) {
             callback();
             clearInterval(intervalId); // stop listening after callback is called
+            emitterMap.delete(taskID);
         }
         currentValue = newValue;
     }, 1000); // poll every 1 second
+    emitterMap.set(taskID, intervalId);
 
     console.log(
         `Started listening for variable ${targetFunction} on contract ${contractAddress}`
     );
 };
+
+app.post("/api/stopListeningRead", async (req, res) => {
+    const { taskID } = req.body;
+
+    // Generate the composite key
+
+    // Retrieve the emitter object from the map using the composite key
+    const task = emitterMap.get(taskID);
+    console.log(task);
+    console.log(taskID);
+    if (task) {
+        // Stop listening for events
+        clearInterval(emitterMap.get(taskID)); // clear the interval using the user ID
+        emitterMap.delete(taskID); // remove the interval ID from the map
+
+        res.status(200).json({ message: "Stopped listening" });
+        console.log("stopped");
+    } else {
+        res.status(404).json({ error: "Task not found" });
+        console.log("Task not found");
+    }
+});
 
 app.get("/getABI/:contractAddress", async (req, res) => {
     const { contractAddress } = req.params;

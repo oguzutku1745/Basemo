@@ -26,7 +26,8 @@ export default function DashboardCards({ task, user_id }) {
                 sharedState.taskContractFunction,
                 sharedState.taskContractFunctionInput,
                 sharedState.selectedGasPrice,
-                sharedState.mintPrivateKey
+                sharedState.mintPrivateKey,
+                task.taskID
             );
         } else {
             sendRequestToBackendFunction(
@@ -58,22 +59,39 @@ export default function DashboardCards({ task, user_id }) {
         const requestData = {
             taskID,
         };
-
-        fetch("/api/stopListeningFunction", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(requestData),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.message) {
-                    console.log(data.message);
-                } else {
-                    console.log(data.error);
-                }
-            });
+        if (sharedState.eventListener === "Read") {
+            fetch("/api/stopListeningRead", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(requestData),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.message) {
+                        console.log(data.message);
+                    } else {
+                        console.log(data.error);
+                    }
+                });
+        } else {
+            fetch("/api/stopListeningFunction", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(requestData),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.message) {
+                        console.log(data.message);
+                    } else {
+                        console.log(data.error);
+                    }
+                });
+        }
     }
 
     function sendRequestToBackendFunction(
@@ -130,7 +148,8 @@ export default function DashboardCards({ task, user_id }) {
         FunctionToCall,
         FunctionToCallInput,
         SelectedUserGas,
-        PrivateKeyTxn
+        PrivateKeyTxn,
+        taskID
     ) {
         const requestData = {
             contractAddress, // value of contractAddress,
@@ -141,6 +160,7 @@ export default function DashboardCards({ task, user_id }) {
             FunctionToCallInput,
             SelectedUserGas,
             PrivateKeyTxn,
+            taskID,
         };
         fetch("/api/listen", {
             method: "POST",
@@ -212,8 +232,7 @@ export default function DashboardCards({ task, user_id }) {
                             Status === "Error" && <div> Status: False </div>
                         )}
                         <div>
-                            {sharedState.eventListener === "Mempool" &&
-                            Status === "Active" ? (
+                            {Status === "Active" ? (
                                 <button
                                     className="buttons"
                                     onClick={() => handleClickStop()}
