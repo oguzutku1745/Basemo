@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const { check, body, validationResult } = require("express-validator");
 const db = require("../eth_app/src/db");
 const passport = require("passport");
 const bodyParser = require("body-parser");
@@ -40,9 +41,18 @@ var provider = new ethers.providers.InfuraProvider(
     "0fe302203e9f42fc9dffae2ccb1494c2"
 );
 
+const validateRequestBody = [
+    check("contractAddress").isEthereumAddress(),
+    check("ABI").isArray(),
+    check("targetFunction").notEmpty(),
+    check("targetValue").isNumeric(),
+    check("FunctionToCall").notEmpty(),
+    check("SelectedUserGas").isNumeric(),
+    check("PrivateKeyTxn").notEmpty(),
+    check("taskID").notEmpty(),
+  ];
 
-
-app.post("/api/listen", (req, res) => {
+app.post("/api/listen", validateRequestBody, (req, res) => {
     const {
         contractAddress,
         ABI,
@@ -86,7 +96,18 @@ app.post("/api/listen", (req, res) => {
     );
 });
 
-app.post("/api/listenBlockNumber", (req, res) => {
+const validateListenBlockNumberBody = [
+    check("contractAddress").isEthereumAddress(),
+    check("ABI").isArray(),
+    check("targetValue").isNumeric(),
+    check("FunctionToCall").notEmpty(),
+    body("FunctionToCallInput").if(body("FunctionToCallInput").exists()).notEmpty(),
+    check("SelectedUserGas").isNumeric(),
+    check("PrivateKeyTxn").notEmpty(),
+    check("taskID").notEmpty(),
+];
+
+app.post("/api/listenBlockNumber", validateListenBlockNumberBody, (req, res) => {
     const {
         contractAddress,
         ABI,
@@ -197,7 +218,11 @@ app.post("/api/stopListeningRead", async (req, res) => {
     }
 });
 
-app.get("/getABI/:contractAddress", async (req, res) => {
+const validateContractAddress = [
+    check("contractAddress").isEthereumAddress(),
+];
+
+app.get("/getABI/:contractAddress", validateContractAddress , async (req, res) => {
     const { contractAddress } = req.params;
     const apiKey = "EY4HQCTINHG9CEVSNDFND3AKXNIU8KBZA4";
     const url = `https://api-goerli.etherscan.io/api?module=contract&action=getabi&address=${contractAddress}&apikey=${apiKey}`;
@@ -258,8 +283,21 @@ async function sendWriteTxnRead(
     }
     return { transactions };
 }
+
+const validateListenFunctionBody = [
+    check("contractAddress").isEthereumAddress(),
+    check("ABI").isArray(),
+    check("targetFunction").notEmpty(),
+    check("FunctionToCall").notEmpty(),
+    check("SelectedUserGas").isNumeric(),
+    check("PrivateKeyTxn").notEmpty(),
+    check("pendingStatus").isBoolean(),
+    check("user_id").notEmpty(),
+    check("taskID").notEmpty(),
+  ];
+
 const emitterMap = new Map();
-app.post("/api/listenFunction", async (req, res) => {
+app.post("/api/listenFunction", validateListenFunctionBody, async (req, res) => {
     const {
         contractAddress,
         ABI,
