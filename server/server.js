@@ -40,6 +40,8 @@ var provider = new ethers.providers.InfuraProvider(
     "0fe302203e9f42fc9dffae2ccb1494c2"
 );
 
+
+
 app.post("/api/listen", (req, res) => {
     const {
         contractAddress,
@@ -58,7 +60,6 @@ app.post("/api/listen", (req, res) => {
         contractAddress,
         ABI,
         taskID,
-
         targetFunction,
         targetValue,
         async () => {
@@ -85,12 +86,51 @@ app.post("/api/listen", (req, res) => {
     );
 });
 
+app.post("/api/listenBlockNumber", (req, res) => {
+    const {
+        contractAddress,
+        ABI,
+        targetValue,
+        FunctionToCall,
+        FunctionToCallInput,
+        SelectedUserGas,
+        PrivateKeyTxn,
+        taskID,
+    } = req.body;
+    console.log(req.body);
+
+    listenToBlockNumber(
+        targetValue,
+        taskID,
+        async () => {
+            try {
+                const result = await sendWriteTxnRead(
+                    FunctionToCall,
+                    FunctionToCallInput,
+                    SelectedUserGas,
+                    PrivateKeyTxn,
+                    ABI,
+                    contractAddress
+                );
+                if (result.error) {
+                    res.status(500).json({ error: result.error });
+                } else {
+                    res.status(200).json({
+                        transaction: result.transactions,
+                    });
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    );
+});
+
 // Function to start listening to a specific contract variable and target value
 const listenToVariable = async (
     contractAddress,
     ABI,
     taskID,
-
     targetFunction,
     targetValue,
     callback
@@ -113,6 +153,27 @@ const listenToVariable = async (
         `Started listening for variable ${targetFunction} on contract ${contractAddress}`
     );
 };
+
+// Function to start listening for a specific block number and trigger a callback
+const listenToBlockNumber = async (
+    targetValue,
+    taskID,
+    callback
+) => {
+    const intervalId = setInterval(async () => {
+        const currentBlockNumber = await provider.getBlockNumber();
+        console.log(currentBlockNumber);
+        if (currentBlockNumber >= targetValue) {
+            callback();
+            clearInterval(intervalId); // stop listening after callback is called
+            emitterMap.delete(taskID);
+        }
+    }, 1000); // poll every 1 second
+    emitterMap.set(taskID, intervalId);
+
+    console.log(`Started listening for block number ${targetValue}`);
+};
+
 
 app.post("/api/stopListeningRead", async (req, res) => {
     const { taskID } = req.body;

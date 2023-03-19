@@ -29,11 +29,24 @@ export default function DashboardCards({ task, user_id }) {
                 sharedState.mintPrivateKey,
                 task.taskID
             );
-        } else {
+        } else if (sharedState.eventListener === "Mempool") {
             sendRequestToBackendFunction(
                 sharedState.taskContract,
                 sharedState.taskContractABI,
                 sharedState.eventListenerFunction,
+                sharedState.eventListenerInput,
+                sharedState.taskContractFunction,
+                sharedState.taskContractFunctionInput,
+                sharedState.selectedGasPrice,
+                sharedState.mintPrivateKey,
+                sharedState.eventListenerPending,
+                user_id,
+                task.taskID
+            );
+        } else if (sharedState.eventListener === "blockNumber") {
+            sendRequestbyBlockNumber(
+                sharedState.taskContract,
+                sharedState.taskContractABI,
                 sharedState.eventListenerInput,
                 sharedState.taskContractFunction,
                 sharedState.taskContractFunctionInput,
@@ -92,6 +105,50 @@ export default function DashboardCards({ task, user_id }) {
                     }
                 });
         }
+    }
+
+    function sendRequestbyBlockNumber(        
+        contractAddress,
+        ABI,
+        targetValue,
+        FunctionToCall,
+        FunctionToCallInput,
+        SelectedUserGas,
+        PrivateKeyTxn,
+        pendingStatus,
+        user_id,
+        taskID
+    ) {
+        const requestData = {
+            contractAddress, // value of contractAddress,
+            ABI,
+            targetValue, // value of targetValue
+            FunctionToCall,
+            FunctionToCallInput,
+            SelectedUserGas,
+            PrivateKeyTxn,
+            pendingStatus,
+            user_id,
+            taskID,
+        };
+        fetch("/api/listenBlockNumber", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestData),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.error) {
+                    console.log(data.error);
+                    setStatus("Error");
+                } else {
+                    console.log(data.transaction);
+                    setStatus("Completed");
+                    // handle successful transaction
+                }
+            });
     }
 
     function sendRequestToBackendFunction(
