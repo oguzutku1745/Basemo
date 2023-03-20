@@ -58,7 +58,10 @@ export default function DashboardCards({ task, user_id, deleteTask, index }) {
             taskID,
         };
 
-        if (sharedState.eventListener === "Read") {
+        if (
+            sharedState.eventListener === "Read" ||
+            sharedState.eventListener === "blockNumber"
+        ) {
             fetch("/api/stopListeningRead", {
                 method: "POST",
                 headers: {
