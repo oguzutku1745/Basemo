@@ -293,7 +293,7 @@ export default function DashboardCards({ task, user_id, deleteTask, index }) {
                                     type="text"
                                     value={UserNewGas}
                                     onChange={handleChange}
-                                    placeholder="Enter your Blocknative Key"
+                                    placeholder="Enter new gas price"
                                     style={{ width: `210px` }} // set the width using the style prop
                                 />
                                 <button
