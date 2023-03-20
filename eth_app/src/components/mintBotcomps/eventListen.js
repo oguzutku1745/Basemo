@@ -13,8 +13,6 @@ import Step4 from "../FormFilling/Step4";
 import Step5 from "../FormFilling/Step5";
 import Step6 from "../FormFilling/Step6";
 import { ethers } from "ethers";
-import { userInputs } from "../../pages/Botpage/Botpage";
-import { v4 as uuidv4 } from "uuid";
 
 const steps = [
     "Basics",
@@ -111,7 +109,7 @@ export default function EventListen(props) {
     const handleComplete = () => {
         let isAnyEmpty = false;
         const newCompleted = { ...completed };
-    
+
         switch (activeStep) {
             case 0:
                 isAnyEmpty =
@@ -131,18 +129,20 @@ export default function EventListen(props) {
                 break;
             case 4:
                 if (mintSectionInputs.selectedMethod === "Read") {
-                    isAnyEmpty = !mintSectionInputs.eventListenerFunction.trim() || !mintSectionInputs.eventListenerInput.trim();
-                } else if(mintSectionInputs.selectedMethod === "Mempool") {
-                    isAnyEmpty = !mintSectionInputs.eventListenerFunction.trim()
-                }
-                 else if (mintSectionInputs.selectedMethod === "blockNumber") {
+                    isAnyEmpty =
+                        !mintSectionInputs.eventListenerFunction.trim() ||
+                        !mintSectionInputs.eventListenerInput.trim();
+                } else if (mintSectionInputs.selectedMethod === "Mempool") {
+                    isAnyEmpty =
+                        !mintSectionInputs.eventListenerFunction.trim();
+                } else if (mintSectionInputs.selectedMethod === "blockNumber") {
                     isAnyEmpty = !mintSectionInputs.eventListenerInput.trim();
                 }
                 break;
             default:
                 break;
         }
-    
+
         if (isAnyEmpty) {
             alert("Please fill in all required fields.");
         } else {
@@ -155,7 +155,6 @@ export default function EventListen(props) {
             }
         }
     };
-    
 
     const setTheInput = (name, value) => {
         setMintSectionInputs((prevState) => {

@@ -56,6 +56,11 @@ const Botpage = () => {
             return [...prev, new_task];
         });
     }
+    function deleteTask(taskToDelete) {
+        setTasks((prevTasks) =>
+            prevTasks.filter((task) => task !== taskToDelete)
+        );
+    }
 
     function bringIt() {
         fetch(`/getABI/${contractInputs.contractAddress}`)
@@ -199,6 +204,7 @@ const Botpage = () => {
                                             index={index}
                                             task={tasks[index]}
                                             user_id={user_id}
+                                            deleteTask={deleteTask}
                                         />
                                     </div>
                                 </li>

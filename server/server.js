@@ -50,7 +50,7 @@ const validateRequestBody = [
     check("SelectedUserGas").isNumeric(),
     check("PrivateKeyTxn").notEmpty(),
     check("taskID").notEmpty(),
-  ];
+];
 
 app.post("/api/listen", validateRequestBody, (req, res) => {
     const {
@@ -101,29 +101,31 @@ const validateListenBlockNumberBody = [
     check("ABI").isArray(),
     check("targetValue").isNumeric(),
     check("FunctionToCall").notEmpty(),
-    body("FunctionToCallInput").if(body("FunctionToCallInput").exists()).notEmpty(),
+    body("FunctionToCallInput")
+        .if(body("FunctionToCallInput").exists())
+        .notEmpty(),
     check("SelectedUserGas").isNumeric(),
     check("PrivateKeyTxn").notEmpty(),
     check("taskID").notEmpty(),
 ];
 
-app.post("/api/listenBlockNumber", validateListenBlockNumberBody, (req, res) => {
-    const {
-        contractAddress,
-        ABI,
-        targetValue,
-        FunctionToCall,
-        FunctionToCallInput,
-        SelectedUserGas,
-        PrivateKeyTxn,
-        taskID,
-    } = req.body;
-    console.log(req.body);
+app.post(
+    "/api/listenBlockNumber",
+    validateListenBlockNumberBody,
+    (req, res) => {
+        const {
+            contractAddress,
+            ABI,
+            targetValue,
+            FunctionToCall,
+            FunctionToCallInput,
+            SelectedUserGas,
+            PrivateKeyTxn,
+            taskID,
+        } = req.body;
+        console.log(req.body);
 
-    listenToBlockNumber(
-        targetValue,
-        taskID,
-        async () => {
+        listenToBlockNumber(targetValue, taskID, async () => {
             try {
                 const result = await sendWriteTxnRead(
                     FunctionToCall,
@@ -143,9 +145,9 @@ app.post("/api/listenBlockNumber", validateListenBlockNumberBody, (req, res) => 
             } catch (error) {
                 console.log(error);
             }
-        }
-    );
-});
+        });
+    }
+);
 
 // Function to start listening to a specific contract variable and target value
 const listenToVariable = async (
@@ -176,11 +178,7 @@ const listenToVariable = async (
 };
 
 // Function to start listening for a specific block number and trigger a callback
-const listenToBlockNumber = async (
-    targetValue,
-    taskID,
-    callback
-) => {
+const listenToBlockNumber = async (targetValue, taskID, callback) => {
     const intervalId = setInterval(async () => {
         const currentBlockNumber = await provider.getBlockNumber();
         console.log(currentBlockNumber);
@@ -194,7 +192,6 @@ const listenToBlockNumber = async (
 
     console.log(`Started listening for block number ${targetValue}`);
 };
-
 
 app.post("/api/stopListeningRead", async (req, res) => {
     const { taskID } = req.body;
@@ -218,24 +215,26 @@ app.post("/api/stopListeningRead", async (req, res) => {
     }
 });
 
-const validateContractAddress = [
-    check("contractAddress").isEthereumAddress(),
-];
+const validateContractAddress = [check("contractAddress").isEthereumAddress()];
 
-app.get("/getABI/:contractAddress", validateContractAddress , async (req, res) => {
-    const { contractAddress } = req.params;
-    const apiKey = "EY4HQCTINHG9CEVSNDFND3AKXNIU8KBZA4";
-    const url = `https://api-goerli.etherscan.io/api?module=contract&action=getabi&address=${contractAddress}&apikey=${apiKey}`;
+app.get(
+    "/getABI/:contractAddress",
+    validateContractAddress,
+    async (req, res) => {
+        const { contractAddress } = req.params;
+        const apiKey = "EY4HQCTINHG9CEVSNDFND3AKXNIU8KBZA4";
+        const url = `https://api-goerli.etherscan.io/api?module=contract&action=getabi&address=${contractAddress}&apikey=${apiKey}`;
 
-    try {
-        const response = await axios.get(url);
-        const data = response.data.result;
-        res.status(200).json(data);
-    } catch (error) {
-        console.log(error);
-        res.status(500).send("Something went wrong");
+        try {
+            const response = await axios.get(url);
+            const data = response.data.result;
+            res.status(200).json(data);
+        } catch (error) {
+            console.log(error);
+            res.status(500).send("Something went wrong");
+        }
     }
-});
+);
 
 async function sendWriteTxnRead(
     FunctionToCall,
@@ -294,112 +293,116 @@ const validateListenFunctionBody = [
     check("pendingStatus").isBoolean(),
     check("user_id").notEmpty(),
     check("taskID").notEmpty(),
-  ];
+];
 
 const emitterMap = new Map();
-app.post("/api/listenFunction", validateListenFunctionBody, async (req, res) => {
-    const {
-        contractAddress,
-        ABI,
-        targetFunction,
-        targetValue,
-        FunctionToCall,
-        FunctionToCallInput,
-        SelectedUserGas,
-        PrivateKeyTxn,
-        pendingStatus,
-        user_id,
-        taskID,
-    } = req.body;
+app.post(
+    "/api/listenFunction",
+    validateListenFunctionBody,
+    async (req, res) => {
+        const {
+            contractAddress,
+            ABI,
+            targetFunction,
+            targetValue,
+            FunctionToCall,
+            FunctionToCallInput,
+            SelectedUserGas,
+            PrivateKeyTxn,
+            pendingStatus,
+            user_id,
+            taskID,
+        } = req.body;
 
-    userBlockKey = await getUserBlockNativeKey(user_id);
-    const YOUR_API_KEY = userBlockKey
-        ? userBlockKey
-        : "6b3983a6-2d11-4316-93db-c701bf1d46f9";
-    console.log(YOUR_API_KEY);
-    const options = {
-        dappId: YOUR_API_KEY,
-        networkId: 5,
-        ws: WebSocket,
-        onerror: (error) => {
-            console.log(error);
-        }, //optional, use to catch errors
-    };
-    const blocknative = new BlocknativeSdk(options);
-    const address = contractAddress;
-    const abi = JSON.parse(ABI);
-    const { emitter, details } = blocknative.account(address);
-    var result;
+        userBlockKey = await getUserBlockNativeKey(user_id);
+        const YOUR_API_KEY = userBlockKey
+            ? userBlockKey
+            : "6b3983a6-2d11-4316-93db-c701bf1d46f9";
+        console.log(YOUR_API_KEY);
+        const options = {
+            dappId: YOUR_API_KEY,
+            networkId: 5,
+            ws: WebSocket,
+            onerror: (error) => {
+                console.log(error);
+            }, //optional, use to catch errors
+        };
+        const blocknative = new BlocknativeSdk(options);
+        const address = contractAddress;
+        const abi = JSON.parse(ABI);
+        const { emitter, details } = blocknative.account(address);
+        var result;
 
-    const functionObject = abi.find((func) => {
-        return func.name === targetFunction;
-    });
+        const functionObject = abi.find((func) => {
+            return func.name === targetFunction;
+        });
 
-    const encodedFunctionCall = targetValue
-        ? web3.eth.abi.encodeFunctionCall(functionObject, [targetValue])
-        : web3.eth.abi.encodeFunctionSignature(functionObject);
+        const encodedFunctionCall = targetValue
+            ? web3.eth.abi.encodeFunctionCall(functionObject, [targetValue])
+            : web3.eth.abi.encodeFunctionSignature(functionObject);
 
-    emitterMap.set(taskID, blocknative.account(address).emitter);
-    console.log(emitterMap);
+        emitterMap.set(taskID, blocknative.account(address).emitter);
+        console.log(emitterMap);
 
-    emitter.on("all", async (transaction) => {
-        try {
-            const input = transaction.input;
-            // Check if the encoded function call matches the input data of the transaction
-            if (
-                transaction.to === contractAddress &&
-                input === encodedFunctionCall
-            ) {
-                console.log(pendingStatus);
-                if (pendingStatus) {
-                    if (transaction.status === "pending") {
-                        console.log("MATCH for pending");
-                        emitter.off("all");
-                        result = await sendWriteTxnRead(
-                            FunctionToCall,
-                            FunctionToCallInput,
-                            SelectedUserGas,
-                            PrivateKeyTxn,
-                            ABI,
-                            contractAddress
-                        );
-                        if (result.error) {
-                            res.status(500).json({ error: result.error });
-                        } else {
-                            res.status(200).json({
-                                transaction: result.transaction,
-                            });
+        emitter.on("all", async (transaction) => {
+            try {
+                const input = transaction.input;
+                // Check if the encoded function call matches the input data of the transaction
+                if (
+                    transaction.to === contractAddress &&
+                    input === encodedFunctionCall
+                ) {
+                    console.log(pendingStatus);
+                    if (pendingStatus) {
+                        if (transaction.status === "pending") {
+                            console.log("MATCH for pending");
+                            emitter.off("all");
+                            result = await sendWriteTxnRead(
+                                FunctionToCall,
+                                FunctionToCallInput,
+                                SelectedUserGas,
+                                PrivateKeyTxn,
+                                ABI,
+                                contractAddress
+                            );
+                            if (result.error) {
+                                res.status(500).json({ error: result.error });
+                            } else {
+                                res.status(200).json({
+                                    transaction: result.transaction,
+                                });
+                            }
+                        }
+                    } else {
+                        if (transaction.status === "confirmed") {
+                            console.log("MATCH for confirmed");
+                            emitter.off("all");
+                            result = await sendWriteTxnRead(
+                                FunctionToCall,
+                                FunctionToCallInput,
+                                SelectedUserGas,
+                                PrivateKeyTxn,
+                                ABI,
+                                contractAddress
+                            );
+                            if (result.error) {
+                                res.status(500).json({ error: result.error });
+                            } else {
+                                res.status(200).json({
+                                    transaction: result.transactions,
+                                });
+                            }
                         }
                     }
                 } else {
-                    if (transaction.status === "confirmed") {
-                        console.log("MATCH for confirmed");
-                        emitter.off("all");
-                        result = await sendWriteTxnRead(
-                            FunctionToCall,
-                            FunctionToCallInput,
-                            SelectedUserGas,
-                            PrivateKeyTxn,
-                            ABI,
-                            contractAddress
-                        );
-                        if (result.error) {
-                            res.status(500).json({ error: result.error });
-                        } else {
-                            res.status(200).json({
-                                transaction: result.transactions,
-                            });
-                        }
-                    }
+                    console.log("DID NOT MATCH");
                 }
-            } else {
-                console.log("DID NOT MATCH");
+            } catch (error) {
+                console.log(error);
             }
-        } catch (error) {
-            console.log(error);
-        }
-    });
-});
+        });
+    }
+);
 
 app.post("/api/stopListeningFunction", async (req, res) => {
     const { taskID } = req.body;

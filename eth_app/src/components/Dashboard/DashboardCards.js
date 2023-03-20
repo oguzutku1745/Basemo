@@ -1,21 +1,13 @@
 import React, { useContext, useState } from "react";
 import { userInputs } from "../../pages/Botpage/Botpage";
 
-export default function DashboardCards({ task, user_id }) {
+export default function DashboardCards({ task, user_id, deleteTask, index }) {
     const [Status, setStatus] = useState("Steady");
     const sharedState = task;
-
-    const [fireButtonLastClicked, setFireButtonLastClicked] = useState(0);
-    const [stopButtonLastClicked, setStopButtonLastClicked] = useState(0);
 
     console.log("shared State is: ", sharedState);
 
     function handleClick() {
-        if (stopButtonLastClicked + 4000 > new Date().getTime()) {
-            return;
-        }
-        setStopButtonLastClicked(new Date().getTime());
-
         setStatus("Active");
         if (sharedState.eventListener === "Read") {
             sendRequestToBackend(
@@ -60,18 +52,12 @@ export default function DashboardCards({ task, user_id }) {
     }
 
     function handleClickStop() {
-        if (stopButtonLastClicked + 4000 > new Date().getTime()) {
-            return;
-        }
-        setStopButtonLastClicked(new Date().getTime());
-
-        setStatus("Steady");
-
         const taskID = task.taskID;
 
         const requestData = {
             taskID,
         };
+
         if (sharedState.eventListener === "Read") {
             fetch("/api/stopListeningRead", {
                 method: "POST",
@@ -105,9 +91,10 @@ export default function DashboardCards({ task, user_id }) {
                     }
                 });
         }
+        deleteTask(task);
     }
 
-    function sendRequestbyBlockNumber(        
+    function sendRequestbyBlockNumber(
         contractAddress,
         ABI,
         targetValue,
@@ -295,7 +282,7 @@ export default function DashboardCards({ task, user_id }) {
                                     onClick={() => handleClickStop()}
                                 >
                                     {" "}
-                                    STOP{" "}
+                                    DELETE THE TASK{" "}
                                 </button>
                             ) : (
                                 ""
