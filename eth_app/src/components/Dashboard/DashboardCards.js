@@ -3,6 +3,11 @@ import { userInputs } from "../../pages/Botpage/Botpage";
 
 export default function DashboardCards({ task, user_id, deleteTask, index }) {
     const [Status, setStatus] = useState("Steady");
+    const [DisplayGas, setDisplayGas] = useState(task.selectedGasPrice);
+    const [GasButtonLastClicked, setGasButtonLastClicked] = useState(0);
+
+    const [UserNewGas, setUserNewGas] = useState(0);
+
     const sharedState = task;
 
     console.log("shared State is: ", sharedState);
@@ -51,7 +56,18 @@ export default function DashboardCards({ task, user_id, deleteTask, index }) {
         }
     }
 
-    function handleClickStop() {
+    function handleClickChangeGas() {
+        if (GasButtonLastClicked + 5000 > new Date().getTime()) {
+            return;
+        }
+        setGasButtonLastClicked(new Date().getTime());
+        handleClickStop(0);
+        setDisplayGas(UserNewGas);
+        task.selectedGasPrice = UserNewGas;
+        handleClick();
+    }
+
+    function handleClickStop(Isdelete) {
         const taskID = task.taskID;
 
         const requestData = {
@@ -94,7 +110,9 @@ export default function DashboardCards({ task, user_id, deleteTask, index }) {
                     }
                 });
         }
-        deleteTask(task);
+        if (Isdelete) {
+            deleteTask(task);
+        }
     }
 
     function sendRequestbyBlockNumber(
@@ -187,6 +205,10 @@ export default function DashboardCards({ task, user_id, deleteTask, index }) {
             });
     }
 
+    function handleChange(event) {
+        setUserNewGas(event.target.value);
+    }
+
     function sendRequestToBackend(
         contractAddress,
         ABI,
@@ -263,7 +285,30 @@ export default function DashboardCards({ task, user_id, deleteTask, index }) {
                         {sharedState.taskContractFunction} <br />
                         Input For The Tx:{" "}
                         {sharedState.taskContractFunctionInput} <br />
-                        Setted Gas: {sharedState.selectedGasPrice}
+                        Setted Gas: {DisplayGas}
+                        <br />
+                        {Status === "Active" ? (
+                            <div>
+                                <input
+                                    type="text"
+                                    value={UserNewGas}
+                                    onChange={handleChange}
+                                    placeholder="Enter your Blocknative Key"
+                                    style={{ width: `210px` }} // set the width using the style prop
+                                />
+                                <button
+                                    className="buttons"
+                                    onClick={() => handleClickChangeGas()}
+                                >
+                                    {" "}
+                                    Change the Gas{" "}
+                                </button>
+                            </div>
+                        ) : (
+                            ""
+                        )}
+                        <br />
+                        <br />
                     </div>
                     <div className="Statu">
                         {Status === "Steady" ? (
@@ -282,10 +327,10 @@ export default function DashboardCards({ task, user_id, deleteTask, index }) {
                             {Status === "Active" ? (
                                 <button
                                     className="buttons"
-                                    onClick={() => handleClickStop()}
+                                    onClick={() => handleClickStop(1)}
                                 >
                                     {" "}
-                                    DELETE THE TASK{" "}
+                                    Delete The Task{" "}
                                 </button>
                             ) : (
                                 ""

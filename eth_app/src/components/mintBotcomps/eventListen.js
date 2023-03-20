@@ -177,7 +177,7 @@ export default function EventListen(props) {
             taskContractABI: "",
             taskContractFunction: "",
             taskContractFunctionInput: "",
-            eventListener: "Read",
+            eventListener: mintSectionInputs.eventListener,
             eventListenerFunction: "",
             eventListenerInput: "",
             eventListenerPending: false,
