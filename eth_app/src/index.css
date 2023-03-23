@@ -111,6 +111,11 @@ input[type="checkbox"] {
     color: #cb5af8;
 }
 
+.tab-content {
+    display:flex;
+    width: 100%;
+}
+
 .dashboardInformer {
     color: rgb(187, 26, 109);
 }
@@ -142,6 +147,58 @@ input[type="checkbox"] {
     display: inline-block;
     max-width: 300px; /* Set the maximum width to the desired value */
 }
+
+
+.dashboard-user {
+color: #ffffff;
+font-family: "Nunito", Helvetica;
+font-size: 16px;
+font-weight: 400;
+left: 26px;
+letter-spacing: 0;
+line-height: normal;
+position: absolute;
+top: 12px;
+width: 460px;
+}
+
+.dashboard-rectangle {
+background-color: #d9d9d9;
+height: 3px;
+left: 0;
+position: absolute;
+top: 191px;
+width: 1728px;
+ }
+
+.frame-header {
+   display: flex;
+   flex-direction: row;
+   padding: 0px;
+   margin-left: 81px;
+   gap: 60px;
+   width: 725px;
+   height: 35px;
+}
+
+.frame-elements {
+color: #ffffff;
+font-family: "Nunito", Helvetica;
+font-size: 26px;
+font-weight: 500;
+left: 0;
+letter-spacing: 0;
+line-height: normal;
+top: 0;
+}
+
+
+.tab-content-container {
+    width: 100%;
+    max-width: 1200px; /* adjust this value based on your desired content width */
+    margin: 0 auto;
+  }
+
 
 .buttons:hover {
     background-color: #b407f9;

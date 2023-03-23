@@ -1,25 +1,33 @@
 import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
+
 const Profilepage = () => {
-    const { state } = useLocation();
+    const location = useLocation();
+    const { user_id, user_wallet } = location.state || { user_id: null, user_wallet: null, setActiveTab: null };
     const [expiryDate, setExpiryDate] = useState();
     const [UserBlocknativeKey, setUserBlocknativeKey] = useState("");
-    const [UserBlocknativeKeyServer, setUserBlocknativeKeyServer] =
-        useState("");
-
+    const [UserBlocknativeKeyServer, setUserBlocknativeKeyServer] = useState("");
+    //const { activeTab, setActiveTab } = useTabContext();
+    const navigate = useNavigate();
     console.log(expiryDate);
     function handleChange(event) {
         setUserBlocknativeKey(event.target.value);
     }
 
+    const handleTabClick = () => {
+        navigate("/botpage", { state: { user_id, user_wallet} });
+      };
+      
+      
+
     function handleSubmit(event) {
         event.preventDefault();
         sendUserKeyToDatabase({
             userBlocknativeKey: UserBlocknativeKey,
-            user_id: state.user_id,
+            user_id: user_id,
         });
     }
 
@@ -31,13 +39,13 @@ const Profilepage = () => {
     };
 
     useEffect(() => {
-        fetch(`/api/${state.user_wallet}`)
+        fetch(`/api/${user_wallet}`)
             .then((response) => response.json())
             .then((data) => {
                 const expiryDate = new Date(data.expiry_date);
                 setExpiryDate(expiryDate);
             });
-        fetch(`/api/getuserblocknativekey?user_id=${state.user_id}`)
+        fetch(`/api/getuserblocknativekey?user_id=${user_id}`)
             .then((response) => response.json())
             .then((data) => {
                 console.log(data[0].blocknative_key);
@@ -45,10 +53,10 @@ const Profilepage = () => {
             })
             .catch((error) => console.error("Error fetching data:", error));
     }, []);
-    console.log(state);
+    console.log();
     return (
         <div>
-            <Header wallet={state.user_wallet} />
+            <Header handleTabClick={handleTabClick} user_id={user_id} wallet={user_wallet}  />
             Hi! This is the profile page.
             {expiryDate && (
                 <p>Your expiry date: {expiryDate.toLocaleDateString()}</p>

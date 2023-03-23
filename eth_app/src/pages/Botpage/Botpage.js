@@ -5,12 +5,12 @@ import MintWalletCards from "../../../src/components/MintWalletCard(s)/MintWalle
 import Header from "../../components/Header";
 import { ethers } from "ethers";
 import FunctionStorer from "../../components/contractFunction(s)/FunctionStorer";
-import Tab from "react-bootstrap/Tab";
-import Tabs from "react-bootstrap/Tabs";
+import { useTabContext } from "../Tabcontext";
 import EventListen from "../../components/mintBotcomps/eventListen";
 import DashboardCards from "../../components/Dashboard/DashboardCards";
 import GasComponent from "../../components/NetworkGas";
 import { createContext } from "react";
+import Background from "../../components/Gradient.png"
 
 var GlobalProvider = new ethers.InfuraProvider(
     "goerli",
@@ -25,7 +25,7 @@ export const userInputs = createContext();
 const Botpage = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { user_id, user_wallet } = location.state;
+    const { user_id, user_wallet } = location.state || { user_id: null, user_wallet: null };
     //const [backendData, setBackendData] = useState([{}]);
     const [mint_wallets, setMint_wallets] = useState([]);
     const [private_keys, setPrivate_keys] = useState([]);
@@ -34,6 +34,7 @@ const Botpage = () => {
     const [functionResult, setFunctionResult] = useState("");
     const [sharedState, setSharedState] = useState({});
     const [tasks, setTasks] = useState([]);
+    const { activeTab, setActiveTab} = useTabContext();
 
     const [contractInputs, setContractInputs] = useState({
         contractAddress: "",
@@ -144,7 +145,8 @@ const Botpage = () => {
 
     function handleRoute() {
         navigate("/profilepage", { state: { user_id, user_wallet } });
-    }
+      }      
+      
 
     function handleChange(event) {
         const { name, value } = event.target;
@@ -169,6 +171,8 @@ const Botpage = () => {
             });
     }, []);
 
+    
+
     function changeStateMintWallets(new_mint_wallet_address) {
         setMint_wallets((prev) => {
             return [...prev, new_mint_wallet_address];
@@ -186,59 +190,61 @@ const Botpage = () => {
     }
 
     return (
-        <div>
-            <Header wallet={user_wallet} handleRoute={handleRoute} />
+        <div className="dashboard-dashboard-wrapper"
+        style={{
+            backgroundImage: `url(${Background})`,
+        }}>
+            <Header
+              wallet={user_wallet}
+              handleRoute={handleRoute}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+            />
             <userInputs.Provider value={{ sharedState, setSharedState }}>
-                <Tabs
-                    defaultActiveKey="profile"
-                    id="uncontrolled-tab-example"
-                    className="mb-3"
-                >
-                    {" "}
-                    <Tab eventKey="home" title="Dashboard">
+            <div className="tab-content">
+                    {activeTab === "dashboard" && (
+                      <div>
                         {tasks &&
-                            tasks.map((task, index) => (
-                                <li key={index}>
-                                    <div>
-                                        <DashboardCards
-                                            index={index}
-                                            task={tasks[index]}
-                                            user_id={user_id}
-                                            deleteTask={deleteTask}
-                                        />
-                                    </div>
-                                </li>
-                            ))}
-                    </Tab>
-                    <Tab eventKey="wallets" title="Wallets">
-                        <div className="left-side">
-                            <div>
-                                <h1>Welcome to the BotPage!</h1>
-                            </div>
-
-                            <div className="create-wallet">
-                                <CreateWallet
-                                    user_id={user_id}
-                                    changeStateMintWallets={
-                                        changeStateMintWallets
-                                    }
-                                    changeStatePrivateKeys={
-                                        changeStatePrivateKeys
-                                    }
+                          tasks.map((task, index) => (
+                            <li key={index}>
+                              <div>
+                                <DashboardCards
+                                  index={index}
+                                  task={tasks[index]}
+                                  user_id={user_id}
+                                  deleteTask={deleteTask}
                                 />
-                            </div>
+                              </div>
+                            </li>
+                          ))}
+                      </div>
+                    )}
 
-                            <div className="mint-wallet-cards">
-                                <MintWalletCards
-                                    mint_wallets={mint_wallets}
-                                    private_keys={private_keys}
-                                    SetTheWallet={SetTheWallet}
-                                />
-                            </div>
+                    {activeTab === "wallets" && (
+                      <div className="left-side">
+                        <div>
+                          <h1>Welcome to the BotPage!</h1>
                         </div>
-                    </Tab>
-                    <Tab eventKey="profile" title="Contract">
-                        <div className="container">
+                    
+                        <div className="create-wallet">
+                          <CreateWallet
+                            user_id={user_id}
+                            changeStateMintWallets={changeStateMintWallets}
+                            changeStatePrivateKeys={changeStatePrivateKeys}
+                          />
+                        </div>
+                    
+                        <div className="mint-wallet-cards">
+                          <MintWalletCards
+                            mint_wallets={mint_wallets}
+                            private_keys={private_keys}
+                            SetTheWallet={SetTheWallet}
+                          />
+                        </div>
+                      </div>
+                    )}
+                    {activeTab === "contract" && (
+                            <div className="container">
                             <h3>
                                 <GasComponent />
                             </h3>
@@ -334,16 +340,18 @@ const Botpage = () => {
                                 Bring the contract
                             </button>
                         </div>
-                    </Tab>
-                    <Tab eventKey="contact" title="Set Up Mint Task">
+                    )}
+                    
+                    {activeTab === "setUpMintTask" && (
                         <EventListen
-                            contractFunctions={contractFunctions}
-                            mint_wallets={mint_wallets}
-                            private_keys={private_keys}
-                            changeStateTasks={changeStateTasks}
+                        contractFunctions={contractFunctions}
+                        mint_wallets={mint_wallets}
+                        private_keys={private_keys}
+                        changeStateTasks={changeStateTasks}
                         />
-                    </Tab>
-                </Tabs>
+                    )}
+
+                    </div>
             </userInputs.Provider>
             <div className="container"></div>
         </div>
