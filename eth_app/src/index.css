@@ -191,7 +191,8 @@ input[type="checkbox"] {
     padding-top: 40px;
 }
 .frame-elements {
-    color: #ffffff;
+    position: relative;
+    color: #cccccc;
     font-family: "Nunito", Helvetica;
     font-size: 18px;
     font-weight: 500;
@@ -199,18 +200,35 @@ input[type="checkbox"] {
     line-height: normal;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
-    border: 2px solid #ffffff;
-    padding: 10px 5px;
+    padding: 10px 3px;
     border-radius: 20px;
 }
 
+.frame-elements::before {
+    content: "";
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    width: 0%;
+    height: 1px;
+    background: #ffffff;
+    transition: all 0.3s ease-in-out;
+}
+
 .frame-elements:hover {
-    background-color: #ffffff;
-    color: #000000;
+    color: #ffffff;
+}
+
+.frame-elements:hover::before {
+    width: 100%;
 }
 
 .frame-elements:focus {
     outline: none;
+}
+
+.frame-elements:focus::before {
+    width: 0%;
 }
 
 .tab-content-container {
