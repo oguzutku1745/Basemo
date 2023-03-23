@@ -80,7 +80,8 @@ app.post("/api/listen", validateRequestBody, (req, res) => {
                     SelectedUserGas,
                     PrivateKeyTxn,
                     ABI,
-                    contractAddress
+                    contractAddress,
+                    mintPrice
                 );
                 if (result.error) {
                     res.status(500).json({ error: result.error });
@@ -122,6 +123,7 @@ app.post(
             SelectedUserGas,
             PrivateKeyTxn,
             taskID,
+            mintPrice,
         } = req.body;
         console.log(req.body);
 
@@ -133,7 +135,8 @@ app.post(
                     SelectedUserGas,
                     PrivateKeyTxn,
                     ABI,
-                    contractAddress
+                    contractAddress,
+                    mintPrice
                 );
                 if (result.error) {
                     res.status(500).json({ error: result.error });
@@ -242,7 +245,8 @@ async function sendWriteTxnRead(
     SelectedUserGas,
     PrivateKeys,
     ABI,
-    contractAddress
+    contractAddress,
+    mintPrice
 ) {
     Interface_txn = new ethers.utils.Interface(ABI);
     transactions = [];
@@ -262,6 +266,9 @@ async function sendWriteTxnRead(
         : FunctionToCallInput
         ? [FunctionToCallInput]
         : [];
+    console.log(mintPrice);
+    const mintpricetouse = ethers.utils.parseEther(mintPrice.toString());
+    console.log(mintpricetouse);
 
     for (const privateKey of PrivateKeys) {
         try {
@@ -270,7 +277,10 @@ async function sendWriteTxnRead(
 
             const transaction = await contract_txn
                 .connect(signer)
-                [FunctionToCall](...inputs, { gasPrice: gasPriceToUse });
+                [FunctionToCall](...inputs, {
+                    value: mintpricetouse,
+                    gasPrice: gasPriceToUse,
+                });
 
             console.log(transaction);
 
@@ -363,7 +373,8 @@ app.post(
                                 SelectedUserGas,
                                 PrivateKeyTxn,
                                 ABI,
-                                contractAddress
+                                contractAddress,
+                                mintPrice
                             );
                             if (result.error) {
                                 res.status(500).json({ error: result.error });
@@ -383,7 +394,8 @@ app.post(
                                 SelectedUserGas,
                                 PrivateKeyTxn,
                                 ABI,
-                                contractAddress
+                                contractAddress,
+                                mintPrice
                             );
                             if (result.error) {
                                 res.status(500).json({ error: result.error });

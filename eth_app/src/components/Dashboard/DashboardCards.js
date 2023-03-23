@@ -24,7 +24,8 @@ export default function DashboardCards({ task, user_id, deleteTask, index }) {
                 sharedState.taskContractFunctionInput,
                 sharedState.selectedGasPrice,
                 sharedState.mintPrivateKey,
-                task.taskID
+                task.taskID,
+                task.mintPrice
             );
         } else if (sharedState.eventListener === "Mempool") {
             sendRequestToBackendFunction(
@@ -38,7 +39,8 @@ export default function DashboardCards({ task, user_id, deleteTask, index }) {
                 sharedState.mintPrivateKey,
                 sharedState.eventListenerPending,
                 user_id,
-                task.taskID
+                task.taskID,
+                task.mintPrice
             );
         } else if (sharedState.eventListener === "blockNumber") {
             sendRequestbyBlockNumber(
@@ -51,7 +53,8 @@ export default function DashboardCards({ task, user_id, deleteTask, index }) {
                 sharedState.mintPrivateKey,
                 sharedState.eventListenerPending,
                 user_id,
-                task.taskID
+                task.taskID,
+                task.mintPrice
             );
         }
     }
@@ -125,7 +128,8 @@ export default function DashboardCards({ task, user_id, deleteTask, index }) {
         PrivateKeyTxn,
         pendingStatus,
         user_id,
-        taskID
+        taskID,
+        mintPrice
     ) {
         const requestData = {
             contractAddress, // value of contractAddress,
@@ -138,6 +142,7 @@ export default function DashboardCards({ task, user_id, deleteTask, index }) {
             pendingStatus,
             user_id,
             taskID,
+            mintPrice,
         };
         fetch("/api/listenBlockNumber", {
             method: "POST",
@@ -170,7 +175,8 @@ export default function DashboardCards({ task, user_id, deleteTask, index }) {
         PrivateKeyTxn,
         pendingStatus,
         user_id,
-        taskID
+        taskID,
+        mintPrice
     ) {
         const requestData = {
             contractAddress, // value of contractAddress,
@@ -184,6 +190,7 @@ export default function DashboardCards({ task, user_id, deleteTask, index }) {
             pendingStatus,
             user_id,
             taskID,
+            mintPrice,
         };
         fetch("/api/listenFunction", {
             method: "POST",
@@ -218,7 +225,8 @@ export default function DashboardCards({ task, user_id, deleteTask, index }) {
         FunctionToCallInput,
         SelectedUserGas,
         PrivateKeyTxn,
-        taskID
+        taskID,
+        mintPrice
     ) {
         const requestData = {
             contractAddress, // value of contractAddress,
@@ -230,6 +238,7 @@ export default function DashboardCards({ task, user_id, deleteTask, index }) {
             SelectedUserGas,
             PrivateKeyTxn,
             taskID,
+            mintPrice,
         };
         fetch("/api/listen", {
             method: "POST",

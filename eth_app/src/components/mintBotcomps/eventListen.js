@@ -51,6 +51,7 @@ export default function EventListen(props) {
         eventListenerInput: "",
         eventListenerPending: false,
         taskID: 0,
+        mintPrice: 0,
     });
 
     console.log(mintSectionInputs);
@@ -181,6 +182,8 @@ export default function EventListen(props) {
             eventListenerFunction: "",
             eventListenerInput: "",
             eventListenerPending: false,
+            taskID: 0,
+            mintPrice: 0,
         });
     };
 
