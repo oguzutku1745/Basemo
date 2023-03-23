@@ -28,17 +28,17 @@ const Header = ({
     const Box = ({ text }) => (
         <div
             style={{
-                width: "516px",
+                width: "520px",
                 height: "50px",
                 backgroundColor: "#0000004D",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
                 textAlign: "center",
-                fontSize: "16px",
+                fontSize: "18px",
                 borderRadius: "15px",
                 cursor: "pointer",
-                transition: "all 0.2s ease-in-out",
+                transition: "all 0.3s ease-in-out",
                 boxShadow: "0 2px 5px rgba(0, 0, 0, 0.2)",
                 BackGround: "rgba(0, 0, 0, 0.3)",
                 border: "1.5px solid #FFFFFF",
@@ -47,8 +47,14 @@ const Header = ({
                 color: "#ffffff",
             }}
             onClick={handleRoute}
-            onMouseEnter={(e) => (e.target.style.backgroundColor = "#eee")}
-            onMouseLeave={(e) => (e.target.style.backgroundColor = "#0000004D")}
+            onMouseEnter={(e) => (
+                (e.target.style.backgroundColor = "#eee"),
+                (e.target.style.color = "#000000")
+            )}
+            onMouseLeave={(e) => (
+                (e.target.style.backgroundColor = "#0000004D"),
+                (e.target.style.color = "#ffffff")
+            )}
         >
             User: {text}
         </div>
@@ -62,8 +68,8 @@ const Header = ({
                 alignItems: "center",
                 padding: "20px",
                 width: "100%",
-                height: "191px",
-                borderBottom: "3px solid #ffffff",
+                height: "160px",
+                borderBottom: "1px solid #ffffff",
             }}
         >
             <div style={{ display: "flex", alignItems: "center" }}>
@@ -72,7 +78,7 @@ const Header = ({
                     alt="logo"
                     style={{
                         width: "138px",
-                        height: "115px",
+                        height: "138px",
                     }}
                 />
                 <div className="frame-header">
@@ -93,7 +99,7 @@ const Header = ({
                         className="frame-elements"
                         onClick={() => handleDashboardClick("contract")}
                     >
-                        Contract
+                        Contract Interaction
                     </div>
                     <div
                         className="frame-elements"
