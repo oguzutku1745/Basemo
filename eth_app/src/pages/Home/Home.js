@@ -1,12 +1,18 @@
 import React from "react";
 import gradient2 from "/root/basemov2/Basemo/eth_app/src/components/gradient2.png";
 import flaplogo from "/root/basemov2/Basemo/eth_app/src/components/FlapLogo.png";
-import JoinUs from "/root/basemov2/Basemo/eth_app/src/components/JoinUs.png";
-import JoinDiscord from "/root/basemov2/Basemo/eth_app/src/components/JoinDiscord.png";
+
 import Rectangle from "/root/basemov2/Basemo/eth_app/src/components/Rectangle.svg";
+import FLAPNFT from "/root/basemov2/Basemo/eth_app/src/components/FLAPNFT.png";
 import { Link } from "react-router-dom";
 
 const Homepage = () => {
+    function handleJoinUsClick() {}
+
+    function handleJoinDiscordClick() {
+        window.open("https://discord.gg/cApSXjHV", "_blank");
+    }
+
     return (
         <div className={"dashboard-dashboard-wrapper"}>
             <div className={"dashboard-dashboard"}>
@@ -32,17 +38,29 @@ const Homepage = () => {
                     <div className={"dashboard-frame-6"}>
                         <div className={"dashboard-text-wrapper"}>FAQ's </div>
                     </div>
-                    <Link to="/app" className={"dashboard-rectangle"}>
-                        <div className={"dashboard-div"}>LAUNCH APP</div>
+                    <Link to="/app">
+                        <button className={"dashboard-rectangle"}>
+                            LAUNCH APP
+                        </button>
                     </Link>
 
-                    <h1 className={"dashboard-h-1"}>FLAPNFT</h1>
-                    <img className={"dashboard-group"} src={JoinUs} />
-                    <img className={"dashboard-group-6"} src={JoinDiscord} />
-                    <img
-                        className={"dashboard-rectangle-10"}
-                        src={Rectangle}
-                    ></img>
+                    <img className={"dashboard-h-1"} src={FLAPNFT} />
+                    <button
+                        className={"dashboard-group"}
+                        onClick={handleJoinUsClick}
+                    >
+                        {" "}
+                        Join Us{" "}
+                    </button>
+                    <button
+                        className={"dashboard-group-6"}
+                        onClick={handleJoinDiscordClick}
+                    >
+                        {" "}
+                        Join Discord
+                    </button>
+
+                    <div className={"dashboard-rectangle-10"}> </div>
                 </div>
             </div>
         </div>
