@@ -246,3 +246,137 @@ input[type="checkbox"] {
     cursor: pointer;
     text-decoration: underline;
 }
+
+.dashboard-dashboard-wrapper {
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+}
+
+.dashboard-dashboard {
+    background-color: #ffffff;
+    border: 1px none;
+    width: 1920px;
+    height: 1080px;
+}
+
+.dashboard-overlap {
+    background-image: url(/root/basemov2/Basemo/eth_app/src/components/gradient2.png);
+    background-size: 100% 100%;
+    height: 1080px;
+    position: relative;
+}
+
+.dashboard-flapnft-website-favicon-black {
+    position: absolute;
+    object-fit: cover;
+    top: 37px;
+    left: 111px;
+    width: 138px;
+    height: 115px;
+}
+
+.dashboard-frame {
+    position: absolute;
+    top: 77px;
+    height: 35px;
+    width: 72px;
+    left: 881px;
+}
+
+.dashboard-frame-home {
+    position: absolute;
+    top: 77px;
+    height: 35px;
+    width: 72px;
+    left: 581px;
+}
+
+.dashboard-text-wrapper {
+    color: #ffffff;
+    font-family: "Nunito", Helvetica;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    top: -1px;
+    left: 0;
+}
+
+.dashboard-frame-6 {
+    position: absolute;
+    top: 77px;
+    left: 1228px;
+    height: 35px;
+    width: 72px;
+}
+
+.dashboard-rectangle {
+    -webkit-backdrop-filter: blur (600px) brightness(100%);
+    backdrop-filter: blur (600px) brightness (100%);
+    background-color: #00000040;
+    border: 1.5px solid;
+    border-color: #ffffff;
+    border-radius: 40px;
+    box-shadow: 15px 22px 4px #00000040;
+    height: 50px;
+    left: 1535px;
+    position: absolute;
+    top: 67px;
+    width: 278px;
+}
+
+.dashboard-div {
+    position: absolute;
+    top: 8px;
+    left: 64px;
+    color: #ffffff;
+    font-family: "Nunito", Helvetica;
+    font-size: 23px;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: normal;
+    width: 156px;
+}
+
+.dashboard-h-1 {
+    -webkit-text-stroke: 2px #000000;
+    color: #ffffff;
+    font-family: "Helvetica-Regular", Helvetica;
+    font-size: 128px;
+    font-weight: 400;
+    left: 666px;
+    letter-spacing: 0;
+    line-height: normal;
+
+    position: absolute;
+    text-shadow: 17 5px 11px rgba(0, 0, 0, 0.25);
+    top: 290px;
+}
+
+.dashboard-group {
+    position: absolute;
+    top: 504px;
+    width: 297px;
+    height: 92px;
+    left: 606px;
+}
+
+.dashboard-group-6 {
+    position: absolute;
+    top: 504px;
+    width: 297px;
+    height: 92px;
+    left: 985px;
+}
+
+.dashboard-rectangle-10 {
+    height: 377px;
+    left: 111px;
+    position: absolute;
+    top: 703px;
+    width: 1751px;
+}
