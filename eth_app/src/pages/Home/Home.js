@@ -11,50 +11,6 @@ const Homepage = () => {
         window.open("https://discord.gg/cApSXjHV", "_blank");
     }
 
-/*
-<div className={"dashboard-dashboard-wrapper"}>
-            <div className={"upper-menu"} >
-                <img
-                    className={"dashboard-flapnft-website-favicon-black"}
-                    src={flaplogo}
-                />
-                <div className={"dashboard-frame-home"}>
-                    <div className={"dashboard-text-wrapper"}> Home </div>
-                </div>
-                <div className={"dashboard-frame"}>
-                    <div className={"dashboard-text-wrapper"}>
-                        {" "}
-                        Features{" "}
-                    </div>
-                </div>
-                <div className={"dashboard-frame-6"}>
-                    <div className={"dashboard-text-wrapper"}>FAQ's </div>
-                </div>
-                <Link to="/app">
-                    <button className={"dashboard-rectangle"}>
-                        LAUNCH APP
-                    </button>
-                </Link>
-            </div>
-                <img className={"dashboard-h-1"} src={FLAPNFT} />
-                <button
-                    className={"dashboard-group"}
-                    onClick={handleJoinUsClick}
-                >
-                    {" "}
-                    Join Us{" "}
-                </button>
-                <button
-                    className={"dashboard-group-6"}
-                    onClick={handleJoinDiscordClick}
-                >
-                    {" "}
-                    Join Discord
-                </button>
-                <div className={"dashboard-rectangle-10"}> </div>
-        </div>
-        */
-
     return (
         <div className="dashboard-dashboard-wrapper">
             <div className="header-bar">
