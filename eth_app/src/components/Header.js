@@ -1,6 +1,6 @@
 import React from "react";
-import FlapLogo from "./FlapLogo.png";
-import BackGround from "./Gradient.png";
+import FlapLogo from "../images/FlapLogo.png";
+import BackGround from "../images/Gradient.png";
 import { useTabContext } from "../pages/Tabcontext";
 import { useLocation, useNavigate } from "react-router-dom";
 

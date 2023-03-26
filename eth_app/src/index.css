@@ -5,7 +5,6 @@ body {
         "Helvetica Neue", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-image: url("/root/basemov2/Basemo/eth_app/src/components/Gradient.png");
     background-size: cover;
     background-repeat: no-repeat;
 }
@@ -169,12 +168,27 @@ input[type="checkbox"] {
 }
 
 .dashboard-rectangle {
-    background-color: #d9d9d9;
-    height: 3px;
-    left: 0;
-    position: absolute;
-    top: 191px;
-    width: 1728px;
+    background-color: #0000004d;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 18px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.25s ease-in-out;
+    box-shadow: 10px 2px 5px rgba(0, 0, 0, 0.2);
+    background-color: rgba(58, 49, 103, 0.35);
+    border: 1.5px solid #ffffff;
+    border-radius: 40px;
+    backdrop-filter: blur(300px);
+    color: #ffffff;
+    height: 50px;
+    width: 278px;
+    margin-left: 20px;
+}
+.dashboard-rectangle:hover {
+    background-color: rgb(61, 9, 121, 0.6);
 }
 
 .frame-header {
@@ -248,29 +262,37 @@ input[type="checkbox"] {
 }
 
 .dashboard-dashboard-wrapper {
-    background-color: #ffffff;
+    background-image: url(./images/gradient2.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
-    width: 100%;
+    min-height: 100vh;
+    height: 100%;
 }
 
-.dashboard-dashboard {
-    background-color: #ffffff;
-    border: 1px none;
-    width: 1920px;
-    height: 1080px;
+.header-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+
 }
 
 .dashboard-overlap {
-    background-image: url(/root/basemov2/Basemo/eth_app/src/components/gradient2.png);
-    background-size: 100% 100%;
-    height: 1080px;
     position: relative;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav {
+    display: flex;
+    gap: 200px;
 }
 
 .dashboard-flapnft-website-favicon-black {
-    position: absolute;
     object-fit: cover;
     top: 37px;
     left: 111px;
@@ -301,9 +323,6 @@ input[type="checkbox"] {
     font-weight: 700;
     letter-spacing: 0;
     line-height: normal;
-    position: absolute;
-    top: -1px;
-    left: 0;
 }
 
 .dashboard-frame-6 {
@@ -314,31 +333,7 @@ input[type="checkbox"] {
     width: 72px;
 }
 
-.dashboard-rectangle {
-    background-color: #0000004d;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    font-size: 18px;
-    border-radius: 15px;
-    cursor: pointer;
-    transition: all 0.25s ease-in-out;
-    box-shadow: 10px 2px 5px rgba(0, 0, 0, 0.2);
-    background-color: rgba(58, 49, 103, 0.35);
-    border: 1.5px solid #ffffff;
-    border-radius: 40px;
-    backdrop-filter: blur(300px);
-    color: #ffffff;
-    height: 50px;
-    left: 1535px;
-    position: absolute;
-    top: 67px;
-    width: 278px;
-}
-.dashboard-rectangle:hover {
-    background-color: rgb(61, 9, 121, 0.6);
-}
+
 
 .dashboard-div {
     position: absolute;
@@ -353,20 +348,33 @@ input[type="checkbox"] {
     width: 156px;
 }
 
+.typo-positioner {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    margin-top: 250px;
+}
+
 .dashboard-h-1 {
     position: relative;
-    top: -122px;
-    left: 436px;
+
+}
+
+.join-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 300px;
+    margin-top: 100px;
+
 }
 
 .dashboard-group {
-    position: absolute;
-    top: 504px;
     width: 297px;
     height: 92px;
-    left: 606px;
     border-radius: 45px;
-    background-color: rgba(58, 49, 103, 0.35);
+    background-color:  rgba(255, 255, 255, 0.5);
+    filter: drop-shadow(15px 22px 4px rgba(0, 0, 0, 0.25));
     border: 4px solid #ffffff;
     color: aliceblue;
     transition: all 0.25s ease-in-out;
@@ -379,13 +387,11 @@ input[type="checkbox"] {
 }
 
 .dashboard-group-6 {
-    position: absolute;
-    top: 504px;
     width: 297px;
     height: 92px;
-    left: 985px;
     border-radius: 45px;
-    background-color: rgba(58, 49, 103, 0.35);
+    background-color:  rgba(255, 255, 255, 0.5);
+    filter: drop-shadow(15px 22px 4px rgba(0, 0, 0, 0.25));
     border: 4px solid #ffffff;
     color: aliceblue;
     transition: all 0.25s ease-in-out;
@@ -397,10 +403,18 @@ input[type="checkbox"] {
 }
 
 .dashboard-rectangle-10 {
-    background-image: url(/root/basemov2/Basemo/eth_app/src/components/Rectangle.svg);
-    height: 377px;
-    left: 111px;
-    position: absolute;
-    top: 703px;
-    width: 1751px;
+    border: 1px solid #000000;
+    background-color: rgba(217, 217, 217, 0.5);;
+    border-radius: 45px;
+    box-shadow: 40px 4px 9px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(250px);
+    height: 70vh;
+    margin: 50px;
+    margin-top: 80px;
+    display: flex;
+}
+
+.info-giver {
+    align-items: flex-start;
+    justify-content: center;
 }

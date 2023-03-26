@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import MintButton from "./MintButton";
-import metamask from "./Metamask.png";
+import metamask from "../images/Metamask.png";
 import Web3 from "web3";
 import { AuthContext } from "../utils/AuthContext";
-import gifBackground from './a6.gif';
+import gifBackground from '../images/a6.gif';
 
 const ConnectWallet = (props) => {
     const navigate = useNavigate();
