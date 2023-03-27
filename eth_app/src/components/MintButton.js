@@ -21,13 +21,7 @@ const MintButton = ({ contract, to, accounts }) => {
         console.error(error);
       }
     };
-  
-    return (
-      <button style={{ backgroundColor: '#ffc107', color: 'white', padding: '15px 30px', fontSize: '20px', border: 'none', borderRadius: '5px', cursor: 'pointer', marginTop: '20px'}}
-        onClick={handleMint}>
-        Mint
-      </button>
-    );
+
   };
   
   export default MintButton;

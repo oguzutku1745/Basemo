@@ -638,10 +638,41 @@ const ConnectWallet = (props) => {
             />
           </div>
             <div class="cw-info-bar">
-
               <div class="cw-buttons-container">
-                <button class="cw-button">Connect Wallet</button>
-                <button class="cw-button">Mint</button>
+              {isConnected && existWallet && allowed ? 
+              (<button className="cw-button-active" 
+              onClick={ () => {navigate("/botpage", {
+                state: { user_id, user_wallet },
+                })} }> Launch App </button>) : 
+                (<button className="cw-button" onClick={handleConnect} >Connect Wallet</button>) }
+
+                <button 
+                className={`cw-button ${isConnected && 'cw-button-active'}`} 
+                onClick={ () => {
+                        if (!isConnected) {
+                            window.alert("Please connect your wallet first.");
+                            return;
+                        }
+                        if (existWallet && allowed) {
+                            const confirmed = window.confirm("You are already whitelisted. If you mint again, your whitelist period will be renewed. Do you confirm?");
+                            if (confirmed) {
+                                <MintButton
+                                contract={contract}
+                                to={accounts[0]}
+                                accounts={accounts}
+                            />
+                            }
+                        } else {
+                            <MintButton
+                                contract={contract}
+                                to={accounts[0]}
+                                accounts={accounts}
+                            />
+                        }
+                    }}
+                >
+                    Mint
+                    </button>
               </div>
             </div>
           </div>
