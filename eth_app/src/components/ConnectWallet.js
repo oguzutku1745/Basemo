@@ -4,7 +4,8 @@ import MintButton from "./MintButton";
 import metamask from "../images/Metamask.png";
 import Web3 from "web3";
 import { AuthContext } from "../utils/AuthContext";
-import gifBackground from '../images/a6.gif';
+import flaplogo from "../images/FlapLogo.png"
+import Background from "../images/gradient2.png"
 
 const ConnectWallet = (props) => {
     const navigate = useNavigate();
@@ -572,56 +573,13 @@ const ConnectWallet = (props) => {
         }
     }, [accounts, existWallet, expired]);
 
-    return (
-        <div
-        style={{
-            backgroundImage: `url(${gifBackground})`,
-            backgroundRepeat: 'no-repeat',
-            backgroundSize: 'cover',
-            height: '100vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-            <div style={{ width: "50%", textAlign: "center" }}>
-                <div
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                    }}
-                >
-                    <img
-                        src={metamask}
-                        alt="Metamask"
-                        style={{
-                            width: "300px",
-                            marginBottom: "40px",
-                            display: "block",
-                            margin: "0 auto",
-                            backgroundColor: "#000001",
-                            padding: "10px",
-                            borderRadius: "10%",
-                            transition: "box-shadow 0.3s", // add this line to make the transition smooth
-                        }}
-                        onMouseEnter={(e) => {
-                            e.target.style.boxShadow = "0 0 200px #9526E9"; // add this line to change the background color on hover
-                        }}
-                        onMouseLeave={(e) => {
-                            e.target.style.boxShadow = "none"; // add this line to reset the background color when leaving the hover
-                        }}
-                    />
-
-
-                </div>
-                <div
+    /* <div
                     style={{
                         backgroundColor: "",
                         padding: "20px",
                         borderRadius: "10px",
                     }}
-                >
+                    >
                     {isConnected ? (
                         existWallet ? (
                             allowed ? (
@@ -667,9 +625,26 @@ const ConnectWallet = (props) => {
                             Connect Wallet
                         </button>
                     )}
-                </div>
+                </div> */
+
+
+
+    return (
+          <div class="connect-wallet-container">
+          <div class="cw-logo">
+          <img
+                className={"dashboard-flapnft-website-favicon-black"}
+                src={flaplogo}
+            />
+          </div>
+            <div class="cw-info-bar">
+
+              <div class="cw-buttons-container">
+                <button class="cw-button">Connect Wallet</button>
+                <button class="cw-button">Mint</button>
+              </div>
             </div>
-        </div>
+          </div>
     );
 };
 
