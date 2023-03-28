@@ -646,8 +646,13 @@ const ConnectWallet = (props) => {
                 })} }> Launch App </button>) : 
                 (<button className="cw-button" onClick={handleConnect} >Connect Wallet</button>) }
 
-                <button 
-                className={`cw-button ${isConnected && 'cw-button-active'}`} 
+                <button
+                disabled={!isConnected}
+                className={`cw-button ${isConnected ? (existWallet && allowed ? 'cw-button' : 'cw-button-active') : 'cw-button'}`}
+
+
+
+
                 onClick={ () => {
                         if (!isConnected) {
                             window.alert("Please connect your wallet first.");
