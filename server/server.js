@@ -63,6 +63,7 @@ app.post("/api/listen", validateRequestBody, (req, res) => {
         SelectedUserGas,
         PrivateKeyTxn,
         taskID,
+        mintPrice,
     } = req.body;
     console.log(req.body);
     var result;
@@ -72,6 +73,7 @@ app.post("/api/listen", validateRequestBody, (req, res) => {
         taskID,
         targetFunction,
         targetValue,
+        mintPrice,
         async () => {
             try {
                 result = await sendWriteTxnRead(
