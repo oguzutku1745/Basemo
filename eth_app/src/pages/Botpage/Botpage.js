@@ -189,7 +189,7 @@ const Botpage = () => {
     }
 
     return (
-        <div>
+        <div className="botpagebackground">
             <Header
                 wallet={user_wallet}
                 handleRoute={handleRoute}

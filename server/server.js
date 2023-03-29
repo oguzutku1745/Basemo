@@ -322,6 +322,7 @@ app.post(
             pendingStatus,
             user_id,
             taskID,
+            mintPrice,
         } = req.body;
 
         userBlockKey = await getUserBlockNativeKey(user_id);
