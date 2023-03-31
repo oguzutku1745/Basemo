@@ -278,6 +278,17 @@ input[type="checkbox"] {
     height: 100%;
 }
 
+.dashboard-botpage-wrapper {
+    background-image: url(./images/gradient2.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    height: 100%;
+}
+
 .connect-wallet-container {
     background-image: url(./images/gradient2.png);
     background-repeat: no-repeat;
