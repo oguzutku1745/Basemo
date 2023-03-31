@@ -189,6 +189,7 @@ const Botpage = () => {
     }
 
     return (
+       <div className="dashboard-botpage-wrapper">
         <div className="botpagebackground">
             <Header
                 wallet={user_wallet}
@@ -359,6 +360,7 @@ const Botpage = () => {
                 </userInputs.Provider>
             </div>
         </div>
+      </div>
     );
 };
 
