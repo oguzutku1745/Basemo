@@ -270,7 +270,12 @@ export default function EventListen(props) {
                             }}
                         >
                             <Box sx={{ flex: "1 1 auto" }} />
-                            <Button onClick={handleReset}>Reset</Button>
+                            <Button
+                                onClick={handleReset}
+                                sx={{ color: "white" }}
+                            >
+                                Reset
+                            </Button>
                         </Box>
                     </React.Fragment>
                 ) : (
