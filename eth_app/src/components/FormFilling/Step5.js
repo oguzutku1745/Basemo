@@ -123,7 +123,9 @@ export default function Step5(props) {
                         Listen the Read function results
                     </option>
                     <option value="Mempool">Listen the function call</option>
-                    <option value="blockNumber">Trigger with the block number</option>
+                    <option value="blockNumber">
+                        Trigger with the block number
+                    </option>
                 </select>
             </div>
             <br></br>
@@ -131,6 +133,7 @@ export default function Step5(props) {
                 <div>
                     Read Function
                     <Select
+                        className="selectclass"
                         options={options}
                         value={selectedOption}
                         onChange={handleSelect}
@@ -146,21 +149,23 @@ export default function Step5(props) {
                         />
                     </form>
                 </div>
-            ) :(props.selectedMethod === "blockNumber" ? (
-            <div>
-                <form>
-                    Target Block number <br />
-                    <input
-                        placeholder="Put the target value"
-                        name="eventListenerInput"
-                        onChange={handleTargetInput}
-                        value={props.setTheInput.eventListenerInput}
-                    />
-                </form>
-            </div>) : (
+            ) : props.selectedMethod === "blockNumber" ? (
+                <div>
+                    <form>
+                        Target Block number <br />
+                        <input
+                            placeholder="Put the target value"
+                            name="eventListenerInput"
+                            onChange={handleTargetInput}
+                            value={props.setTheInput.eventListenerInput}
+                        />
+                    </form>
+                </div>
+            ) : (
                 <div>
                     Write Function
                     <Select
+                        className="selectclass"
                         options={optionsWrite}
                         value={selectedOptionFunction}
                         onChange={handleSelectFunction}
@@ -200,7 +205,7 @@ export default function Step5(props) {
                             </form>
                         )}
                 </div>
-            ))}
+            )}
         </div>
     );
 }

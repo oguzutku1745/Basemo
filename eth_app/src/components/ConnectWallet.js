@@ -4,8 +4,8 @@ import MintButton from "./MintButton";
 import metamask from "../images/Metamask.png";
 import Web3 from "web3";
 import { AuthContext } from "../utils/AuthContext";
-import flaplogo from "../images/FlapLogo.png"
-import Background from "../images/gradient2.png"
+import flaplogo from "../images/FlapLogo.png";
+import Background from "../images/gradient2.png";
 
 const ConnectWallet = (props) => {
     const navigate = useNavigate();
@@ -509,29 +509,29 @@ const ConnectWallet = (props) => {
 
     const checkWhitelistedStatus = async () => {
         try {
-          const currentDate = new Date();
-          const response = await fetch(`/api/${accounts[0]}`);
-          const dbdata = await response.json();
-          console.log(dbdata.expiry_date)
-          
-          if (dbdata) {
-            const expiryDate = new Date(dbdata.expiry_date);
-            setUser_id(dbdata.user_id);
-            setUser_wallet(dbdata.user_wallet);
-            setExistWallet(true);
-            
-            if (currentDate > expiryDate) {
-              setExpired(true);
+            const currentDate = new Date();
+            const response = await fetch(`/api/${accounts[0]}`);
+            const dbdata = await response.json();
+            console.log(dbdata.expiry_date);
+
+            if (dbdata) {
+                const expiryDate = new Date(dbdata.expiry_date);
+                setUser_id(dbdata.user_id);
+                setUser_wallet(dbdata.user_wallet);
+                setExistWallet(true);
+
+                if (currentDate > expiryDate) {
+                    setExpired(true);
+                } else {
+                    setAllowed(true);
+                }
             } else {
-              setAllowed(true);
+                console.log(`${accounts[0]} is not whitelisted`);
             }
-          } else {
-            console.log(`${accounts[0]} is not whitelisted`);
-          }
         } catch (error) {
-          console.error(error);
+            console.error(error);
         }
-      };
+    };
 
     const handleConnect = async () => {
         try {
@@ -627,60 +627,75 @@ const ConnectWallet = (props) => {
                     )}
                 </div> */
 
-
-
     return (
-          <div class="connect-wallet-container">
-          <div class="cw-logo">
-          <img
-                className={"dashboard-flapnft-website-favicon-black"}
-                src={flaplogo}
-            />
-          </div>
-            <div class="cw-info-bar">
-              <div class="cw-buttons-container">
-              {isConnected && existWallet && allowed ? 
-              (<button className="cw-button-active" 
-              onClick={ () => {navigate("/botpage", {
-                state: { user_id, user_wallet },
-                })} }> Launch App </button>) : 
-                (<button className="cw-button" onClick={handleConnect} >Connect Wallet</button>) }
-
-                <button
-                disabled={!isConnected}
-                className={`cw-button ${isConnected ? (existWallet && allowed ? 'cw-button' : 'cw-button-active') : 'cw-button'}`}
-
-
-
-
-                onClick={ () => {
-                        if (!isConnected) {
-                            window.alert("Please connect your wallet first.");
-                            return;
-                        }
-                        if (existWallet && allowed) {
-                            const confirmed = window.confirm("You are already whitelisted. If you mint again, your whitelist period will be renewed. Do you confirm?");
-                            if (confirmed) {
-                                <MintButton
-                                contract={contract}
-                                to={accounts[0]}
-                                accounts={accounts}
-                            />
-                            }
-                        } else {
-                            <MintButton
-                                contract={contract}
-                                to={accounts[0]}
-                                accounts={accounts}
-                            />
-                        }
-                    }}
-                >
-                    Mint
-                    </button>
-              </div>
+        <div class="connect-wallet-container">
+            <div class="cw-logo">
+                <img
+                    className={"dashboard-flapnft-website-favicon-black"}
+                    src={flaplogo}
+                />
             </div>
-          </div>
+            <div class="cw-info-bar">
+                <div class="cw-buttons-container">
+                    {isConnected && existWallet && allowed ? (
+                        <button
+                            className="cw-button-active"
+                            onClick={() => {
+                                navigate("/botpage", {
+                                    state: { user_id, user_wallet },
+                                });
+                            }}
+                        >
+                            {" "}
+                            Launch App{" "}
+                        </button>
+                    ) : (
+                        <button className="cw-button" onClick={handleConnect}>
+                            Connect Wallet
+                        </button>
+                    )}
+
+                    <button
+                        disabled={!isConnected}
+                        className={`cw-button ${
+                            isConnected
+                                ? existWallet && allowed
+                                    ? "cw-button"
+                                    : "cw-button-active"
+                                : "cw-button"
+                        }`}
+                        onClick={() => {
+                            if (!isConnected) {
+                                window.alert(
+                                    "Please connect your wallet first."
+                                );
+                                return;
+                            }
+                            if (existWallet && allowed) {
+                                const confirmed = window.confirm(
+                                    "You are already whitelisted. If you mint again, your whitelist period will be renewed. Do you confirm?"
+                                );
+                                if (confirmed) {
+                                    <MintButton
+                                        contract={contract}
+                                        to={accounts[0]}
+                                        accounts={accounts}
+                                    />;
+                                }
+                            } else {
+                                <MintButton
+                                    contract={contract}
+                                    to={accounts[0]}
+                                    accounts={accounts}
+                                />;
+                            }
+                        }}
+                    >
+                        Mint
+                    </button>
+                </div>
+            </div>
+        </div>
     );
 };
 

@@ -112,6 +112,7 @@ input[type="checkbox"] {
     border-radius: 3px;
     background-color: bisque;
     padding: 5px;
+    color: #000000;
 }
 
 .taskNameColor {
@@ -120,6 +121,7 @@ input[type="checkbox"] {
 
 .tab-content {
     width: 100%;
+    color: #ffffff;
 }
 
 .dashboardInformer {
@@ -260,12 +262,7 @@ input[type="checkbox"] {
     cursor: pointer;
     text-decoration: underline;
 }
-.botpagebackground {
-    background-image: url(./images/gradient2.png);
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center center;
-}
+
 .dashboard-dashboard-wrapper {
     background-image: url(./images/gradient2.png);
     background-repeat: no-repeat;
@@ -277,7 +274,9 @@ input[type="checkbox"] {
     min-height: 100vh;
     height: 100%;
 }
-
+.selectclass {
+    color: black;
+}
 .dashboard-botpage-wrapper {
     background-image: url(./images/gradient2.png);
     background-repeat: no-repeat;
@@ -466,7 +465,7 @@ input[type="checkbox"] {
     filter: drop-shadow(15px 22px 4px rgba(0, 0, 0, 0.25));
     border: 4px solid #ffffff;
     color: aliceblue;
-    transition: all 0.25s ease-in-out;
+    transition: all 0.2s ease-in-out;
     font-size: 40px;
     text-align: center;
 }
@@ -483,7 +482,7 @@ input[type="checkbox"] {
     filter: drop-shadow(15px 22px 4px rgba(0, 0, 0, 0.25));
     border: 4px solid #ffffff;
     color: aliceblue;
-    transition: all 0.25s ease-in-out;
+    transition: all 0.2s ease-in-out;
     font-size: 40px;
     text-align: center;
 }

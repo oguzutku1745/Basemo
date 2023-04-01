@@ -248,7 +248,7 @@ export default function EventListen(props) {
             <Stepper nonLinear activeStep={activeStep}>
                 {steps.map((label, index) => (
                     <Step key={label} completed={completed[index]}>
-                        <StepButton color="inherit" onClick={handleStep(index)}>
+                        <StepButton color="white" onClick={handleStep(index)}>
                             {label}
                         </StepButton>
                     </Step>

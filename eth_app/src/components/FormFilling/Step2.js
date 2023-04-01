@@ -70,6 +70,7 @@ export default function Step2(props) {
     return (
         <div>
             <Select
+                className="selectclass"
                 options={options}
                 value={selectedOption}
                 onChange={handleSelect}
