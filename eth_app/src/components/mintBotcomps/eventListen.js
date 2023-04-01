@@ -309,6 +309,7 @@ export default function EventListen(props) {
                             sx={{
                                 display: "flex",
                                 flexDirection: "row",
+                                alignItems: "center",
                                 pt: 2,
                             }}
                         >
@@ -316,29 +317,39 @@ export default function EventListen(props) {
                                 color="inherit"
                                 disabled={activeStep === 0}
                                 onClick={handleBack}
-                                sx={{ mr: 1 }}
+                                sx={{ color: "white", mr: 1 }}
                             >
                                 Back
                             </Button>
                             <Box sx={{ flex: "1 1 auto" }} />
-                            <Button onClick={handleNext} sx={{ mr: 1 }}>
+                            <Button
+                                onClick={handleNext}
+                                sx={{ color: "white", mr: 1 }}
+                            >
                                 Next
                             </Button>
-                            {activeStep !== steps.length &&
-                                (completed[activeStep] ? (
-                                    <Typography
-                                        variant="caption"
-                                        sx={{ display: "inline-block" }}
-                                    >
-                                        Step {activeStep + 1} already completed
-                                    </Typography>
-                                ) : (
-                                    <Button onClick={handleComplete}>
-                                        {completedSteps() === totalSteps() - 1
-                                            ? "Finish"
-                                            : "Complete Step"}
-                                    </Button>
-                                ))}
+                            <Box sx={{ flex: "0 1 auto" }}>
+                                {activeStep !== steps.length &&
+                                    (completed[activeStep] ? (
+                                        <Typography
+                                            variant="caption"
+                                            sx={{ display: "inline-block" }}
+                                        >
+                                            Step {activeStep + 1} already
+                                            completed
+                                        </Typography>
+                                    ) : (
+                                        <Button
+                                            onClick={handleComplete}
+                                            sx={{ color: "white" }}
+                                        >
+                                            {completedSteps() ===
+                                            totalSteps() - 1
+                                                ? "Finish"
+                                                : "Complete Step"}
+                                        </Button>
+                                    ))}
+                            </Box>
                         </Box>
                     </React.Fragment>
                 )}
