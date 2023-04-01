@@ -1,7 +1,12 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, memo } from "react";
 import { userInputs } from "../../pages/Botpage/Botpage";
 
-export default function DashboardCards({ task, user_id, deleteTask, index }) {
+const DashboardCards = memo(function DashboardCards({
+    task,
+    user_id,
+    deleteTask,
+    index,
+}) {
     const [Status, setStatus] = useState("Steady");
     const [DisplayGas, setDisplayGas] = useState(task.selectedGasPrice);
     const [GasButtonLastClicked, setGasButtonLastClicked] = useState(0);
@@ -352,4 +357,5 @@ export default function DashboardCards({ task, user_id, deleteTask, index }) {
             )}
         </div>
     );
-}
+});
+export default DashboardCards;

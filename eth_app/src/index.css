@@ -277,6 +277,10 @@ input[type="checkbox"] {
 .selectclass {
     color: black;
 }
+.hidden {
+    display: none;
+}
+
 .dashboard-botpage-wrapper {
     background-image: url(./images/gradient2.png);
     background-repeat: no-repeat;

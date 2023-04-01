@@ -202,171 +202,178 @@ const Botpage = () => {
                         value={{ sharedState, setSharedState }}
                     >
                         <div className="tab-content">
-                            {activeTab === "dashboard" && (
-                                <div>
-                                    {tasks &&
-                                        tasks.map((task, index) => (
-                                            <li key={index}>
-                                                <div>
-                                                    <DashboardCards
-                                                        index={index}
-                                                        task={tasks[index]}
-                                                        user_id={user_id}
-                                                        deleteTask={deleteTask}
-                                                    />
-                                                </div>
-                                            </li>
-                                        ))}
-                                </div>
-                            )}
-
-                            {activeTab === "wallets" && (
-                                <div className="walletsTab">
-                                    <div className="create-wallet">
-                                        <CreateWallet
-                                            user_id={user_id}
-                                            changeStateMintWallets={
-                                                changeStateMintWallets
-                                            }
-                                            changeStatePrivateKeys={
-                                                changeStatePrivateKeys
-                                            }
-                                        />
-                                    </div>
-
-                                    <div className="mint-wallet-cards">
-                                        <MintWalletCards
-                                            mint_wallets={mint_wallets}
-                                            private_keys={private_keys}
-                                            SetTheWallet={SetTheWallet}
-                                        />
-                                    </div>
-                                </div>
-                            )}
-                            {activeTab === "contract" && (
-                                <div className="container">
-                                    <h3>
-                                        <GasComponent />
-                                    </h3>
-                                    <form>
-                                        <input
-                                            onChange={handleGasChange}
-                                            placeholder="Enter your desired Gas"
-                                            value={UserGasPrice}
-                                        />
-                                    </form>
-                                    {contractFunctions.length > 0 && (
-                                        <>
-                                            {" "}
-                                            <div className="left-side">
-                                                <div className="functionContainers">
-                                                    <h2>READ</h2>
-                                                    {contractFunctions
-                                                        .filter(
-                                                            (fn) =>
-                                                                fn.functionType ===
-                                                                "read"
-                                                        )
-                                                        .map((fn) => (
-                                                            <FunctionStorer
-                                                                key={fn.id}
-                                                                id={fn.id}
-                                                                name={fn.name}
-                                                                paramName={
-                                                                    fn.paramName
-                                                                }
-                                                                inputType={
-                                                                    fn.inputType
-                                                                }
-                                                                functionType={
-                                                                    fn.functionType
-                                                                }
-                                                                handleChildStateChange={
-                                                                    handleChildStateChange
-                                                                }
-                                                                functionResult={
-                                                                    userContractInputs.functionName ===
-                                                                    fn.name
-                                                                        ? functionResult
-                                                                        : null
-                                                                }
-                                                                sendTxn={
-                                                                    sendTxn
-                                                                }
-                                                                sendWriteTxn={
-                                                                    sendWriteTxn
-                                                                }
-                                                            />
-                                                        ))}
-                                                </div>
+                            <div
+                                className={
+                                    activeTab === "dashboard" ? "" : "hidden"
+                                }
+                            >
+                                {tasks &&
+                                    tasks.map((task, index) => (
+                                        <li key={index}>
+                                            <div>
+                                                <DashboardCards
+                                                    index={index}
+                                                    task={tasks[index]}
+                                                    user_id={user_id}
+                                                    deleteTask={deleteTask}
+                                                />
                                             </div>
-                                            <div className="right-side">
-                                                <div className="functionContainers">
-                                                    <h2>WRITE</h2>
-                                                    {contractFunctions
-                                                        .filter(
-                                                            (fn) =>
-                                                                fn.functionType ===
-                                                                "write"
-                                                        )
-                                                        .map((fn) => (
-                                                            <FunctionStorer
-                                                                key={fn.id}
-                                                                id={fn.id}
-                                                                name={fn.name}
-                                                                paramName={
-                                                                    fn.paramName
-                                                                }
-                                                                inputType={
-                                                                    fn.inputType
-                                                                }
-                                                                functionType={
-                                                                    fn.functionType
-                                                                }
-                                                                handleChildStateChange={
-                                                                    handleChildStateChange
-                                                                }
-                                                                sendWriteTxn={
-                                                                    sendWriteTxn
-                                                                }
-                                                                sendTxn={
-                                                                    sendTxn
-                                                                }
-                                                            />
-                                                        ))}
-                                                </div>
-                                            </div>
-                                        </>
-                                    )}
-                                    <form>
-                                        <input
-                                            onChange={handleChange}
-                                            type="text"
-                                            value={
-                                                contractInputs.contractAddress
-                                            }
-                                            name="contractAddress"
-                                            placeholder="Paste the contract address..."
-                                        />{" "}
-                                    </form>{" "}
-                                    <br />
-                                    <button
-                                        className="buttons"
-                                        onClick={bringIt}
-                                    >
-                                        Bring the contract
-                                    </button>
-                                </div>
-                            )}
+                                        </li>
+                                    ))}
+                            </div>
 
-                            {activeTab === "setUpMintTask" && (
+                            <div
+                                className={
+                                    activeTab === "wallets"
+                                        ? "walletsTab"
+                                        : "hidden"
+                                }
+                            >
+                                <div className="create-wallet">
+                                    <CreateWallet
+                                        user_id={user_id}
+                                        changeStateMintWallets={
+                                            changeStateMintWallets
+                                        }
+                                        changeStatePrivateKeys={
+                                            changeStatePrivateKeys
+                                        }
+                                    />
+                                </div>
+
+                                <div className="mint-wallet-cards">
+                                    <MintWalletCards
+                                        mint_wallets={mint_wallets}
+                                        private_keys={private_keys}
+                                        SetTheWallet={SetTheWallet}
+                                    />
+                                </div>
+                            </div>
+                            <div
+                                className={
+                                    activeTab === "contract"
+                                        ? "container"
+                                        : "hidden"
+                                }
+                            >
+                                <h3>
+                                    <GasComponent />
+                                </h3>
+                                <form>
+                                    <input
+                                        onChange={handleGasChange}
+                                        placeholder="Enter your desired Gas"
+                                        value={UserGasPrice}
+                                    />
+                                </form>
+                                {contractFunctions.length > 0 && (
+                                    <>
+                                        {" "}
+                                        <div className="left-side">
+                                            <div className="functionContainers">
+                                                <h2>READ</h2>
+                                                {contractFunctions
+                                                    .filter(
+                                                        (fn) =>
+                                                            fn.functionType ===
+                                                            "read"
+                                                    )
+                                                    .map((fn) => (
+                                                        <FunctionStorer
+                                                            key={fn.id}
+                                                            id={fn.id}
+                                                            name={fn.name}
+                                                            paramName={
+                                                                fn.paramName
+                                                            }
+                                                            inputType={
+                                                                fn.inputType
+                                                            }
+                                                            functionType={
+                                                                fn.functionType
+                                                            }
+                                                            handleChildStateChange={
+                                                                handleChildStateChange
+                                                            }
+                                                            functionResult={
+                                                                userContractInputs.functionName ===
+                                                                fn.name
+                                                                    ? functionResult
+                                                                    : null
+                                                            }
+                                                            sendTxn={sendTxn}
+                                                            sendWriteTxn={
+                                                                sendWriteTxn
+                                                            }
+                                                        />
+                                                    ))}
+                                            </div>
+                                        </div>
+                                        <div className="right-side">
+                                            <div className="functionContainers">
+                                                <h2>WRITE</h2>
+                                                {contractFunctions
+                                                    .filter(
+                                                        (fn) =>
+                                                            fn.functionType ===
+                                                            "write"
+                                                    )
+                                                    .map((fn) => (
+                                                        <FunctionStorer
+                                                            key={fn.id}
+                                                            id={fn.id}
+                                                            name={fn.name}
+                                                            paramName={
+                                                                fn.paramName
+                                                            }
+                                                            inputType={
+                                                                fn.inputType
+                                                            }
+                                                            functionType={
+                                                                fn.functionType
+                                                            }
+                                                            handleChildStateChange={
+                                                                handleChildStateChange
+                                                            }
+                                                            sendWriteTxn={
+                                                                sendWriteTxn
+                                                            }
+                                                            sendTxn={sendTxn}
+                                                        />
+                                                    ))}
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
+                                <form>
+                                    <input
+                                        onChange={handleChange}
+                                        type="text"
+                                        value={contractInputs.contractAddress}
+                                        name="contractAddress"
+                                        placeholder="Paste the contract address..."
+                                    />{" "}
+                                </form>{" "}
+                                <br />
+                                <button className="buttons" onClick={bringIt}>
+                                    Bring the contract
+                                </button>
+                            </div>
+
+                            <div
+                                className={
+                                    activeTab === "setUpMintTask"
+                                        ? ""
+                                        : "hidden"
+                                }
+                            >
                                 <EventListen
                                     contractFunctions={contractFunctions}
                                     mint_wallets={mint_wallets}
                                     private_keys={private_keys}
                                     changeStateTasks={changeStateTasks}
                                 />
-                            )}
+                            </div>
                         </div>
                     </userInputs.Provider>
                 </div>
