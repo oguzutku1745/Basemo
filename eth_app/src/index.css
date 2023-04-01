@@ -113,6 +113,7 @@ input[type="checkbox"] {
     background-color: bisque;
     padding: 5px;
     color: #000000;
+    padding-top: -50px;
 }
 
 .taskNameColor {

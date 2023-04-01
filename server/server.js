@@ -161,6 +161,7 @@ const listenToVariable = async (
     taskID,
     targetFunction,
     targetValue,
+    mintPrice,
     callback
 ) => {
     const contract = new ethers.Contract(contractAddress, ABI, provider);
