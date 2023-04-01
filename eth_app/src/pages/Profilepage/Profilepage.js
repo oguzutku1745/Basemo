@@ -55,8 +55,9 @@ const Profilepage = () => {
     }, []);
     console.log();
     return (
-        <div>
+        <div className="dashboard-botpage-wrapper">
             <Header handleTabClick={handleTabClick} user_id={user_id} wallet={user_wallet}  />
+            <div className="profile-setter">
             Hi! This is the profile page.
             {expiryDate && (
                 <p>Your expiry date: {expiryDate.toLocaleDateString()}</p>
@@ -76,6 +77,7 @@ const Profilepage = () => {
                 </div>
                 <button type="submit">Submit</button>
             </form>
+            </div>
         </div>
     );
 };

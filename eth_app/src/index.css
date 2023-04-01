@@ -25,6 +25,11 @@ input {
     padding-left: 10px;
 }
 
+.profile-setter{
+    margin: 20px;
+    color: white;
+}
+
 .mint-wallet-card {
     background-color: rgba(190, 154, 249, 0.5);
 }
