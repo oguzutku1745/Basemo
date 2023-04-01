@@ -211,7 +211,7 @@ const Botpage = () => {
                                     tasks.map((task, index) => (
                                         <li
                                             key={index}
-                                            style={{ marginBottom: "50px" }}
+                                            style={{ marginBottom: "60px" }}
                                         >
                                             <div>
                                                 <DashboardCards
