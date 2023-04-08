@@ -472,6 +472,17 @@ app.post("/api/data", (req, res) => {
     });
 });
 
+app.post("/api/tasks", (req,res) => {
+    const sql=
+            "INSERT INTO mint_tasks(user_id, eventListener, eventListenerInput, eventListenerFunction, eventListenerPending, mintPrice, mintPrivateKey, mintWallet, gasPrice, taskContract, taskContractABI, taskContractFunction, taskContractFunctionInput, taskID, taskName, status) VALUES(?, ?, ?, ? , ?, ?, ?, ? , ?, ?, ?, ? , ?, ?, ?, ?)"
+    const data=[req.body.user_id, req.body.eventListener, req.body.eventListenerInput, req.body.eventListenerFunction, req.body.eventListenerPending, req.body.mintPrice, req.body.mintPrivateKey, req.body.mintWallet, req.body.gasPrice, req.body.taskContract, req.body.taskContractABI, req.body.taskContractFunction, req.body.taskContractFunctionInput, req.body.taskId, req.body.taskName, req.body.status];
+    db.query(sql, data, (err, results) => {
+        console.log(data)
+        if(err) throw err;
+        console.log(`Inserted ${results.affectedRows} row(s)`);
+    })
+})
+
 app.post("/api/setuserblocknativekey", (req, res) => {
     const sql = "UPDATE users SET blocknative_key = ? WHERE user_id = ?";
     const data = [req.body.userBlocknativeKey, req.body.user_id];

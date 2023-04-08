@@ -573,60 +573,6 @@ const ConnectWallet = (props) => {
         }
     }, [accounts, existWallet, expired]);
 
-    /* <div
-                    style={{
-                        backgroundColor: "",
-                        padding: "20px",
-                        borderRadius: "10px",
-                    }}
-                    >
-                    {isConnected ? (
-                        existWallet ? (
-                            allowed ? (
-                                navigate("/botpage", {
-                                    state: { user_id, user_wallet },
-                                })
-                            ) : (
-                                <p>Your whitelist has expired</p>
-                            )
-                        ) : (
-                            <MintButton
-                                contract={contract}
-                                to={accounts[0]}
-                                accounts={accounts}
-                            />
-                        )
-                    ) : (
-                        <button
-                            style={{
-                                backgroundColor: "#975E08",
-                                color: "white",
-                                padding: "15px 30px",
-                                fontSize: "25px",
-                                border: "none",
-                                borderRadius: "5px",
-                                cursor: "pointer",
-                                marginTop: "20px",
-                                transition: "all 0.3s",
-                                textShadow: "0 0 10px orange",
-                            }}
-                            onMouseEnter={(e) => {
-                                e.target.style.boxShadow = "0 0 40px pink";
-                                e.target.style.transform = "translateY(-12px)";
-                                e.target.style.textShadow = "0 0 20px orange";
-                            }}
-                            onMouseLeave={(e) => {
-                                e.target.style.boxShadow = "none"; 
-                                e.target.style.transform = "";
-                                e.target.style.textShadow = "0 0 10px orange";
-                            }}
-                            onClick={handleConnect}
-                        >
-                            Connect Wallet
-                        </button>
-                    )}
-                </div> */
-
     return (
         <div class="connect-wallet-container">
             <div class="cw-logo">

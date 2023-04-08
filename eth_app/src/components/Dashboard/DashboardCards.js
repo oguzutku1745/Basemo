@@ -1,5 +1,6 @@
 import React, { useContext, useState, memo } from "react";
 import { userInputs } from "../../pages/Botpage/Botpage";
+import axios from "axios";
 
 const DashboardCards = memo(function DashboardCards({
     task,
@@ -19,7 +20,7 @@ const DashboardCards = memo(function DashboardCards({
 
     function handleClick() {
         setStatus("Active");
-        if (sharedState.eventListener === "Read") {
+        if (sharedState.eventListener === "Read") {    
             sendRequestToBackend(
                 sharedState.taskContract,
                 sharedState.taskContractABI,
@@ -32,6 +33,24 @@ const DashboardCards = memo(function DashboardCards({
                 task.taskID,
                 task.mintPrice
             );
+            sendDataToDatabase({
+                user_id: user_id,
+                mintWallet: sharedState.mintWallet,
+                mintPrivateKey: sharedState.mintPrivateKey,
+                eventListener: sharedState.eventListener,
+                eventListenerFunction: sharedState.eventListenerFunction,
+                eventListenerInput: sharedState.eventListenerInput,
+                taskContract: sharedState.taskContract,
+                taskContractABI: sharedState.taskContractABI,
+                taskContractFunction: sharedState.taskContractFunction,
+                taskContractFunctionInput: sharedState.taskContractFunctionInput,
+                gasPrice: sharedState.selectedGasPrice,
+                taskName: sharedState.taskName,
+                taskId: task.taskID,
+                mintPrice: task.mintPrice,
+                status: Status
+
+            })
         } else if (sharedState.eventListener === "Mempool") {
             sendRequestToBackendFunction(
                 sharedState.taskContract,
@@ -63,6 +82,14 @@ const DashboardCards = memo(function DashboardCards({
             );
         }
     }
+
+    const sendDataToDatabase = (data) => {
+        console.log(data)
+        axios
+            .post("http://localhost:3002/api/tasks", data)
+            .then((response) => console.log("Success:", response))
+            .catch((error) => console.error("Error:", error));
+    };
 
     function handleClickChangeGas() {
         if (GasButtonLastClicked + 5000 > new Date().getTime()) {

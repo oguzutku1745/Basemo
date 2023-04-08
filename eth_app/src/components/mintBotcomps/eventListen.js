@@ -105,7 +105,7 @@ export default function EventListen(props) {
 
     const handleStep = (step) => () => {
         setActiveStep(step);
-    };
+    }; 
 
     const handleComplete = () => {
         let isAnyEmpty = false;
