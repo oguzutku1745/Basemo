@@ -29,7 +29,7 @@ export default function Step3(props) {
     };
 
     return (
-        <div>
+        <div className="wallets-container">
             {props.mint_wallets.map((wallet, index) => (
                 <div key={index}>
                     <input
