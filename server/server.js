@@ -88,6 +88,13 @@ app.post("/api/listen", validateRequestBody, (req, res) => {
                 if (result.error) {
                     res.status(500).json({ error: result.error });
                 } else {
+                    // Update status in the database
+                    const sql = "UPDATE mint_tasks SET status = 'Completed' WHERE taskID = ?";
+                    const data = [taskID];
+                    db.query(sql, data, (err, results) => {
+                        if (err) throw err;
+                        console.log(`Updated ${results.affectedRows} row(s)`);
+                    });
                     res.status(200).json({
                         transaction: result.transactions,
                     });
@@ -95,6 +102,15 @@ app.post("/api/listen", validateRequestBody, (req, res) => {
             } catch (error) {
                 console.log(error);
             }
+        },
+        () => {
+            // Update status in the database
+            const sql = "UPDATE mint_tasks SET status = 'Failed' WHERE taskID = ?";
+            const data = [taskID];
+            db.query(sql, data, (err, results) => {
+                if (err) throw err;
+                console.log(`Updated ${results.affectedRows} row(s)`);
+            });
         }
     );
 });
