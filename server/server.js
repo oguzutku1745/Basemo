@@ -371,6 +371,8 @@ app.post(
                         if (transaction.status === "pending") {
                             console.log("MATCH for pending");
                             emitter.off("all");
+                            emitterMap.delete(taskID);
+
                             result = await sendWriteTxnRead(
                                 FunctionToCall,
                                 FunctionToCallInput,
@@ -392,6 +394,8 @@ app.post(
                         if (transaction.status === "confirmed") {
                             console.log("MATCH for confirmed");
                             emitter.off("all");
+                            emitterMap.delete(taskID);
+
                             result = await sendWriteTxnRead(
                                 FunctionToCall,
                                 FunctionToCallInput,
@@ -472,16 +476,33 @@ app.post("/api/data", (req, res) => {
     });
 });
 
-app.post("/api/tasks", (req,res) => {
-    const sql=
-            "INSERT INTO mint_tasks(user_id, eventListener, eventListenerInput, eventListenerFunction, eventListenerPending, mintPrice, mintPrivateKey, mintWallet, gasPrice, taskContract, taskContractABI, taskContractFunction, taskContractFunctionInput, taskID, taskName, status) VALUES(?, ?, ?, ? , ?, ?, ?, ? , ?, ?, ?, ? , ?, ?, ?, ?)"
-    const data=[req.body.user_id, req.body.eventListener, req.body.eventListenerInput, req.body.eventListenerFunction, req.body.eventListenerPending, req.body.mintPrice, req.body.mintPrivateKey, req.body.mintWallet, req.body.gasPrice, req.body.taskContract, req.body.taskContractABI, req.body.taskContractFunction, req.body.taskContractFunctionInput, req.body.taskId, req.body.taskName, req.body.status];
+app.post("/api/tasks", (req, res) => {
+    const sql =
+        "INSERT INTO mint_tasks(user_id, eventListener, eventListenerInput, eventListenerFunction, eventListenerPending, mintPrice, mintPrivateKey, mintWallet, gasPrice, taskContract, taskContractABI, taskContractFunction, taskContractFunctionInput, taskID, taskName, status) VALUES(?, ?, ?, ? , ?, ?, ?, ? , ?, ?, ?, ? , ?, ?, ?, ?)";
+    const data = [
+        req.body.user_id,
+        req.body.eventListener,
+        req.body.eventListenerInput,
+        req.body.eventListenerFunction,
+        req.body.eventListenerPending,
+        req.body.mintPrice,
+        req.body.mintPrivateKey,
+        req.body.mintWallet,
+        req.body.gasPrice,
+        req.body.taskContract,
+        req.body.taskContractABI,
+        req.body.taskContractFunction,
+        req.body.taskContractFunctionInput,
+        req.body.taskId,
+        req.body.taskName,
+        req.body.status,
+    ];
     db.query(sql, data, (err, results) => {
-        console.log(data)
-        if(err) throw err;
+        console.log(data);
+        if (err) throw err;
         console.log(`Inserted ${results.affectedRows} row(s)`);
-    })
-})
+    });
+});
 
 app.post("/api/setuserblocknativekey", (req, res) => {
     const sql = "UPDATE users SET blocknative_key = ? WHERE user_id = ?";
