@@ -20,7 +20,7 @@ const DashboardCards = memo(function DashboardCards({
 
     function handleClick() {
         setStatus("Active");
-        if (sharedState.eventListener === "Read") {    
+        if (sharedState.eventListener === "Read") {
             sendRequestToBackend(
                 sharedState.taskContract,
                 sharedState.taskContractABI,
@@ -43,14 +43,14 @@ const DashboardCards = memo(function DashboardCards({
                 taskContract: sharedState.taskContract,
                 taskContractABI: sharedState.taskContractABI,
                 taskContractFunction: sharedState.taskContractFunction,
-                taskContractFunctionInput: sharedState.taskContractFunctionInput,
+                taskContractFunctionInput:
+                    sharedState.taskContractFunctionInput,
                 gasPrice: sharedState.selectedGasPrice,
                 taskName: sharedState.taskName,
                 taskId: task.taskID,
                 mintPrice: task.mintPrice,
-                status: Status
-
-            })
+                status: Status,
+            });
         } else if (sharedState.eventListener === "Mempool") {
             sendRequestToBackendFunction(
                 sharedState.taskContract,
@@ -84,7 +84,7 @@ const DashboardCards = memo(function DashboardCards({
     }
 
     const sendDataToDatabase = (data) => {
-        console.log(data)
+        console.log(data);
         axios
             .post("http://localhost:3002/api/tasks", data)
             .then((response) => console.log("Success:", response))
@@ -369,6 +369,17 @@ const DashboardCards = memo(function DashboardCards({
                                 <button
                                     className="buttons"
                                     onClick={() => handleClickStop(1)}
+                                >
+                                    {" "}
+                                    Delete The Task{" "}
+                                </button>
+                            ) : (
+                                ""
+                            )}
+                            {Status === "Steady" ? (
+                                <button
+                                    className="buttons"
+                                    onClick={() => deleteTask(task)}
                                 >
                                     {" "}
                                     Delete The Task{" "}
