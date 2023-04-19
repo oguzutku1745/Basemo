@@ -8,7 +8,7 @@ export default function Step6(props) {
                     <h3 className="taskNameColor">
                         {props.mintSectionInputs.taskName}
                     </h3>
-                    <h4>{props.mintSectionInputs.taskContract}</h4>
+                    <div className="dashboard-contractaddr">{props.mintSectionInputs.taskContract}</div>
                     <hr />
                     <div className="dashboard-Taskinputs">
                         Mint Wallet(s):{" "}

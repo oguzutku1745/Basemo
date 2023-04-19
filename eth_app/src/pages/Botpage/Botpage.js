@@ -264,6 +264,7 @@ const Botpage = () => {
                                 </h3>
                                 <form>
                                     <input
+                                        className="gasInput"
                                         onChange={handleGasChange}
                                         placeholder="Enter your desired Gas"
                                         value={UserGasPrice}
@@ -355,12 +356,16 @@ const Botpage = () => {
                                         value={contractInputs.contractAddress}
                                         name="contractAddress"
                                         placeholder="Paste the contract address..."
+                                        className="gasInput"
+                                        style={{width: "511px"}}
                                     />{" "}
                                 </form>{" "}
                                 <br />
+                                <div className="button-aligner">
                                 <button className="buttons" onClick={bringIt}>
                                     Bring the contract
                                 </button>
+                                </div>
                             </div>
 
                             <div

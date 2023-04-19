@@ -42,12 +42,31 @@ input {
 }
 .container {
     display: grid;
-    grid-template-columns: 1fr 1fr;
     grid-gap: 20px;
     align-items: start;
     align-items: top;
     justify-content: center;
     text-align: center; /* centers text within element */
+}
+
+.gasInput {
+    box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid #FFFFFF;
+    border-radius: 15px;
+    width: 403px;
+    height: 50px;
+    text-align: center;
+    color: #FFFFFF;
+}
+
+.gasInput::placeholder{
+    font-family: 'Nunito';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 22px;
+    color: rgba(35, 13, 118, 0.3);
 }
 
 .left-side {
@@ -102,27 +121,54 @@ input[type="checkbox"] {
     padding: 10px;
 }
 .buttons {
-    border-radius: 5px;
-    background-color: #995db1;
-    border: 1px solid #9126ee;
-    color: aliceblue;
-    margin-top: 10px;
-    padding: 2px;
+    box-sizing: border-box;
+    background: #3F3896;
+    border: 2px solid #FFFFFF;
+    box-shadow: 5px 5px 4px rgba(0, 0, 0, 0.5);
+    border-radius: 45px;
+    width: 190px;
+    height: 50px;
     transition: all 0.3s ease-in-out;
 }
 
+.button-aligner {
+    justify-content: center;
+    align-items: center;
+}
+
 .dashboard-Card {
-    border: 1px solid #0f1011;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
     margin-left: 10px;
-    border-radius: 3px;
-    background-color: bisque;
     padding: 5px;
     color: #000000;
-    padding-top: -50px;
+    box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.5);
+    border: 4px solid #FFFFFF;
+    box-shadow: 5px 5px 4px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(200px);
+    border-radius: 45px;
 }
 
 .taskNameColor {
-    color: #cb5af8;
+    font-family: 'Nunito';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 32px;
+    /* identical to box height */
+
+    color: #412991;
+}
+
+.dashboard-contractaddr {
+    font-family: 'Nunito';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 20px;
+    line-height: 27px;
+
+    color: #412991;
 }
 
 .tab-content {
@@ -131,13 +177,26 @@ input[type="checkbox"] {
 }
 
 .dashboardInformer {
-    color: rgb(187, 26, 109);
+    font-family: 'Nunito';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 27px;
+
+    color: #412991;
 }
 
 .dashboard-Taskinputs {
     padding: 5px;
+    margin-left: 50px;
     justify-content: left;
     text-align: left;
+    font-family: 'Nunito';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 20px;
+
+    color: #412991;
 }
 
 .nothingness {
@@ -145,9 +204,7 @@ input[type="checkbox"] {
 }
 
 .dashboard-Container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 20px;
+    display: flex;
     align-items: start;
     align-items: top;
     justify-content: center;
