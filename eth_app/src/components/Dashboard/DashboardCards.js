@@ -16,8 +16,6 @@ const DashboardCards = memo(function DashboardCards({
 
     const sharedState = task;
 
-    console.log("shared State is: ", sharedState);
-
     function handleClick() {
         setStatus("Active");
         if (sharedState.eventListener === "Read") {

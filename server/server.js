@@ -775,4 +775,17 @@ if (cluster.isMaster) {
             }
         });
     });
+
+    app.get("/api/getTasks/:user_id", (req, res) => {
+        const user_id = req.params.user_id;
+        const query = `SELECT * FROM mint_tasks WHERE user_id = '${user_id}'`;
+
+        db.query(query, (err, data) => {
+            if (err) {
+                res.status(500).json({ error: err });
+            } else {
+                res.json(data);
+            }
+        });
+    });
 }

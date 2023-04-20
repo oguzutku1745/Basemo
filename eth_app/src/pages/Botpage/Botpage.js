@@ -158,18 +158,47 @@ const Botpage = () => {
             };
         });
     }
-
+    var count = 1;
     useEffect(() => {
-        fetch(`/users/${user_id}`)
-            .then((response) => response.json())
-            .then((data) => {
-                const dbdata = data.filter((item) => item.user_id === user_id);
-                const mint_wallets = dbdata.map((item) => item.mint_wallet);
-                setMint_wallets(mint_wallets);
-                const private_keys = dbdata.map((item) => item.private_key);
-                setPrivate_keys(private_keys);
-                //setBackendData(data);
-            });
+        if (count) {
+            count--;
+            fetch(`/users/${user_id}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    const dbdata = data.filter(
+                        (item) => item.user_id === user_id
+                    );
+                    const mint_wallets = dbdata.map((item) => item.mint_wallet);
+                    setMint_wallets(mint_wallets);
+                    const private_keys = dbdata.map((item) => item.private_key);
+                    setPrivate_keys(private_keys);
+                    //setBackendData(data);
+                });
+
+            fetch(`/api/getTasks/${user_id}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    data.map((task) =>
+                        changeStateTasks({
+                            mintWallet: [task.mintWallet],
+                            mintPrivateKey: task.mintPrivateKey,
+                            selectedGasPrice: task.gasPrice,
+                            taskName: task.taskName,
+                            taskContract: task.taskContract,
+                            taskContractABI: task.taskContractABI,
+                            taskContractFunction: task.taskContractFunction,
+                            taskContractFunctionInput:
+                                task.taskContractFunctionInput,
+                            eventListener: task.eventListener,
+                            eventListenerFunction: task.eventListenerFunction,
+                            eventListenerInput: task.eventListenerInput,
+                            eventListenerPending: false,
+                            taskID: task.taskID,
+                            mintPrice: task.mintPrice,
+                        })
+                    );
+                });
+        }
     }, []);
 
     function changeStateMintWallets(new_mint_wallet_address) {

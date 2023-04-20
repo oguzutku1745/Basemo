@@ -77,7 +77,7 @@ const CreateWallet = ({
         <div>
             <button
                 style={{
-                    backgroundColor: "#cb5af8",
+                    backgroundColor: "rgba(190, 154, 249, 0.5)",
                     color: "white",
                     padding: "15px 30px",
                     fontSize: "20px",
@@ -94,7 +94,7 @@ const CreateWallet = ({
             <br></br>
             <button
                 style={{
-                    backgroundColor: "#cb5af8",
+                    backgroundColor: "rgba(190, 154, 249, 0.5)",
                     color: "white",
                     padding: "15px 30px",
                     fontSize: "20px",
