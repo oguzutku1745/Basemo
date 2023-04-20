@@ -25,7 +25,7 @@ input {
     padding-left: 10px;
 }
 
-.profile-setter{
+.profile-setter {
     margin: 20px;
     color: white;
 }
@@ -52,16 +52,16 @@ input {
 .gasInput {
     box-sizing: border-box;
     background: rgba(255, 255, 255, 0.1);
-    border: 2px solid #FFFFFF;
+    border: 2px solid #ffffff;
     border-radius: 15px;
     width: 403px;
     height: 50px;
     text-align: center;
-    color: #FFFFFF;
+    color: #ffffff;
 }
 
-.gasInput::placeholder{
-    font-family: 'Nunito';
+.gasInput::placeholder {
+    font-family: "Nunito";
     font-style: normal;
     font-weight: 700;
     font-size: 16px;
@@ -122,8 +122,8 @@ input[type="checkbox"] {
 }
 .buttons {
     box-sizing: border-box;
-    background: #3F3896;
-    border: 2px solid #FFFFFF;
+    background: #3f3896;
+    border: 2px solid #ffffff;
     box-shadow: 5px 5px 4px rgba(0, 0, 0, 0.5);
     border-radius: 45px;
     width: 190px;
@@ -139,20 +139,21 @@ input[type="checkbox"] {
 .dashboard-Card {
     justify-content: center;
     align-items: center;
-    width: 100%;
+    width: 50%;
     margin-left: 10px;
     padding: 5px;
     color: #000000;
     box-sizing: border-box;
     background: rgba(255, 255, 255, 0.5);
-    border: 4px solid #FFFFFF;
+    border: 4px solid #ffffff;
     box-shadow: 5px 5px 4px rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(200px);
     border-radius: 45px;
+    margin-top: 90px;
 }
 
 .taskNameColor {
-    font-family: 'Nunito';
+    font-family: "Nunito";
     font-style: normal;
     font-weight: 700;
     font-size: 32px;
@@ -162,7 +163,7 @@ input[type="checkbox"] {
 }
 
 .dashboard-contractaddr {
-    font-family: 'Nunito';
+    font-family: "Nunito";
     font-style: normal;
     font-weight: 300;
     font-size: 20px;
@@ -177,7 +178,7 @@ input[type="checkbox"] {
 }
 
 .dashboardInformer {
-    font-family: 'Nunito';
+    font-family: "Nunito";
     font-style: normal;
     font-weight: 700;
     font-size: 20px;
@@ -191,7 +192,7 @@ input[type="checkbox"] {
     margin-left: 50px;
     justify-content: left;
     text-align: left;
-    font-family: 'Nunito';
+    font-family: "Nunito";
     font-style: normal;
     font-weight: 300;
     font-size: 20px;
@@ -394,25 +395,22 @@ input[type="checkbox"] {
     padding: 73px;
 }
 
+.wallets-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 15px;
+    align-items: center;
+}
 
-    .wallets-container {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        grid-gap: 15px;
-        align-items: center;
-      }
-      
-      .wallets-container div > input[type="checkbox"] {
-        margin-right: 5px;
-      }
-      
-      .wallets-container div > label {
-        font-size: 13px;
-        display: inline-block;
-        vertical-align: middle;
-      }
-      
-  
+.wallets-container div > input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+.wallets-container div > label {
+    font-size: 13px;
+    display: inline-block;
+    vertical-align: middle;
+}
 
 .cw-logo {
     display: flex;

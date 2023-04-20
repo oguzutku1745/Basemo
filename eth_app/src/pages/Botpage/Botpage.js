@@ -211,7 +211,7 @@ const Botpage = () => {
                                     tasks.map((task, index) => (
                                         <li
                                             key={index}
-                                            style={{ marginBottom: "60px" }}
+                                            style={{ marginBottom: "210px" }}
                                         >
                                             <div>
                                                 <DashboardCards
@@ -357,14 +357,17 @@ const Botpage = () => {
                                         name="contractAddress"
                                         placeholder="Paste the contract address..."
                                         className="gasInput"
-                                        style={{width: "511px"}}
+                                        style={{ width: "511px" }}
                                     />{" "}
                                 </form>{" "}
                                 <br />
                                 <div className="button-aligner">
-                                <button className="buttons" onClick={bringIt}>
-                                    Bring the contract
-                                </button>
+                                    <button
+                                        className="buttons"
+                                        onClick={bringIt}
+                                    >
+                                        Bring the contract
+                                    </button>
                                 </div>
                             </div>
 

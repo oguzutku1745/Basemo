@@ -66,6 +66,24 @@ const DashboardCards = memo(function DashboardCards({
                 task.taskID,
                 task.mintPrice
             );
+            sendDataToDatabase({
+                user_id: user_id,
+                mintWallet: sharedState.mintWallet,
+                mintPrivateKey: sharedState.mintPrivateKey,
+                eventListener: sharedState.eventListener,
+                eventListenerFunction: sharedState.eventListenerFunction,
+                eventListenerInput: sharedState.eventListenerInput,
+                taskContract: sharedState.taskContract,
+                taskContractABI: sharedState.taskContractABI,
+                taskContractFunction: sharedState.taskContractFunction,
+                taskContractFunctionInput:
+                    sharedState.taskContractFunctionInput,
+                gasPrice: sharedState.selectedGasPrice,
+                taskName: sharedState.taskName,
+                taskId: task.taskID,
+                mintPrice: task.mintPrice,
+                status: Status,
+            });
         } else if (sharedState.eventListener === "blockNumber") {
             sendRequestbyBlockNumber(
                 sharedState.taskContract,
@@ -303,7 +321,16 @@ const DashboardCards = memo(function DashboardCards({
             {sharedState.taskName ? (
                 <div
                     className="dashboard-Card"
-                    style={{ backgroundColor: statusColors[Status] }}
+                    style={{
+                        border:
+                            Status === "Active"
+                                ? "4px solid yellow"
+                                : Status === "Completed"
+                                ? "4px solid green"
+                                : Status === "Error"
+                                ? "4px solid red"
+                                : "4px solid #ffffff",
+                    }}
                 >
                     <h3 className="taskNameColor">{sharedState.taskName}</h3>
                     <h4>{sharedState.taskContract}</h4>
@@ -358,11 +385,21 @@ const DashboardCards = memo(function DashboardCards({
                                 FIRE{" "}
                             </button>
                         ) : Status === "Active" ? (
-                            <div>Status: Active</div>
+                            <div className="dashboard-Taskinputs">
+                                Status: Active
+                            </div>
                         ) : Status === "Completed" ? (
-                            <div> Status: Completed </div>
+                            <div className="dashboard-Taskinputs">
+                                {" "}
+                                Status: Completed{" "}
+                            </div>
                         ) : (
-                            Status === "Error" && <div> Status: False </div>
+                            Status === "Error" && (
+                                <div className="dashboard-Taskinputs">
+                                    {" "}
+                                    Status: False{" "}
+                                </div>
+                            )
                         )}
                         <div>
                             {Status === "Active" ? (

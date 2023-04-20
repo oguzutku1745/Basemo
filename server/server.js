@@ -234,8 +234,26 @@ if (cluster.isMaster) {
                         mintPrice
                     );
                     if (result.error) {
+                        const sql =
+                            "UPDATE mint_tasks SET status = 'Error' WHERE taskID = ?";
+                        const data = [taskID];
+                        db.query(sql, data, (err, results) => {
+                            if (err) throw err;
+                            console.log(
+                                `Updated ${results.affectedRows} row(s)`
+                            );
+                        });
                         res.status(500).json({ error: result.error });
                     } else {
+                        const sql =
+                            "UPDATE mint_tasks SET status = 'Completed' WHERE taskID = ?";
+                        const data = [taskID];
+                        db.query(sql, data, (err, results) => {
+                            if (err) throw err;
+                            console.log(
+                                `Updated ${results.affectedRows} row(s)`
+                            );
+                        });
                         res.status(200).json({
                             transaction: result.transactions,
                         });
@@ -494,10 +512,28 @@ if (cluster.isMaster) {
                                     mintPrice
                                 );
                                 if (result.error) {
+                                    const sql =
+                                        "UPDATE mint_tasks SET status = 'Error' WHERE taskID = ?";
+                                    const data = [taskID];
+                                    db.query(sql, data, (err, results) => {
+                                        if (err) throw err;
+                                        console.log(
+                                            `Updated ${results.affectedRows} row(s)`
+                                        );
+                                    });
                                     res.status(500).json({
                                         error: result.error,
                                     });
                                 } else {
+                                    const sql =
+                                        "UPDATE mint_tasks SET status = 'Completed' WHERE taskID = ?";
+                                    const data = [taskID];
+                                    db.query(sql, data, (err, results) => {
+                                        if (err) throw err;
+                                        console.log(
+                                            `Updated ${results.affectedRows} row(s)`
+                                        );
+                                    });
                                     res.status(200).json({
                                         transaction: result.transaction,
                                     });
@@ -519,10 +555,28 @@ if (cluster.isMaster) {
                                     mintPrice
                                 );
                                 if (result.error) {
+                                    const sql =
+                                        "UPDATE mint_tasks SET status = 'Error' WHERE taskID = ?";
+                                    const data = [taskID];
+                                    db.query(sql, data, (err, results) => {
+                                        if (err) throw err;
+                                        console.log(
+                                            `Updated ${results.affectedRows} row(s)`
+                                        );
+                                    });
                                     res.status(500).json({
                                         error: result.error,
                                     });
                                 } else {
+                                    const sql =
+                                        "UPDATE mint_tasks SET status = 'Completed' WHERE taskID = ?";
+                                    const data = [taskID];
+                                    db.query(sql, data, (err, results) => {
+                                        if (err) throw err;
+                                        console.log(
+                                            `Updated ${results.affectedRows} row(s)`
+                                        );
+                                    });
                                     res.status(200).json({
                                         transaction: result.transactions,
                                     });
