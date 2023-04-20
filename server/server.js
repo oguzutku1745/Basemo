@@ -1,54 +1,59 @@
 const cluster = require("cluster");
 const numCPUs = require("os").cpus().length;
-const Bottleneck = require('bottleneck');
+const Bottleneck = require("bottleneck");
 
 if (cluster.isMaster) {
     console.log(`Master ${process.pid} is running`);
-  
+
     // Create the rate limiter in the master process
     const fetchDataAndUpdateDBLimiter = new Bottleneck({
-        minTime: 2000 // 1 request every 2 seconds
-      });
+        minTime: 2000, // 1 request every 2 seconds
+    });
 
     const listenToBlockNumberLimiter = new Bottleneck({
-      minTime: 2000, // Minimum time between tasks in milliseconds (2 seconds)
+        minTime: 2000, // Minimum time between tasks in milliseconds (2 seconds)
     });
-  
+
     // Fork worker processes for each CPU core
     for (let i = 0; i < numCPUs; i++) {
-      cluster.fork();
+        cluster.fork();
     }
 
     cluster.on("exit", (worker, code, signal) => {
         console.log(`Worker ${worker.process.pid} died`);
         console.log("Forking a new worker");
         cluster.fork();
-      });
-  
+    });
+
     // Listen to messages from worker processes
     cluster.on("message", (worker, message) => {
         if (message.type === "requestRateLimit") {
-          const taskId = message.taskId;
-          const targetValue = message.targetValue;
-          if (taskId === "fetchDataAndUpdateDBTask") {
-            fetchDataAndUpdateDBLimiter.schedule(() => {
-              worker.send({ type: "rateLimitResponse", taskId });
-            });
-          } else {
-            listenToBlockNumberLimiter.schedule(() => {
-              worker.send({ type: "rateLimitResponse", taskId, targetValue });
-            });
-          }
+            const taskId = message.taskId;
+            const targetValue = message.targetValue;
+            if (taskId === "fetchDataAndUpdateDBTask") {
+                fetchDataAndUpdateDBLimiter.schedule(() => {
+                    worker.send({ type: "rateLimitResponse", taskId });
+                });
+            } else {
+                listenToBlockNumberLimiter.schedule(() => {
+                    worker.send({
+                        type: "rateLimitResponse",
+                        taskId,
+                        targetValue,
+                    });
+                });
+            }
         }
-      });
+    });
 
-      cluster.on("error", (worker, error) => {
-        console.error(`Worker ${worker.process.pid} encountered an error:`, error);
+    cluster.on("error", (worker, error) => {
+        console.error(
+            `Worker ${worker.process.pid} encountered an error:`,
+            error
+        );
         // Handle the error, e.g., log it, restart the worker, etc.
-      });
-      
-      
-  } else {
+    });
+} else {
     const express = require("express");
     const app = express();
     const { check, body, validationResult } = require("express-validator");
@@ -61,21 +66,19 @@ if (cluster.isMaster) {
     const WebSocket = require("ws");
     const Web3 = require("web3");
     const web3 = new Web3(
-      new Web3.providers.WebsocketProvider(
-        "wss://eth-mainnet.g.alchemy.com/v2/04sBQAgtEQL0-ixJE6Kc2lQ-8kaiYVS0"
-      )
+        new Web3.providers.WebsocketProvider(
+            "wss://eth-mainnet.g.alchemy.com/v2/04sBQAgtEQL0-ixJE6Kc2lQ-8kaiYVS0"
+        )
     );
-  
+
     // Send a message to the master process to request rate limiting
     const requestRateLimit = (taskId, targetValue) => {
         process.send({
-          type: 'requestRateLimit',
-          taskId,
-          targetValue,
+            type: "requestRateLimit",
+            taskId,
+            targetValue,
         });
-      };
-      
-      
+    };
 
     db.connect();
     app.use(express.json());
@@ -198,48 +201,51 @@ if (cluster.isMaster) {
         "/api/listenBlockNumber",
         validateListenBlockNumberBody,
         (req, res) => {
-          const {
-            contractAddress,
-            ABI,
-            targetValue,
-            FunctionToCall,
-            FunctionToCallInput,
-            SelectedUserGas,
-            PrivateKeyTxn,
-            taskID,
-            mintPrice,
-          } = req.body;
-          console.log(req.body);
-      
-          const startBlockListening = async (taskId, targetValue, callback) => {
-            listenToBlockNumber(targetValue, taskId, callback);
-          };
-      
-          startBlockListening(taskID, targetValue, async () => {
-            try {
-              const result = await sendWriteTxnRead(
+            const {
+                contractAddress,
+                ABI,
+                targetValue,
                 FunctionToCall,
                 FunctionToCallInput,
                 SelectedUserGas,
                 PrivateKeyTxn,
-                ABI,
-                contractAddress,
-                mintPrice
-              );
-              if (result.error) {
-                res.status(500).json({ error: result.error });
-              } else {
-                res.status(200).json({
-                  transaction: result.transactions,
-                });
-              }
-            } catch (error) {
-              console.log(error);
-            }
-          });
+                taskID,
+                mintPrice,
+            } = req.body;
+            console.log(req.body);
+
+            const startBlockListening = async (
+                taskId,
+                targetValue,
+                callback
+            ) => {
+                listenToBlockNumber(targetValue, taskId, callback);
+            };
+
+            startBlockListening(taskID, targetValue, async () => {
+                try {
+                    const result = await sendWriteTxnRead(
+                        FunctionToCall,
+                        FunctionToCallInput,
+                        SelectedUserGas,
+                        PrivateKeyTxn,
+                        ABI,
+                        contractAddress,
+                        mintPrice
+                    );
+                    if (result.error) {
+                        res.status(500).json({ error: result.error });
+                    } else {
+                        res.status(200).json({
+                            transaction: result.transactions,
+                        });
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            });
         }
-      );
-      
+    );
 
     // Function to start listening to a specific contract variable and target value
     const listenToVariable = async (
@@ -273,33 +279,34 @@ if (cluster.isMaster) {
     const listenToBlockNumber = async (targetValue, taskID, callback) => {
         const currentBlockNumber = await provider.getBlockNumber();
         console.log(currentBlockNumber);
-      
-        if (currentBlockNumber >= targetValue) {
-          // No need to request rate limiting again since the task is done
-          console.log(`Reached block number ${targetValue}`);
-          callback();
-        } else {
-          setTimeout(() => listenToBlockNumber(targetValue, taskID, callback), 2000); // Poll every 2 seconds
-        }
-      
-        console.log(`Started listening for block number ${targetValue}`);
-      };
 
-        process.on('message', (message) => {
-            if (message.type === 'rateLimitResponse') {
-              const taskId = message.taskId;
-          
-              // Call the corresponding callback function
-              if (taskId === 'fetchDataAndUpdateDBTask') {
+        if (currentBlockNumber >= targetValue) {
+            // No need to request rate limiting again since the task is done
+            console.log(`Reached block number ${targetValue}`);
+            callback();
+        } else {
+            setTimeout(
+                () => listenToBlockNumber(targetValue, taskID, callback),
+                2000
+            ); // Poll every 2 seconds
+        }
+
+        console.log(`Started listening for block number ${targetValue}`);
+    };
+
+    process.on("message", (message) => {
+        if (message.type === "rateLimitResponse") {
+            const taskId = message.taskId;
+
+            // Call the corresponding callback function
+            if (taskId === "fetchDataAndUpdateDBTask") {
                 fetchDataAndUpdateDB();
-              } else {
+            } else {
                 const targetBlockValue = message.targetValue;
                 listenToBlockNumber(targetBlockValue, taskId);
-              }
             }
-          });
-          
-      
+        }
+    });
 
     app.post("/api/stopListeningRead", async (req, res) => {
         const { taskID } = req.body;
@@ -607,7 +614,7 @@ if (cluster.isMaster) {
             req.body.taskContractFunctionInput,
             req.body.taskId,
             req.body.taskName,
-            req.body.status,
+            "Active",
         ];
         db.query(sql, data, (err, results) => {
             console.log(data);
@@ -659,36 +666,34 @@ if (cluster.isMaster) {
 
     const fetchDataAndUpdateDB = async () => {
         try {
-          const gasPriceInWei = await web3.eth.getGasPrice();
-          const gasPriceInGwei = web3.utils.fromWei(gasPriceInWei, 'gwei');
-          // Update database with new gas price value
-          const sql = "UPDATE Etherscan_requests SET GasPrice = ?";
-          const data = [gasPriceInGwei];
-          db.query(sql, data, (err, results) => {
-            if (err) throw err;
-          });
+            const gasPriceInWei = await web3.eth.getGasPrice();
+            const gasPriceInGwei = web3.utils.fromWei(gasPriceInWei, "gwei");
+            // Update database with new gas price value
+            const sql = "UPDATE Etherscan_requests SET GasPrice = ?";
+            const data = [gasPriceInGwei];
+            db.query(sql, data, (err, results) => {
+                if (err) throw err;
+            });
         } catch (error) {
-          console.error('Error fetching gas price:', error);
+            console.error("Error fetching gas price:", error);
         }
         // Schedule the next rate limit request
         scheduleNextRateLimitRequest("fetchDataAndUpdateDBTask", 2000);
-      };
-      
-      const scheduleNextRateLimitRequest = (taskId, interval) => {
+    };
+
+    const scheduleNextRateLimitRequest = (taskId, interval) => {
         setTimeout(() => {
-          requestRateLimit(taskId);
+            requestRateLimit(taskId);
         }, interval);
-      };
-      
-      const startDataFetching = async (taskId, interval) => {
+    };
+
+    const startDataFetching = async (taskId, interval) => {
         scheduleNextRateLimitRequest(taskId, interval);
-      };
-      
-      // Start data fetching
-      startDataFetching("fetchDataAndUpdateDBTask", 2000);
-      
-      
-  
+    };
+
+    // Start data fetching
+    startDataFetching("fetchDataAndUpdateDBTask", 2000);
+
     // Call the fetchDataAndUpdateDB function every second
     //setInterval(fetchDataAndUpdateDB);
 
