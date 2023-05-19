@@ -8,7 +8,7 @@ const DashboardCards = memo(function DashboardCards({
     deleteTask,
     index,
 }) {
-    const [Status, setStatus] = useState("Steady");
+    const [Status, setStatus] = useState(task.taskstatus);
     const [DisplayGas, setDisplayGas] = useState(task.selectedGasPrice);
     const [GasButtonLastClicked, setGasButtonLastClicked] = useState(0);
 

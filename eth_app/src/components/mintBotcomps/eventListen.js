@@ -52,6 +52,7 @@ export default function EventListen(props) {
         eventListenerPending: false,
         taskID: 0,
         mintPrice: 0,
+        taskstatus: "Steady",
     });
 
     console.log(mintSectionInputs);
@@ -105,7 +106,7 @@ export default function EventListen(props) {
 
     const handleStep = (step) => () => {
         setActiveStep(step);
-    }; 
+    };
 
     const handleComplete = () => {
         let isAnyEmpty = false;

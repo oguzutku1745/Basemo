@@ -195,6 +195,7 @@ const Botpage = () => {
                             eventListenerPending: false,
                             taskID: task.taskID,
                             mintPrice: task.mintPrice,
+                            taskstatus: task.status,
                         })
                     );
                 });
