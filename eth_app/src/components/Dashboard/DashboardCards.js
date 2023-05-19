@@ -7,6 +7,8 @@ const DashboardCards = memo(function DashboardCards({
     user_id,
     deleteTask,
     index,
+    Increment_active_task_count,
+    Decrement_active_task_count,
 }) {
     const [Status, setStatus] = useState(task.taskstatus);
     const [DisplayGas, setDisplayGas] = useState(task.selectedGasPrice);
@@ -18,6 +20,7 @@ const DashboardCards = memo(function DashboardCards({
 
     function handleClick() {
         setStatus("Active");
+        Increment_active_task_count();
         if (sharedState.eventListener === "Read") {
             sendRequestToBackend(
                 sharedState.taskContract,
@@ -119,6 +122,7 @@ const DashboardCards = memo(function DashboardCards({
     }
 
     function handleClickStop(Isdelete) {
+        Decrement_active_task_count();
         const taskID = task.taskID;
 
         const requestData = {

@@ -80,6 +80,7 @@ if (cluster.isMaster) {
         const cipher = crypto.createCipheriv(algorithm, cryptoKey, iv);
         let encrypted = cipher.update(text);
         encrypted = Buffer.concat([encrypted, cipher.final()]);
+        console.log(iv.toString("hex") + ":" + encrypted.toString("hex"));
         return iv.toString("hex") + ":" + encrypted.toString("hex");
     }
 

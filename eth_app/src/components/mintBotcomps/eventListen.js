@@ -283,7 +283,19 @@ export default function EventListen(props) {
                     <React.Fragment>
                         <Typography sx={{ mt: 2, mb: 1, py: 1 }}>
                             {activeStep === 0 ? (
-                                <Step1 setTheInput={setTheInput} />
+                                <div>
+                                    {props.active_task_count >= 3 ? (
+                                        <div>
+                                            {/* Text to display when active_task_count is 3 or more */}
+                                            <p>
+                                                You can't create more than 3
+                                                Active tasks for now
+                                            </p>
+                                        </div>
+                                    ) : (
+                                        <Step1 setTheInput={setTheInput} />
+                                    )}
+                                </div>
                             ) : activeStep === 1 ? (
                                 <Step2
                                     contractFunctions={contractFunctions}
@@ -331,6 +343,7 @@ export default function EventListen(props) {
                             <Button
                                 onClick={handleNext}
                                 sx={{ color: "white", mr: 1 }}
+                                disabled={props.active_task_count >= 3} // Disable the button if value is greater than or equal to 3
                             >
                                 Next
                             </Button>
@@ -348,6 +361,9 @@ export default function EventListen(props) {
                                         <Button
                                             onClick={handleComplete}
                                             sx={{ color: "white" }}
+                                            disabled={
+                                                props.active_task_count >= 3
+                                            } // Disable the button if value is greater than or equal to 3
                                         >
                                             {completedSteps() ===
                                             totalSteps() - 1

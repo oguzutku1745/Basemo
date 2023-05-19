@@ -37,6 +37,7 @@ const Botpage = () => {
     const [sharedState, setSharedState] = useState({});
     const [tasks, setTasks] = useState([]);
     const { activeTab, setActiveTab } = useTabContext();
+    const [active_task_count, setactive_task_count] = useState(0);
 
     const [contractInputs, setContractInputs] = useState({
         contractAddress: "",
@@ -159,6 +160,12 @@ const Botpage = () => {
         });
     }
     var count = 1;
+    function Increment_active_task_count() {
+        setactive_task_count((prevCount) => prevCount + 1);
+    }
+    function Decrement_active_task_count() {
+        setactive_task_count((prevCount) => prevCount - 1);
+    }
     useEffect(() => {
         if (count) {
             count--;
@@ -178,7 +185,12 @@ const Botpage = () => {
             fetch(`/api/getTasks/${user_id}`)
                 .then((response) => response.json())
                 .then((data) => {
-                    data.map((task) =>
+                    data.map((task) => {
+                        console.log(task.status);
+                        if (task.status === "Active") {
+                            Increment_active_task_count();
+                            console.log(active_task_count);
+                        }
                         changeStateTasks({
                             mintWallet: [task.mintWallet],
                             mintPrivateKey: task.mintPrivateKey,
@@ -196,8 +208,8 @@ const Botpage = () => {
                             taskID: task.taskID,
                             mintPrice: task.mintPrice,
                             taskstatus: task.status,
-                        })
-                    );
+                        });
+                    });
                 });
         }
     }, []);
@@ -249,6 +261,12 @@ const Botpage = () => {
                                                     task={tasks[index]}
                                                     user_id={user_id}
                                                     deleteTask={deleteTask}
+                                                    Increment_active_task_count={
+                                                        Increment_active_task_count
+                                                    }
+                                                    Decrement_active_task_count={
+                                                        Decrement_active_task_count
+                                                    }
                                                 />
                                             </div>
                                         </li>
@@ -413,6 +431,7 @@ const Botpage = () => {
                                     mint_wallets={mint_wallets}
                                     private_keys={private_keys}
                                     changeStateTasks={changeStateTasks}
+                                    active_task_count={active_task_count}
                                 />
                             </div>
                         </div>
