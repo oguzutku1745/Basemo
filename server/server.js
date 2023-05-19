@@ -70,6 +70,28 @@ if (cluster.isMaster) {
             "wss://eth-mainnet.g.alchemy.com/v2/04sBQAgtEQL0-ixJE6Kc2lQ-8kaiYVS0"
         )
     );
+    require("dotenv").config();
+    const crypto = require("crypto");
+    const algorithm = "aes-256-cbc";
+    const cryptoKey = process.env.SECRET_KEY;
+
+    function encrypt(text) {
+        const iv = crypto.randomBytes(16);
+        const cipher = crypto.createCipheriv(algorithm, cryptoKey, iv);
+        let encrypted = cipher.update(text);
+        encrypted = Buffer.concat([encrypted, cipher.final()]);
+        return iv.toString("hex") + ":" + encrypted.toString("hex");
+    }
+
+    function decrypt(text) {
+        let textParts = text.split(":");
+        const iv = Buffer.from(textParts.shift(), "hex");
+        const encryptedText = Buffer.from(textParts.join(":"), "hex");
+        const decipher = crypto.createDecipheriv(algorithm, cryptoKey, iv);
+        let decrypted = decipher.update(encryptedText);
+        decrypted = Buffer.concat([decrypted, decipher.final()]);
+        return decrypted.toString();
+    }
 
     // Send a message to the master process to request rate limiting
     const requestRateLimit = (taskId, targetValue) => {
@@ -628,7 +650,11 @@ if (cluster.isMaster) {
             if (err) {
                 res.status(500).json({ error: err });
             } else {
-                res.json(data);
+                let modifiedData = data.map((item) => {
+                    let newPrivateKey = decrypt(item.private_key);
+                    return { ...item, private_key: newPrivateKey };
+                });
+                res.json(modifiedData);
             }
         });
     });
@@ -638,10 +664,11 @@ if (cluster.isMaster) {
     app.post("/api/data", (req, res) => {
         const sql =
             "INSERT INTO mint_wallet(user_id, mint_wallet, private_key) VALUES (?, ?, ?)";
+        const encryptedPrivateKey = encrypt(req.body.private_key);
         const data = [
             req.body.user_id,
             req.body.mint_wallet,
-            req.body.private_key,
+            encryptedPrivateKey,
         ];
         db.query(sql, data, (err, results) => {
             if (err) throw err;
