@@ -10,6 +10,7 @@ import EventListen from "../../components/mintBotcomps/eventListen";
 import DashboardCards from "../../components/Dashboard/DashboardCards";
 import GasComponent from "../../components/NetworkGas";
 import { createContext } from "react";
+import EthDistribute from "../../components/MintWalletCard(s)/EthDistribute";
 
 var GlobalProvider = new ethers.InfuraProvider(
     "goerli",
@@ -289,6 +290,11 @@ const Botpage = () => {
                                         changeStatePrivateKeys={
                                             changeStatePrivateKeys
                                         }
+                                    />
+                                </div>
+                                <div>
+                                    <EthDistribute
+                                        mint_wallets={mint_wallets}
                                     />
                                 </div>
 

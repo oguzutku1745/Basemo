@@ -21,8 +21,36 @@ function ImportPopup(props) {
         <div className="popup">
             <label htmlFor="privateKey">Enter Private Key:</label>
             <input id="privateKey" type="text" onChange={handleInputChange} />
-            <button onClick={handleImport}>Import</button>
-            <button onClick={props.onClose}>Cancel</button>
+            <button
+                style={{
+                    backgroundColor: "rgba(190, 154, 249, 0.5)",
+                    color: "white",
+                    padding: "5px 5px",
+                    fontSize: "15px",
+                    border: "none",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                    marginLeft: "5px",
+                }}
+                onClick={handleImport}
+            >
+                Import
+            </button>
+            <button
+                style={{
+                    backgroundColor: "rgba(190, 154, 249, 0.5)",
+                    color: "white",
+                    padding: "5px 5px",
+                    fontSize: "15px",
+                    border: "none",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                    marginLeft: "5px",
+                }}
+                onClick={props.onClose}
+            >
+                Cancel
+            </button>
         </div>
     );
 }
