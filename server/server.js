@@ -72,7 +72,7 @@ if (cluster.isMaster) {
     );
     require("dotenv").config();
     const crypto = require("crypto");
-    const algorithm = "aes-256-cbc";
+    const algorithm = "aes-128-cbc";
     const cryptoKey = process.env.SECRET_KEY;
 
     function encrypt(text) {
@@ -80,8 +80,9 @@ if (cluster.isMaster) {
         const cipher = crypto.createCipheriv(algorithm, cryptoKey, iv);
         let encrypted = cipher.update(text);
         encrypted = Buffer.concat([encrypted, cipher.final()]);
-        console.log(iv.toString("hex") + ":" + encrypted.toString("hex"));
-        return iv.toString("hex") + ":" + encrypted.toString("hex");
+        let result = iv.toString("hex") + ":" + encrypted.toString("hex");
+        console.log(result);
+        return result;
     }
 
     function decrypt(text) {
@@ -680,6 +681,11 @@ if (cluster.isMaster) {
     app.post("/api/tasks", (req, res) => {
         const sql =
             "INSERT INTO mint_tasks(user_id, eventListener, eventListenerInput, eventListenerFunction, eventListenerPending, mintPrice, mintPrivateKey, mintWallet, gasPrice, taskContract, taskContractABI, taskContractFunction, taskContractFunctionInput, taskID, taskName, status) VALUES(?, ?, ?, ? , ?, ?, ?, ? , ?, ?, ?, ? , ?, ?, ?, ?)";
+
+        // Encrypt and stringify arrays
+        const mintPrivateKey = encrypt(JSON.stringify(req.body.mintPrivateKey));
+        const mintwallets = JSON.stringify(req.body.mintWallet);
+
         const data = [
             req.body.user_id,
             req.body.eventListener,
@@ -687,8 +693,8 @@ if (cluster.isMaster) {
             req.body.eventListenerFunction,
             req.body.eventListenerPending,
             req.body.mintPrice,
-            req.body.mintPrivateKey,
-            req.body.mintWallet,
+            mintPrivateKey, // Use encrypted and stringified array
+            mintwallets, // Use stringified array
             req.body.gasPrice,
             req.body.taskContract,
             req.body.taskContractABI,
@@ -812,7 +818,18 @@ if (cluster.isMaster) {
             if (err) {
                 res.status(500).json({ error: err });
             } else {
-                res.json(data);
+                let modifiedData = data.map((item) => {
+                    let newMintWallets = JSON.parse(item.mintWallet);
+                    let newPrivateKey = JSON.parse(
+                        decrypt(item.mintPrivateKey)
+                    );
+                    return {
+                        ...item,
+                        mintPrivateKey: newPrivateKey,
+                        mintWallet: newMintWallets,
+                    };
+                });
+                res.json(modifiedData);
             }
         });
     });

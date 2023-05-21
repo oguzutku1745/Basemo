@@ -193,7 +193,7 @@ const Botpage = () => {
                             console.log(active_task_count);
                         }
                         changeStateTasks({
-                            mintWallet: [task.mintWallet],
+                            mintWallet: task.mintWallet,
                             mintPrivateKey: task.mintPrivateKey,
                             selectedGasPrice: task.gasPrice,
                             taskName: task.taskName,

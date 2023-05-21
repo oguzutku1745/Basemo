@@ -39,7 +39,6 @@ const EthDistribute = ({ mint_wallets }) => {
                 from: fromAddress,
                 to: toAddress,
                 value: web3.utils.toWei(ethAmount, "ether"),
-                gas: 21000,
             };
 
             web3.eth.sendTransaction(tx);
