@@ -67,7 +67,7 @@ if (cluster.isMaster) {
     const Web3 = require("web3");
     const web3 = new Web3(
         new Web3.providers.WebsocketProvider(
-            "wss://eth-mainnet.g.alchemy.com/v2/04sBQAgtEQL0-ixJE6Kc2lQ-8kaiYVS0"
+            "wss://eth-goerli.g.alchemy.com/v2/EKK4XkksUPAwWjOWrrqQngSPLroT6oYr"
         )
     );
     require("dotenv").config();
