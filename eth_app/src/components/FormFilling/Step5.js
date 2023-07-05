@@ -46,7 +46,9 @@ export default function Step5(props) {
             );
             setWriteFunctions(filteredFunctions.map((func) => func.name));
         }
-        const taskid = uuidv4();
+        let taskid = uuidv4();
+        taskid = taskid.replace(/-/g, "");
+
         props.setTheInput("taskID", taskid);
     }, [props.contractFunctions]);
 
