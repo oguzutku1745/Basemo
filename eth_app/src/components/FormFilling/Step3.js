@@ -21,8 +21,17 @@ export default function Step3(props) {
         const selected = event.target.checked;
         setSelectedWallets((prev) => {
             if (selected) {
-                return [...prev, index];
+                // If already 5 wallets are selected, return the previous state
+                if (prev.length >= 5) {
+                    alert("You can select at most 5 wallets.");
+                    event.target.checked = false;
+                    return [...prev];
+                } else {
+                    // Otherwise, add the new wallet
+                    return [...prev, index];
+                }
             } else {
+                // If the wallet was deselected, remove it
                 return prev.filter((i) => i !== index);
             }
         });
