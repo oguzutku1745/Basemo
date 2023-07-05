@@ -10,11 +10,12 @@ const DashboardCards = memo(function DashboardCards({
     Increment_active_task_count,
     Decrement_active_task_count,
 }) {
-    const [Status, setStatus] = useState(task.taskstatus);
+    const [Status, setStatus] = useState(task.taskstatus || "Steady");
     const [DisplayGas, setDisplayGas] = useState(task.selectedGasPrice);
     const [GasButtonLastClicked, setGasButtonLastClicked] = useState(0);
 
     const [UserNewGas, setUserNewGas] = useState(0);
+    console.log(Status);
 
     const sharedState = task;
 
