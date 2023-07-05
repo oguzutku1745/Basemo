@@ -6,15 +6,15 @@ const web3 = new Web3(
         "wss://eth-goerli.g.alchemy.com/v2/Znc3f3QZfwNR4cpKpwfa5JRPoEvEIpHg"
     )
 );
-const ABI = require("./ABI");
+const NFT_ABI = require("/root/basemov2/Basemo/scripts/ABI.js");
 
 // NFT contract address
 const contractAddress = "0xFc3287b7508a0783665fbCA5C8847628475c83e9";
 
 // ABI (Application Binary Interface) of the NFT contract
-const contractABI = ABI.contractABI;
+const NFT_contractABI = NFT_ABI.contractABI;
 
-const contract = new web3.eth.Contract(contractABI, contractAddress);
+const NFT_contract = new web3.eth.Contract(NFT_contractABI, contractAddress);
 
 const getUserExpirydate = (user_wallet) => {
     return new Promise((resolve, reject) => {
@@ -35,7 +35,6 @@ const getUserExpirydate = (user_wallet) => {
     });
 };
 
-let whitelistedAddresses = [];
 const whitelistAddress = async (address) => {
     var current_expirydate;
     try {
@@ -58,7 +57,6 @@ const whitelistAddress = async (address) => {
     }
     const laterDateObj = new Date(Date.parse(laterDate));
     laterDateObj.setMonth(laterDateObj.getMonth() + 1);
-    whitelistedAddresses.push(address, laterDateObj);
     var sql;
     if (current_expirydate === 0) {
         sql = "INSERT INTO users(user_wallet, expiry_date) VALUES (?, ?)";
@@ -84,7 +82,7 @@ db.connect((err) => {
     console.log("Connected to database");
 });
 
-contract.events
+NFT_contract.events
     .Transfer((error, event) => {
         if (error) {
             console.log(error);
