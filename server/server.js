@@ -828,5 +828,85 @@ app.get("/api/getTasks/:user_id", (req, res) => {
         }
     });
 });
+
+/////// WHİTELİSTER
+const NFT_ABI = require("/root/basemov2/Basemo/scripts/ABI.js");
+
+// NFT contract address
+const contractAddress = "0xFc3287b7508a0783665fbCA5C8847628475c83e9";
+
+// ABI (Application Binary Interface) of the NFT contract
+const NFT_contractABI = NFT_ABI.contractABI;
+
+const NFT_contract = new web3.eth.Contract(NFT_contractABI, contractAddress);
+
+const getUserExpirydate = (user_wallet) => {
+    return new Promise((resolve, reject) => {
+        const query = "SELECT expiry_date FROM users WHERE user_wallet = (?)";
+        const input = [user_wallet];
+        db.query(query, input, (err, data) => {
+            if (err) {
+                reject(err);
+            } else {
+                if (data.length === 0) {
+                    // user not found in database
+                    resolve(0);
+                } else {
+                    resolve(data[0].expiry_date);
+                }
+            }
+        });
+    });
+};
+const whitelistAddress = async (address) => {
+    var current_expirydate;
+    try {
+        current_expirydate = await getUserExpirydate(address);
+    } catch (err) {
+        current_expirydate = 0;
+    }
+    console.log(current_expirydate);
+    const expirationDate = new Date();
+    const currentExpiryDateObj = current_expirydate
+        ? new Date(Date.parse(current_expirydate))
+        : expirationDate;
+    console.log(currentExpiryDateObj);
+
+    let laterDate;
+    if (currentExpiryDateObj > expirationDate) {
+        laterDate = currentExpiryDateObj;
+    } else {
+        laterDate = expirationDate;
+    }
+    const laterDateObj = new Date(Date.parse(laterDate));
+    laterDateObj.setMonth(laterDateObj.getMonth() + 1);
+    var sql;
+    if (current_expirydate === 0) {
+        sql = "INSERT INTO users(user_wallet, expiry_date) VALUES (?, ?)";
+    } else {
+        sql = `UPDATE users SET expiry_date = ? WHERE user_wallet= ?`;
+    }
+
+    const data = current_expirydate
+        ? [laterDateObj, address]
+        : [address, laterDateObj];
+    db.query(sql, data, (err, results) => {
+        if (err) throw err;
+        console.log(`Inserted ${results.affectedRows} row(s)`);
+    });
+};
+NFT_contract.events
+    .Transfer((error, event) => {
+        if (error) {
+            console.log(error);
+        }
+    })
+    .on("data", (event) => {
+        const tokenId = event.returnValues.tokenId;
+        const userAddress = event.returnValues[1];
+        console.log(userAddress);
+        whitelistAddress(userAddress);
+    });
+
 /*
 }*/
