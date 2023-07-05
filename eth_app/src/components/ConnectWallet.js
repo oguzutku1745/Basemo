@@ -32,11 +32,7 @@ const ConnectWallet = (props) => {
     //}, [existWallet,expired]);
 
     const contractABI = [
-        {
-            inputs: [],
-            stateMutability: "nonpayable",
-            type: "constructor",
-        },
+        { inputs: [], stateMutability: "nonpayable", type: "constructor" },
         {
             anonymous: false,
             inputs: [
@@ -110,19 +106,6 @@ const ConnectWallet = (props) => {
             anonymous: false,
             inputs: [
                 {
-                    indexed: false,
-                    internalType: "address",
-                    name: "account",
-                    type: "address",
-                },
-            ],
-            name: "Paused",
-            type: "event",
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
                     indexed: true,
                     internalType: "address",
                     name: "from",
@@ -144,50 +127,11 @@ const ConnectWallet = (props) => {
             name: "Transfer",
             type: "event",
         },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: "address",
-                    name: "account",
-                    type: "address",
-                },
-            ],
-            name: "Unpaused",
-            type: "event",
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: "uint256",
-                    name: "",
-                    type: "uint256",
-                },
-                {
-                    indexed: false,
-                    internalType: "address",
-                    name: "",
-                    type: "address",
-                },
-            ],
-            name: "mintedBSM",
-            type: "event",
-        },
+        { stateMutability: "payable", type: "fallback" },
         {
             inputs: [
-                {
-                    internalType: "address",
-                    name: "to",
-                    type: "address",
-                },
-                {
-                    internalType: "uint256",
-                    name: "tokenId",
-                    type: "uint256",
-                },
+                { internalType: "address", name: "to", type: "address" },
+                { internalType: "uint256", name: "tokenId", type: "uint256" },
             ],
             name: "approve",
             outputs: [],
@@ -196,128 +140,94 @@ const ConnectWallet = (props) => {
         },
         {
             inputs: [
-                {
-                    internalType: "address",
-                    name: "owner",
-                    type: "address",
-                },
+                { internalType: "address", name: "owner", type: "address" },
             ],
             name: "balanceOf",
-            outputs: [
-                {
-                    internalType: "uint256",
-                    name: "",
-                    type: "uint256",
-                },
-            ],
+            outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
             stateMutability: "view",
+            type: "function",
+        },
+        {
+            inputs: [
+                { internalType: "string", name: "__baseURI", type: "string" },
+            ],
+            name: "changeBaseURI",
+            outputs: [],
+            stateMutability: "nonpayable",
             type: "function",
         },
         {
             inputs: [
                 {
                     internalType: "uint256",
-                    name: "tokenId",
+                    name: "_mintPrice",
                     type: "uint256",
                 },
+            ],
+            name: "changeMintPrice",
+            outputs: [],
+            stateMutability: "nonpayable",
+            type: "function",
+        },
+        {
+            inputs: [
+                {
+                    internalType: "uint256",
+                    name: "_mintStage",
+                    type: "uint256",
+                },
+            ],
+            name: "changeMintStage",
+            outputs: [],
+            stateMutability: "nonpayable",
+            type: "function",
+        },
+        {
+            inputs: [
+                { internalType: "uint256", name: "tokenId", type: "uint256" },
             ],
             name: "getApproved",
-            outputs: [
-                {
-                    internalType: "address",
-                    name: "",
-                    type: "address",
-                },
-            ],
+            outputs: [{ internalType: "address", name: "", type: "address" }],
             stateMutability: "view",
             type: "function",
         },
         {
             inputs: [
-                {
-                    internalType: "address",
-                    name: "owner",
-                    type: "address",
-                },
-                {
-                    internalType: "address",
-                    name: "operator",
-                    type: "address",
-                },
+                { internalType: "address", name: "owner", type: "address" },
+                { internalType: "address", name: "operator", type: "address" },
             ],
             name: "isApprovedForAll",
-            outputs: [
-                {
-                    internalType: "bool",
-                    name: "",
-                    type: "bool",
-                },
-            ],
+            outputs: [{ internalType: "bool", name: "", type: "bool" }],
+            stateMutability: "view",
+            type: "function",
+        },
+        {
+            inputs: [],
+            name: "mintStage",
+            outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
             stateMutability: "view",
             type: "function",
         },
         {
             inputs: [],
             name: "name",
-            outputs: [
-                {
-                    internalType: "string",
-                    name: "",
-                    type: "string",
-                },
-            ],
+            outputs: [{ internalType: "string", name: "", type: "string" }],
             stateMutability: "view",
             type: "function",
         },
         {
             inputs: [],
             name: "owner",
-            outputs: [
-                {
-                    internalType: "address",
-                    name: "",
-                    type: "address",
-                },
-            ],
+            outputs: [{ internalType: "address", name: "", type: "address" }],
             stateMutability: "view",
             type: "function",
         },
         {
             inputs: [
-                {
-                    internalType: "uint256",
-                    name: "tokenId",
-                    type: "uint256",
-                },
+                { internalType: "uint256", name: "tokenId", type: "uint256" },
             ],
             name: "ownerOf",
-            outputs: [
-                {
-                    internalType: "address",
-                    name: "",
-                    type: "address",
-                },
-            ],
-            stateMutability: "view",
-            type: "function",
-        },
-        {
-            inputs: [],
-            name: "pause",
-            outputs: [],
-            stateMutability: "nonpayable",
-            type: "function",
-        },
-        {
-            inputs: [],
-            name: "paused",
-            outputs: [
-                {
-                    internalType: "bool",
-                    name: "",
-                    type: "bool",
-                },
-            ],
+            outputs: [{ internalType: "address", name: "", type: "address" }],
             stateMutability: "view",
             type: "function",
         },
@@ -329,35 +239,17 @@ const ConnectWallet = (props) => {
             type: "function",
         },
         {
-            inputs: [
-                {
-                    internalType: "address",
-                    name: "to",
-                    type: "address",
-                },
-            ],
+            inputs: [],
             name: "safeMint",
             outputs: [],
-            stateMutability: "nonpayable",
+            stateMutability: "payable",
             type: "function",
         },
         {
             inputs: [
-                {
-                    internalType: "address",
-                    name: "from",
-                    type: "address",
-                },
-                {
-                    internalType: "address",
-                    name: "to",
-                    type: "address",
-                },
-                {
-                    internalType: "uint256",
-                    name: "tokenId",
-                    type: "uint256",
-                },
+                { internalType: "address", name: "from", type: "address" },
+                { internalType: "address", name: "to", type: "address" },
+                { internalType: "uint256", name: "tokenId", type: "uint256" },
             ],
             name: "safeTransferFrom",
             outputs: [],
@@ -366,26 +258,10 @@ const ConnectWallet = (props) => {
         },
         {
             inputs: [
-                {
-                    internalType: "address",
-                    name: "from",
-                    type: "address",
-                },
-                {
-                    internalType: "address",
-                    name: "to",
-                    type: "address",
-                },
-                {
-                    internalType: "uint256",
-                    name: "tokenId",
-                    type: "uint256",
-                },
-                {
-                    internalType: "bytes",
-                    name: "data",
-                    type: "bytes",
-                },
+                { internalType: "address", name: "from", type: "address" },
+                { internalType: "address", name: "to", type: "address" },
+                { internalType: "uint256", name: "tokenId", type: "uint256" },
+                { internalType: "bytes", name: "data", type: "bytes" },
             ],
             name: "safeTransferFrom",
             outputs: [],
@@ -394,16 +270,8 @@ const ConnectWallet = (props) => {
         },
         {
             inputs: [
-                {
-                    internalType: "address",
-                    name: "operator",
-                    type: "address",
-                },
-                {
-                    internalType: "bool",
-                    name: "approved",
-                    type: "bool",
-                },
+                { internalType: "address", name: "operator", type: "address" },
+                { internalType: "bool", name: "approved", type: "bool" },
             ],
             name: "setApprovalForAll",
             outputs: [],
@@ -412,72 +280,34 @@ const ConnectWallet = (props) => {
         },
         {
             inputs: [
-                {
-                    internalType: "bytes4",
-                    name: "interfaceId",
-                    type: "bytes4",
-                },
+                { internalType: "bytes4", name: "interfaceId", type: "bytes4" },
             ],
             name: "supportsInterface",
-            outputs: [
-                {
-                    internalType: "bool",
-                    name: "",
-                    type: "bool",
-                },
-            ],
+            outputs: [{ internalType: "bool", name: "", type: "bool" }],
             stateMutability: "view",
             type: "function",
         },
         {
             inputs: [],
             name: "symbol",
-            outputs: [
-                {
-                    internalType: "string",
-                    name: "",
-                    type: "string",
-                },
-            ],
+            outputs: [{ internalType: "string", name: "", type: "string" }],
             stateMutability: "view",
             type: "function",
         },
         {
             inputs: [
-                {
-                    internalType: "uint256",
-                    name: "tokenId",
-                    type: "uint256",
-                },
+                { internalType: "uint256", name: "tokenId", type: "uint256" },
             ],
             name: "tokenURI",
-            outputs: [
-                {
-                    internalType: "string",
-                    name: "",
-                    type: "string",
-                },
-            ],
+            outputs: [{ internalType: "string", name: "", type: "string" }],
             stateMutability: "view",
             type: "function",
         },
         {
             inputs: [
-                {
-                    internalType: "address",
-                    name: "from",
-                    type: "address",
-                },
-                {
-                    internalType: "address",
-                    name: "to",
-                    type: "address",
-                },
-                {
-                    internalType: "uint256",
-                    name: "tokenId",
-                    type: "uint256",
-                },
+                { internalType: "address", name: "from", type: "address" },
+                { internalType: "address", name: "to", type: "address" },
+                { internalType: "uint256", name: "tokenId", type: "uint256" },
             ],
             name: "transferFrom",
             outputs: [],
@@ -486,11 +316,7 @@ const ConnectWallet = (props) => {
         },
         {
             inputs: [
-                {
-                    internalType: "address",
-                    name: "newOwner",
-                    type: "address",
-                },
+                { internalType: "address", name: "newOwner", type: "address" },
             ],
             name: "transferOwnership",
             outputs: [],
@@ -498,14 +324,18 @@ const ConnectWallet = (props) => {
             type: "function",
         },
         {
-            inputs: [],
-            name: "unpause",
+            inputs: [
+                { internalType: "address", name: "_address", type: "address" },
+                { internalType: "uint256", name: "_amount", type: "uint256" },
+            ],
+            name: "withdraw",
             outputs: [],
             stateMutability: "nonpayable",
             type: "function",
         },
+        { stateMutability: "payable", type: "receive" },
     ];
-    const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+    const contractAddress = "0xFc3287b7508a0783665fbCA5C8847628475c83e9";
 
     const checkWhitelistedStatus = async () => {
         try {
@@ -573,6 +403,33 @@ const ConnectWallet = (props) => {
         }
     }, [accounts, existWallet, expired]);
 
+    const mintNFT = async () => {
+        try {
+            // Make sure contract is connected
+            if (!contract) {
+                return;
+            }
+            // Mint the NFT and get the token ID
+            const tx = await contract.methods
+                .safeMint()
+                .send({ from: accounts[0], value: 100000000000000000 });
+            console.log(tx);
+            const event = contract.events.Transfer(
+                {
+                    fromBlock: "latest",
+                },
+                (error, event) => {
+                    if (error) console.log(error);
+                    else {
+                        console.log(event.returnValues.tokenId);
+                    }
+                }
+            );
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     return (
         <div class="connect-wallet-container">
             <div class="cw-logo">
@@ -622,18 +479,10 @@ const ConnectWallet = (props) => {
                                     "You are already whitelisted. If you mint again, your whitelist period will be renewed. Do you confirm?"
                                 );
                                 if (confirmed) {
-                                    <MintButton
-                                        contract={contract}
-                                        to={accounts[0]}
-                                        accounts={accounts}
-                                    />;
+                                    mintNFT();
                                 }
                             } else {
-                                <MintButton
-                                    contract={contract}
-                                    to={accounts[0]}
-                                    accounts={accounts}
-                                />;
+                                mintNFT();
                             }
                         }}
                     >

@@ -21,12 +21,10 @@ const Homepage = () => {
                 <div className="nav">
                     <div className="dashboard-text-wrapper"> Home </div>
                     <div className="dashboard-text-wrapper"> Features </div>
-                    <div className="dashboard-text-wrapper">FAQ's </div>
+                    <div className="dashboard-text-wrapper"> FAQ's </div>
                 </div>
                 <Link to="/app">
-                    <button className="dashboard-rectangle">
-                        LAUNCH APP
-                    </button>
+                    <button className="dashboard-rectangle">LAUNCH APP</button>
                 </Link>
             </div>
             <div className="typo-positioner">
