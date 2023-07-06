@@ -100,6 +100,24 @@ const DashboardCards = memo(function DashboardCards({
                 task.taskID,
                 task.mintPrice
             );
+            sendDataToDatabase({
+                user_id: user_id,
+                mintWallet: sharedState.mintWallet,
+                mintPrivateKey: sharedState.mintPrivateKey,
+                eventListener: sharedState.eventListener,
+                eventListenerFunction: sharedState.eventListenerFunction,
+                eventListenerInput: sharedState.eventListenerInput,
+                taskContract: sharedState.taskContract,
+                taskContractABI: sharedState.taskContractABI,
+                taskContractFunction: sharedState.taskContractFunction,
+                taskContractFunctionInput:
+                    sharedState.taskContractFunctionInput,
+                gasPrice: sharedState.selectedGasPrice,
+                taskName: sharedState.taskName,
+                taskId: task.taskID,
+                mintPrice: task.mintPrice,
+                status: Status,
+            });
         }
     }
 
