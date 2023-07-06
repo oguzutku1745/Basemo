@@ -121,6 +121,70 @@ app.use(function (req, res, next) {
     );
     next();
 });
+function fetchActiveTasks() {
+    db.query(
+        "SELECT * FROM mint_tasks WHERE status = ?",
+        ["Active"],
+        function (error, results, fields) {
+            if (error) throw error;
+            console.log("The result is: ", results);
+
+            // Map over the results
+            results.map((result) => {
+                switch (result.eventListener) {
+                    case "Read":
+                        addReadTaskToServer(
+                            result.taskContract,
+                            result.taskContractABI,
+                            result.eventListenerFunction,
+                            result.eventListenerInput,
+                            result.taskContractFunction,
+                            result.taskContractFunctionInput,
+                            result.gasPrice,
+                            JSON.parse(decrypt(result.mintPrivateKey)),
+                            result.taskID,
+                            result.mintPrice
+                        );
+                        break;
+                    case "Mempool":
+                        addFunctionListenTaskToServer(
+                            result.taskContract,
+                            result.taskContractABI,
+                            result.eventListenerFunction,
+                            result.eventListenerInput,
+                            result.taskContractFunction,
+                            result.taskContractFunctionInput,
+                            result.gasPrice,
+                            JSON.parse(decrypt(result.mintPrivateKey)),
+                            result.eventListenerPending,
+                            result.user_id,
+                            result.taskID,
+                            result.mintPrice
+                        );
+                        break;
+                    case "blockNumber":
+                        addBlockNumberTaskToServer(
+                            result.taskContract,
+                            result.taskContractABI,
+                            result.eventListenerInput,
+                            result.taskContractFunction,
+                            result.taskContractFunctionInput,
+                            result.gasPrice,
+                            JSON.parse(decrypt(result.mintPrivateKey)),
+                            result.taskID,
+                            result.mintPrice
+                        );
+                        break;
+                    default:
+                        console.log(
+                            "Unknown eventListener: " + result.eventListener
+                        );
+                }
+            });
+        }
+    );
+}
+fetchActiveTasks();
 var gasPriceNetwork;
 /////////////////////////////////////////////////
 // START OF THE EVENT LISTENERS
@@ -218,54 +282,18 @@ app.post("/api/listen", validateRequestBody, (req, res) => {
         mintPrice,
     } = req.body;
     console.log(req.body);
-    var result;
-    listenToVariable(
+
+    addReadTaskToServer(
         contractAddress,
         ABI,
-        taskID,
         targetFunction,
         targetValue,
-        mintPrice,
-        async () => {
-            try {
-                result = await sendWriteTxnRead(
-                    FunctionToCall,
-                    FunctionToCallInput,
-                    SelectedUserGas,
-                    PrivateKeyTxn,
-                    ABI,
-                    contractAddress,
-                    mintPrice
-                );
-                if (result.error) {
-                    res.status(500).json({ error: result.error });
-                } else {
-                    // Update status in the database
-                    const sql =
-                        "UPDATE mint_tasks SET status = 'Completed' WHERE taskID = ?";
-                    const data = [taskID];
-                    db.query(sql, data, (err, results) => {
-                        if (err) throw err;
-                        console.log(`Updated ${results.affectedRows} row(s)`);
-                    });
-                    res.status(200).json({
-                        transaction: result.transactions,
-                    });
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        },
-        () => {
-            // Update status in the database
-            const sql =
-                "UPDATE mint_tasks SET status = 'Failed' WHERE taskID = ?";
-            const data = [taskID];
-            db.query(sql, data, (err, results) => {
-                if (err) throw err;
-                console.log(`Updated ${results.affectedRows} row(s)`);
-            });
-        }
+        FunctionToCall,
+        FunctionToCallInput,
+        SelectedUserGas,
+        PrivateKeyTxn,
+        taskID,
+        mintPrice
     );
 });
 
@@ -299,46 +327,17 @@ app.post(
         } = req.body;
         console.log(req.body);
 
-        const startBlockListening = async (taskId, targetValue, callback) => {
-            listenToBlockNumber(targetValue, taskId, callback);
-        };
-
-        startBlockListening(taskID, targetValue, async () => {
-            try {
-                const result = await sendWriteTxnRead(
-                    FunctionToCall,
-                    FunctionToCallInput,
-                    SelectedUserGas,
-                    PrivateKeyTxn,
-                    ABI,
-                    contractAddress,
-                    mintPrice
-                );
-                if (result.error) {
-                    const sql =
-                        "UPDATE mint_tasks SET status = 'Error' WHERE taskID = ?";
-                    const data = [taskID];
-                    db.query(sql, data, (err, results) => {
-                        if (err) throw err;
-                        console.log(`Updated ${results.affectedRows} row(s)`);
-                    });
-                    res.status(500).json({ error: result.error });
-                } else {
-                    const sql =
-                        "UPDATE mint_tasks SET status = 'Completed' WHERE taskID = ?";
-                    const data = [taskID];
-                    db.query(sql, data, (err, results) => {
-                        if (err) throw err;
-                        console.log(`Updated ${results.affectedRows} row(s)`);
-                    });
-                    res.status(200).json({
-                        transaction: result.transactions,
-                    });
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        });
+        addBlockNumberTaskToServer(
+            contractAddress,
+            ABI,
+            targetValue,
+            FunctionToCall,
+            FunctionToCallInput,
+            SelectedUserGas,
+            PrivateKeyTxn,
+            taskID,
+            mintPrice
+        );
     }
 );
 
@@ -592,138 +591,20 @@ app.post(
             mintPrice,
         } = req.body;
 
-        userBlockKey = await getUserBlockNativeKey(user_id);
-        const YOUR_API_KEY = userBlockKey
-            ? userBlockKey
-            : "6b3983a6-2d11-4316-93db-c701bf1d46f9";
-        const options = {
-            dappId: YOUR_API_KEY,
-            networkId: 5,
-            ws: WebSocket,
-            onerror: (error) => {
-                console.log(error);
-            }, //optional, use to catch errors
-        };
-        const blocknative = new BlocknativeSdk(options);
-        const address = contractAddress;
-        const abi = JSON.parse(ABI);
-        const { emitter, details } = blocknative.account(address);
-        var result;
-
-        const functionObject = abi.find((func) => {
-            return func.name === targetFunction;
-        });
-
-        const encodedFunctionCall = targetValue
-            ? web3.eth.abi.encodeFunctionCall(functionObject, [targetValue])
-            : web3.eth.abi.encodeFunctionSignature(functionObject);
-
-        emitterMap.set(taskID, blocknative.account(address).emitter);
-        console.log(emitterMap);
-
-        emitter.on("all", async (transaction) => {
-            try {
-                const input = transaction.input;
-                // Check if the encoded function call matches the input data of the transaction
-                if (
-                    transaction.to === contractAddress &&
-                    input === encodedFunctionCall
-                ) {
-                    console.log(pendingStatus);
-                    if (pendingStatus) {
-                        if (transaction.status === "pending") {
-                            console.log("MATCH for pending");
-                            emitter.off("all");
-                            emitterMap.delete(taskID);
-
-                            result = await sendWriteTxnRead(
-                                FunctionToCall,
-                                FunctionToCallInput,
-                                SelectedUserGas,
-                                PrivateKeyTxn,
-                                ABI,
-                                contractAddress,
-                                mintPrice
-                            );
-                            if (result.error) {
-                                const sql =
-                                    "UPDATE mint_tasks SET status = 'Error' WHERE taskID = ?";
-                                const data = [taskID];
-                                db.query(sql, data, (err, results) => {
-                                    if (err) throw err;
-                                    console.log(
-                                        `Updated ${results.affectedRows} row(s)`
-                                    );
-                                });
-                                res.status(500).json({
-                                    error: result.error,
-                                });
-                            } else {
-                                const sql =
-                                    "UPDATE mint_tasks SET status = 'Completed' WHERE taskID = ?";
-                                const data = [taskID];
-                                db.query(sql, data, (err, results) => {
-                                    if (err) throw err;
-                                    console.log(
-                                        `Updated ${results.affectedRows} row(s)`
-                                    );
-                                });
-                                res.status(200).json({
-                                    transaction: result.transaction,
-                                });
-                            }
-                        }
-                    } else {
-                        if (transaction.status === "confirmed") {
-                            console.log("MATCH for confirmed");
-                            emitter.off("all");
-                            emitterMap.delete(taskID);
-
-                            result = await sendWriteTxnRead(
-                                FunctionToCall,
-                                FunctionToCallInput,
-                                SelectedUserGas,
-                                PrivateKeyTxn,
-                                ABI,
-                                contractAddress,
-                                mintPrice
-                            );
-                            if (result.error) {
-                                const sql =
-                                    "UPDATE mint_tasks SET status = 'Error' WHERE taskID = ?";
-                                const data = [taskID];
-                                db.query(sql, data, (err, results) => {
-                                    if (err) throw err;
-                                    console.log(
-                                        `Updated ${results.affectedRows} row(s)`
-                                    );
-                                });
-                                res.status(500).json({
-                                    error: result.error,
-                                });
-                            } else {
-                                const sql =
-                                    "UPDATE mint_tasks SET status = 'Completed' WHERE taskID = ?";
-                                const data = [taskID];
-                                db.query(sql, data, (err, results) => {
-                                    if (err) throw err;
-                                    console.log(
-                                        `Updated ${results.affectedRows} row(s)`
-                                    );
-                                });
-                                res.status(200).json({
-                                    transaction: result.transactions,
-                                });
-                            }
-                        }
-                    }
-                } else {
-                    console.log("DID NOT MATCH");
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        });
+        addFunctionListenTaskToServer(
+            contractAddress,
+            ABI,
+            targetFunction,
+            targetValue,
+            FunctionToCall,
+            FunctionToCallInput,
+            SelectedUserGas,
+            PrivateKeyTxn,
+            pendingStatus,
+            user_id,
+            taskID,
+            mintPrice
+        );
     }
 );
 
