@@ -121,6 +121,8 @@ app.use(function (req, res, next) {
     );
     next();
 });
+
+// Function to fetch tasks from the database when server is restarted.
 function fetchActiveTasks() {
     db.query(
         "SELECT * FROM mint_tasks WHERE status = ?",
@@ -205,6 +207,7 @@ const validateRequestBody = [
     check("taskID").notEmpty(),
 ];
 
+// Function to add active Read task to the server. Initialize and start the task.
 function addReadTaskToServer(
     contractAddress,
     ABI,
@@ -268,6 +271,7 @@ function addReadTaskToServer(
     );
 }
 
+// API to the client to send a Read task
 app.post("/api/listen", validateRequestBody, (req, res) => {
     const {
         contractAddress,
@@ -310,6 +314,7 @@ const validateListenBlockNumberBody = [
     check("taskID").notEmpty(),
 ];
 
+// API to the client to send a Block Number task
 app.post(
     "/api/listenBlockNumber",
     validateListenBlockNumberBody,
