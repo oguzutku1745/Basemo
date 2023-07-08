@@ -169,7 +169,8 @@ const Botpage = () => {
     function Decrement_active_task_count() {
         setactive_task_count((prevCount) => prevCount - 1);
     }
-    useEffect(() => {
+
+    function getUserDataAndActiveTasks() {
         if (count) {
             count--;
             fetch(`/users/${user_id}`)
@@ -208,6 +209,7 @@ const Botpage = () => {
                             eventListenerFunction: task.eventListenerFunction,
                             eventListenerInput: task.eventListenerInput,
                             eventListenerPending: false,
+                            // FALSE OLMASI HATA OLABİLİR DÜZELTMK LAZIM
                             taskID: task.taskID,
                             mintPrice: task.mintPrice,
                             taskstatus: task.status,
@@ -215,13 +217,16 @@ const Botpage = () => {
                     });
                 });
         }
-    }, []);
-
-    const socket = socketIOClient("http://localhost:3002", {
-        query: { userId: user_id },
-    }); // Replace with your server's URL and add userId to query
+    }
 
     useEffect(() => {
+        getUserDataAndActiveTasks();
+    }, []);
+
+    useEffect(() => {
+        const socket = socketIOClient("http://localhost:3002", {
+            query: { userId: user_id },
+        }); // Replace with your server's URL and add userId to query
         // Listen for taskStatus events
         socket.on("taskStatus", ({ taskID, statusToSend }) => {
             console.log(taskID);
@@ -229,11 +234,14 @@ const Botpage = () => {
             console.log(tasks);
             // Find the task with the given ID and update its status
             setTasks((prevTasks) =>
-                prevTasks.map((task) =>
-                    task.taskID === taskID
-                        ? { ...task, taskstatus: String(statusToSend) }
-                        : task
-                )
+                prevTasks.map((task) => {
+                    if (task.taskID === taskID) {
+                        console.log(`Changing status of task ${taskID}`);
+                        return { ...task, taskstatus: "Completed" };
+                    } else {
+                        return task;
+                    }
+                })
             );
             console.log(tasks);
         });
@@ -242,7 +250,11 @@ const Botpage = () => {
         return () => {
             socket.disconnect();
         };
-    }, []);
+    }, [tasks]);
+
+    useEffect(() => {
+        console.log(tasks);
+    }, [tasks]);
 
     function changeStateMintWallets(new_mint_wallet_address) {
         setMint_wallets((prev) => {
