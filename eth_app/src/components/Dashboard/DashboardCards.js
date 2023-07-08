@@ -33,7 +33,8 @@ const DashboardCards = memo(function DashboardCards({
                 sharedState.selectedGasPrice,
                 sharedState.mintPrivateKey,
                 task.taskID,
-                task.mintPrice
+                task.mintPrice,
+                user_id
             );
             sendDataToDatabase({
                 user_id: user_id,
@@ -297,7 +298,8 @@ const DashboardCards = memo(function DashboardCards({
         SelectedUserGas,
         PrivateKeyTxn,
         taskID,
-        mintPrice
+        mintPrice,
+        user_id
     ) {
         const requestData = {
             contractAddress, // value of contractAddress,
@@ -310,6 +312,7 @@ const DashboardCards = memo(function DashboardCards({
             PrivateKeyTxn,
             taskID,
             mintPrice,
+            user_id,
         };
         fetch("/api/listen", {
             method: "POST",

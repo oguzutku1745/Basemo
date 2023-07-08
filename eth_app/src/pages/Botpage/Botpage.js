@@ -11,6 +11,7 @@ import DashboardCards from "../../components/Dashboard/DashboardCards";
 import GasComponent from "../../components/NetworkGas";
 import { createContext } from "react";
 import EthDistribute from "../../components/MintWalletCard(s)/EthDistribute";
+import socketIOClient from "socket.io-client";
 
 var GlobalProvider = new ethers.InfuraProvider(
     "goerli",
@@ -55,6 +56,29 @@ const Botpage = () => {
         functionParams: [],
         functionInputs: [],
     });
+
+    useEffect(() => {
+        const socket = socketIOClient("http://localhost:3002", {
+            query: { userId: user_id },
+        }); // Replace with your server's URL and add userId to query
+
+        // Listen for taskStatus events
+        socket.on("taskStatus", ({ taskId, statusToSend }) => {
+            // Find the task with the given ID and update its status
+            setTasks((prevTasks) =>
+                prevTasks.map((task) =>
+                    task.taskID === taskId
+                        ? { ...task, taskstatus: String(statusToSend) }
+                        : task
+                )
+            );
+        });
+
+        // Clean up the WebSocket connection when the component unmounts
+        return () => {
+            socket.disconnect();
+        };
+    }, []); // Empty array means the effect only runs once after initial render
 
     function changeStateTasks(new_task) {
         setTasks((prev) => {

@@ -54,8 +54,19 @@ if (cluster.isMaster) {
         // Handle the error, e.g., log it, restart the worker, etc.
     });
 } else {*/
+const http = require("http"); // Add this line
+const socketIO = require("socket.io"); // Add this line
+
 const express = require("express");
 const app = express();
+const server = http.createServer(app); // Change this line
+const io = require("socket.io")(server, {
+    cors: {
+        origin: "*", // allow to connect from any host
+        methods: ["GET", "POST"], // allowed to deal with these methods
+    },
+});
+
 const { check, body, validationResult } = require("express-validator");
 const db = require("../eth_app/src/db");
 const passport = require("passport");
@@ -71,6 +82,7 @@ const web3 = new Web3(
     )
 );
 require("dotenv").config();
+
 const crypto = require("crypto");
 const algorithm = "aes-128-cbc";
 const cryptoKey = process.env.SECRET_KEY;
@@ -108,7 +120,27 @@ db.connect();
 app.use(express.json());
 app.use(passport.initialize());
 app.use(bodyParser.json());
-app.listen(3002, () => console.log("Server running on port 3002"));
+
+const userIdToSocketIdMap = new Map();
+io.on("connection", (socket) => {
+    const userId = socket.handshake.query.userId;
+
+    // If there is a user id, store the socket id in the map
+    if (userId) {
+        userIdToSocketIdMap.set(String(userId), socket.id);
+    }
+
+    console.log(`User ${userId} connected with socket ${socket.id}`);
+    console.log(userIdToSocketIdMap);
+
+    socket.on("disconnect", () => {
+        console.log(`User ${userId} disconnected`);
+        // When the user disconnects, remove them from the map
+        userIdToSocketIdMap.delete(userId);
+    });
+});
+
+server.listen(3002, () => console.log("Server running on port 3002")); // Use server.listen() instead of app.listen()
 //app.get('/', whitelistRouter);
 
 app.use(bodyParser.json());
@@ -218,7 +250,8 @@ function addReadTaskToServer(
     SelectedUserGas,
     PrivateKeyTxn,
     taskID,
-    mintPrice
+    mintPrice,
+    user_id
 ) {
     var result;
     listenToVariable(
@@ -253,6 +286,23 @@ function addReadTaskToServer(
                     //res.status(200).json({
                     //    transaction: result.transactions,
                     //});
+                    const socketId = userIdToSocketIdMap.get(user_id);
+
+                    // If the socket ID exists, use it to get the socket object and send the message
+                    if (socketId) {
+                        const socket = io.sockets.sockets.get(socketId);
+
+                        if (socket) {
+                            statusToSend = "Completed";
+                            socket.emit("taskStatus", { taskID, statusToSend });
+                        } else {
+                            console.error(
+                                `Socket not found for ID ${socketId}`
+                            );
+                        }
+                    } else {
+                        console.error(`No socket ID found for user ${userId}`);
+                    }
                 }
             } catch (error) {
                 console.log(error);
@@ -267,6 +317,21 @@ function addReadTaskToServer(
                 if (err) throw err;
                 console.log(`Updated ${results.affectedRows} row(s)`);
             });
+            const socketId = userIdToSocketIdMap.get(user_id);
+
+            // If the socket ID exists, use it to get the socket object and send the message
+            if (socketId) {
+                const socket = io.sockets.sockets.get(socketId);
+
+                if (socket) {
+                    statusToSend = "Error";
+                    socket.emit("taskStatus", { taskID, statusToSend });
+                } else {
+                    console.error(`Socket not found for ID ${socketId}`);
+                }
+            } else {
+                console.error(`No socket ID found for user ${user_id}`);
+            }
         }
     );
 }
@@ -284,6 +349,7 @@ app.post("/api/listen", validateRequestBody, (req, res) => {
         PrivateKeyTxn,
         taskID,
         mintPrice,
+        user_id,
     } = req.body;
     console.log(req.body);
 
@@ -297,7 +363,8 @@ app.post("/api/listen", validateRequestBody, (req, res) => {
         SelectedUserGas,
         PrivateKeyTxn,
         taskID,
-        mintPrice
+        mintPrice,
+        user_id
     );
 });
 
@@ -690,6 +757,34 @@ async function addFunctionListenTaskToServer(
                                     `Updated ${results.affectedRows} row(s)`
                                 );
                             });
+                            console.log(userIdToSocketIdMap);
+                            console.log(user_id);
+
+                            const socketId = userIdToSocketIdMap.get(
+                                String(user_id)
+                            );
+
+                            // If the socket ID exists, use it to get the socket object and send the message
+                            if (socketId) {
+                                const socket = io.sockets.sockets.get(socketId);
+
+                                if (socket) {
+                                    console.log("sending data from socket");
+                                    statusToSend = "Error";
+                                    socket.emit("taskStatus", {
+                                        taskID,
+                                        statusToSend,
+                                    });
+                                } else {
+                                    console.error(
+                                        `Socket not found for ID ${socketId}`
+                                    );
+                                }
+                            } else {
+                                console.error(
+                                    `No socket ID found for user ${user_id}`
+                                );
+                            }
                         } else {
                             const sql =
                                 "UPDATE mint_tasks SET status = 'Completed' WHERE taskID = ?";
@@ -700,6 +795,34 @@ async function addFunctionListenTaskToServer(
                                     `Updated ${results.affectedRows} row(s)`
                                 );
                             });
+                            console.log(userIdToSocketIdMap);
+                            console.log(user_id);
+                            const socketId = userIdToSocketIdMap.get(
+                                String(user_id)
+                            );
+
+                            // If the socket ID exists, use it to get the socket object and send the message
+                            if (socketId) {
+                                const socket = io.sockets.sockets.get(socketId);
+
+                                if (socket) {
+                                    console.log("sending data from socket");
+
+                                    statusToSend = "Completed";
+                                    socket.emit("taskStatus", {
+                                        taskID,
+                                        statusToSend,
+                                    });
+                                } else {
+                                    console.error(
+                                        `Socket not found for ID ${socketId}`
+                                    );
+                                }
+                            } else {
+                                console.error(
+                                    `No socket ID found for user ${user_id}`
+                                );
+                            }
                         }
                     }
                 } else {
@@ -727,6 +850,35 @@ async function addFunctionListenTaskToServer(
                                     `Updated ${results.affectedRows} row(s)`
                                 );
                             });
+
+                            console.log(userIdToSocketIdMap);
+                            console.log(user_id);
+                            const socketId = userIdToSocketIdMap.get(
+                                String(user_id)
+                            );
+
+                            // If the socket ID exists, use it to get the socket object and send the message
+                            if (socketId) {
+                                const socket = io.sockets.sockets.get(socketId);
+
+                                if (socket) {
+                                    console.log("sending data from socket");
+
+                                    statusToSend = "Error";
+                                    socket.emit("taskStatus", {
+                                        taskID,
+                                        statusToSend,
+                                    });
+                                } else {
+                                    console.error(
+                                        `Socket not found for ID ${socketId}`
+                                    );
+                                }
+                            } else {
+                                console.error(
+                                    `No socket ID found for user ${user_id}`
+                                );
+                            }
                         } else {
                             const sql =
                                 "UPDATE mint_tasks SET status = 'Completed' WHERE taskID = ?";
@@ -737,6 +889,34 @@ async function addFunctionListenTaskToServer(
                                     `Updated ${results.affectedRows} row(s)`
                                 );
                             });
+                            console.log(userIdToSocketIdMap);
+                            console.log(user_id);
+                            const socketId = userIdToSocketIdMap.get(
+                                String(user_id)
+                            );
+
+                            // If the socket ID exists, use it to get the socket object and send the message
+                            if (socketId) {
+                                const socket = io.sockets.sockets.get(socketId);
+
+                                if (socket) {
+                                    console.log("sending data from socket");
+
+                                    statusToSend = "Completed";
+                                    socket.emit("taskStatus", {
+                                        taskID,
+                                        statusToSend,
+                                    });
+                                } else {
+                                    console.error(
+                                        `Socket not found for ID ${socketId}`
+                                    );
+                                }
+                            } else {
+                                console.error(
+                                    `No socket ID found for user ${user_id}`
+                                );
+                            }
                         }
                     }
                 }
