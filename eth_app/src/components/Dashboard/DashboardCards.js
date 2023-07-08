@@ -89,6 +89,7 @@ const DashboardCards = ({
                 taskId: task.taskID,
                 mintPrice: task.mintPrice,
                 status: Status,
+                eventListenerPending: sharedState.eventListenerPending,
             });
         } else if (sharedState.eventListener === "blockNumber") {
             sendRequestbyBlockNumber(

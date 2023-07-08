@@ -208,7 +208,7 @@ const Botpage = () => {
                             eventListener: task.eventListener,
                             eventListenerFunction: task.eventListenerFunction,
                             eventListenerInput: task.eventListenerInput,
-                            eventListenerPending: false,
+                            eventListenerPending: task.eventListenerPending,
                             // FALSE OLMASI HATA OLABİLİR DÜZELTMK LAZIM
                             taskID: task.taskID,
                             mintPrice: task.mintPrice,

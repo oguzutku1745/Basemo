@@ -61,7 +61,8 @@ export default function Step5(props) {
     function handleChecked(event) {
         const { name, value, checked } = event.target;
         console.log(checked);
-        props.setTheInput("eventListenerPending", checked);
+        const checkedValue = checked ? 1 : 0; // if checked is true, checkedValue will be 1, otherwise it will be 0
+        props.setTheInput("eventListenerPending", checkedValue);
     }
 
     function handleSelectFunction(selected) {
