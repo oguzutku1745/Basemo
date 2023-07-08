@@ -40,6 +40,7 @@ const Botpage = () => {
     const [tasks, setTasks] = useState([]);
     const { activeTab, setActiveTab } = useTabContext();
     const [active_task_count, setactive_task_count] = useState(0);
+    const [tasksLoaded, setTasksLoaded] = useState(false);
 
     const [contractInputs, setContractInputs] = useState({
         contractAddress: "",
@@ -56,29 +57,6 @@ const Botpage = () => {
         functionParams: [],
         functionInputs: [],
     });
-
-    useEffect(() => {
-        const socket = socketIOClient("http://localhost:3002", {
-            query: { userId: user_id },
-        }); // Replace with your server's URL and add userId to query
-
-        // Listen for taskStatus events
-        socket.on("taskStatus", ({ taskId, statusToSend }) => {
-            // Find the task with the given ID and update its status
-            setTasks((prevTasks) =>
-                prevTasks.map((task) =>
-                    task.taskID === taskId
-                        ? { ...task, taskstatus: String(statusToSend) }
-                        : task
-                )
-            );
-        });
-
-        // Clean up the WebSocket connection when the component unmounts
-        return () => {
-            socket.disconnect();
-        };
-    }, []); // Empty array means the effect only runs once after initial render
 
     function changeStateTasks(new_task) {
         setTasks((prev) => {
@@ -237,6 +215,33 @@ const Botpage = () => {
                     });
                 });
         }
+    }, []);
+
+    const socket = socketIOClient("http://localhost:3002", {
+        query: { userId: user_id },
+    }); // Replace with your server's URL and add userId to query
+
+    useEffect(() => {
+        // Listen for taskStatus events
+        socket.on("taskStatus", ({ taskID, statusToSend }) => {
+            console.log(taskID);
+            console.log(statusToSend);
+            console.log(tasks);
+            // Find the task with the given ID and update its status
+            setTasks((prevTasks) =>
+                prevTasks.map((task) =>
+                    task.taskID === taskID
+                        ? { ...task, taskstatus: String(statusToSend) }
+                        : task
+                )
+            );
+            console.log(tasks);
+        });
+
+        // Clean up the WebSocket connection when the component unmounts
+        return () => {
+            socket.disconnect();
+        };
     }, []);
 
     function changeStateMintWallets(new_mint_wallet_address) {

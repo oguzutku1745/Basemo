@@ -50,7 +50,7 @@ export default function EventListen(props) {
         eventListenerFunction: "",
         eventListenerInput: "",
         eventListenerPending: false,
-        taskID: 0,
+        taskID: "",
         mintPrice: 0,
         taskstatus: "Steady",
     });
