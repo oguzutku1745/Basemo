@@ -19,8 +19,9 @@ const DashboardCards = ({
 
     const sharedState = task;
     useEffect(() => {
-        console.log("DashboardCards has re-rendered");
-    }, [task]);
+        if (Status === "Completed" || Status === "Error")
+            Decrement_active_task_count();
+    }, [Status]);
 
     function handleClick() {
         setStatus("Active");
