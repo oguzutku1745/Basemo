@@ -1,15 +1,15 @@
-import React, { useContext, useState, memo } from "react";
+import React, { useContext, useState, memo, useEffect } from "react";
 import { userInputs } from "../../pages/Botpage/Botpage";
 import axios from "axios";
 
-const DashboardCards = memo(function DashboardCards({
+const DashboardCards = ({
     task,
     user_id,
     deleteTask,
     index,
     Increment_active_task_count,
     Decrement_active_task_count,
-}) {
+}) => {
     const [Status, setStatus] = useState(task.taskstatus || "Steady");
     const [DisplayGas, setDisplayGas] = useState(task.selectedGasPrice);
     const [GasButtonLastClicked, setGasButtonLastClicked] = useState(0);
@@ -18,6 +18,9 @@ const DashboardCards = memo(function DashboardCards({
     console.log(Status);
 
     const sharedState = task;
+    useEffect(() => {
+        console.log("DashboardCards has re-rendered");
+    }, [task]);
 
     function handleClick() {
         setStatus("Active");
@@ -456,5 +459,5 @@ const DashboardCards = memo(function DashboardCards({
             )}
         </div>
     );
-});
+};
 export default DashboardCards;

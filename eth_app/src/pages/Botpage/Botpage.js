@@ -237,7 +237,7 @@ const Botpage = () => {
                 prevTasks.map((task) => {
                     if (task.taskID === taskID) {
                         console.log(`Changing status of task ${taskID}`);
-                        return { ...task, taskstatus: "Completed" };
+                        return { ...task, taskstatus: statusToSend };
                     } else {
                         return task;
                     }
@@ -301,6 +301,7 @@ const Botpage = () => {
                                                 <DashboardCards
                                                     index={index}
                                                     task={tasks[index]}
+                                                    tasks={tasks}
                                                     user_id={user_id}
                                                     deleteTask={deleteTask}
                                                     Increment_active_task_count={
@@ -309,6 +310,12 @@ const Botpage = () => {
                                                     Decrement_active_task_count={
                                                         Decrement_active_task_count
                                                     }
+                                                    key={tasks
+                                                        .map(
+                                                            (task) =>
+                                                                task.taskstatus
+                                                        )
+                                                        .join("_")}
                                                 />
                                             </div>
                                         </li>
