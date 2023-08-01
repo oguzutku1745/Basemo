@@ -1147,7 +1147,7 @@ app.get("/api/getTasks/:user_id", (req, res) => {
 });
 
 /////// WHİTELİSTER
-const NFT_ABI = require("/root/basemov2/Basemo/scripts/ABI.js");
+const NFT_ABI = require("./ABI.js");
 
 // NFT contract address
 const contractAddress = "0xFc3287b7508a0783665fbCA5C8847628475c83e9";
