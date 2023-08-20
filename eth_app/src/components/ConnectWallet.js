@@ -341,15 +341,19 @@ const ConnectWallet = (props) => {
         try {
             const currentDate = new Date();
             const response = await fetch(`/api/${accounts[0]}`);
-            const dbdata = await response.json();
+            
+            const responseBody = await response.text();
+            console.log(responseBody);
+            
+            const dbdata = JSON.parse(responseBody);
             console.log(dbdata.expiry_date);
-
+    
             if (dbdata) {
                 const expiryDate = new Date(dbdata.expiry_date);
                 setUser_id(dbdata.user_id);
                 setUser_wallet(dbdata.user_wallet);
                 setExistWallet(true);
-
+    
                 if (currentDate > expiryDate) {
                     setExpired(true);
                 } else {
@@ -362,6 +366,7 @@ const ConnectWallet = (props) => {
             console.error(error);
         }
     };
+    
 
     const handleConnect = async () => {
         try {
